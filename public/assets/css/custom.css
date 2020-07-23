@@ -1,0 +1,355 @@
+@media print {
+    body{
+        font-size : 14px;
+    }
+	table, table tr, table tr td{
+		border : 1px solid #cfcfcf;
+	}
+	thead{
+		background-color: #f1404c !important;
+		color: white;
+		-webkit-print-color-adjust: exact;
+	}
+	tfoot{
+		background-color: #dadce0 !important;
+		-webkit-print-color-adjust: exact;
+	}
+}
+.lima-section,
+.lima-section li a {
+    position: absolute !important;
+    bottom: 0 !important;
+}
+.sidenav {
+    padding-bottom: 0px;
+}
+.bg-top {
+    background-image: url("../img/bg-resto.png");
+    background-position: bottom;
+    background-size: cover;
+}
+.bg-primary-opacity {
+    background: rgba(24, 38, 77, 0.5);
+}
+.form-control:focus {
+    border-color: #7186a0;
+}
+.breadcrumb {
+    border: 4px solid rgba(24, 38, 77, 0.5);
+}
+.breadcrumb li a i {
+    line-height: 160%;
+}
+.sidenav .nav-item .nav-link {
+    color: rgba(24, 38, 77, 0.9);
+}
+.sidenav .nav-item .nav-collapse {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.sidenav .nav-item .nav-collapse .nav-item .nav-link {
+    padding-left: 80px;
+    color: rgba(24, 38, 77, 0.6);
+}
+.loading {
+    background: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5000;
+    display: none;
+}
+.loading.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loading .info p {
+    text-align: center;
+    font-weight: bold !important;
+}
+.loading img {
+    width: 100px;
+    border-radius: 100%;
+}
+.nav-tabs li.active {
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 7px 7px 0px 0px;
+}
+.nav-tabs li.active a {
+    color: #f1404c;
+}
+.nav-tabs li {
+    padding: 10px 15px;
+}
+.nav-tabs li a {
+    color: #939da8;
+}
+.box-menu {
+    height: 500px;
+    width: 100%;
+    border: 2px solid #f0f3f8;
+    position: relative;
+    overflow: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.box-menu .col-md-4 {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 10px;
+}
+.box-menu .img {
+    height: 120px;
+}
+.box-menu .img img {
+    width: 100%;
+    height: 100%;
+}
+.sidenav.fixed-left + .main-content {
+    transition: all 0.5s ease;
+}
+.fullpage-version {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 10px 16px;
+    border-radius: 100%;
+    color: #fff;
+}
+.fullpage .navbar-vertical.navbar-expand-xs {
+    transform: translateX(-100%);
+}
+@media (min-width: 1200px) {
+    .fullpage .g-sidenav-pinned .sidenav.fixed-left + .main-content {
+        margin-left: 0px;
+    }
+}
+.fullpage .navbar-vertical.navbar-expand-xs.fixed-left + .main-content,
+.fullpage .sidenav.fixed-left + .main-content {
+    margin-left: 0px;
+}
+.penjualan .main-content .bg-top,
+.penjualan .main-content .container-content {
+    width: 60%;
+}
+.penjualan.waiters .main-content .bg-top,
+.penjualan.waiters .main-content .container-content {
+    width: 100%;
+}
+.penjualan .main-content .container-content {
+    margin-left: inherit;
+}
+.body-click{
+    background: rgba(24, 38, 77, 0.5);
+    position: fixed;
+    left : 0;
+    top : 0;
+    width : 100%;
+    height :100%;
+    z-index: 2;
+    display: none;
+}
+.body-click.show{
+    display: block;
+}
+.waiters .main-content .container-content .box-penjualan {
+    width: 85%;
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    -o-transform: translateX(100%);
+    -moz-transform: translateX(100%);
+}
+.waiters .main-content .container-content .box-penjualan.show{
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%);
+    -o-transform: translateX(0%);
+    -moz-transform: translateX(0%);
+}
+.waiters .main-content .container-content .box-penjualan .toggle-cart {
+    display: block;
+}
+.box-penjualan .toggle-cart {
+    display: none;
+    position: absolute;
+    left : 0;
+    color : #f1404c;
+    background: #fff;
+    top : 20%;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    -moz-transform: translateX(-100%);
+    padding : 13px;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+    border : 2px solid #f1404c;
+    border-right: none;
+    border-radius : 5px 0px 0px 5px;
+}
+.box-penjualan {
+    z-index: 10;
+    width: 40%;
+    height: 100%;
+    position: fixed;
+    background: #fff;
+    right: 0;
+    top: 0;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+    transition: all.3s ease;
+    -webkit-transition: all.3s ease;
+    -moz-transition: all.3s ease;
+    -o-transition: all.3s ease;
+}
+.box-penjualan .relative {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+select.form-line, input.form-line,textarea.form-line, .form-line .select2-container .select2-selection--single {
+    border: none !important;
+    border-bottom: 1px solid #dee2e6  !important;
+    border-radius: 0px;
+    background: none !important;
+}
+.form-line-check{
+    position: relative;
+}
+.form-line-check span{
+    color: #2dce89;
+    font-size : 14px;
+    position: absolute;
+    top : 50%;
+    left : 5px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+}
+.form-line-check input,.form-line-check select{
+    padding-left : 30px;
+    font-size : 16px;
+}
+.row-menu .col-md-3 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.row-menu .menu {
+    width: 100%;
+    min-height: 200px;
+    position: relative;
+    border-radius: 7px;
+    border: 1px solid #f0f3f8;
+    cursor: pointer;
+}
+.row-menu .menu .img div {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    left: 50%;
+    width: 100%;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+.row-menu .menu .img div span.info {
+    background: rgba(255, 255, 255, 0.3);
+}
+.row-menu .menu .img div span.picked {
+    background: rgba(241, 64, 76, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+.row-menu .menu .img div span {
+    border-radius: 50px;
+    padding: 5px 8px;
+    transition: all.3s ease;
+    display: none;
+}
+.row-menu .menu[data-pick="false"]:hover .img div span.info,
+.row-menu .menu[data-pick="true"] .img div span.picked {
+    display: inline-block;
+}
+.row-menu .menu .img::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(24, 38, 77, 0.3);
+    border-radius: 7px;
+}
+.row-menu .menu .img {
+    position: relative;
+    width: 100%;
+    height: 138px;
+}
+.row-menu .menu .img img {
+    border-radius: 7px;
+    width: 100%;
+    height: 100%;
+}
+.row-menu .menu .info {
+    padding: 10px;
+}
+.input-group-prepend .select2-selection.select2-selection--single {
+    padding: 0.625rem 2.3rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.sticky-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    right: 0;
+    background: white;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+}
+.btn-rounded-left,
+.sticky-bottom .btn {
+    border-top-left-radius: 30px;
+}
+.box-penjualan form {
+    max-height: 900px;
+    overflow: auto;
+}
+.change-qty{
+    position: relative;
+}
+.change-qty button:first-child {
+    left: 0;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+.change-qty button:last-child {
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    right: 0;
+}
+.change-qty button {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border : none;
+    background: #ffc107;
+    color : #fff;
+    font-size: 20px;
+    font-weight: bold;
+    padding : 0px 10px;
+}
+.keranjang td, .keranjang th{
+    white-space: normal;
+}
+.form-pembayaran{
+    position: fixed;
+    bottom: 0;
+    margin-left: 250px;
+    left : 0;
+    background: #fff;
+    z-index: 1000;
+}
+.cursor-disabled{
+    cursor: no-drop;
+}
