@@ -96,6 +96,25 @@
                   </li>
                 </ul>
             </li>
+            
+            <li class="nav-item">
+              <a class="nav-link collapsed {{Request::segment(1) == 'transaksi' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#transaksi" aria-expanded='false'>
+                <i class="ni ni-credit-card text-orange"></i>
+                <span class="nav-link-text">Transaksi</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="transaksi">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/transaksi')}}">
+                      <span class="nav-link-text">Transaksi</span>
+                    </a>
+                  </li>
+                  {{-- <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/pembayaran')}}">
+                      <span class="nav-link-text">Pembayaran</span>
+                    </a>
+                  </li> --}}
+                </ul>
+            </li>
 
           </ul>
           <!-- Divider -->

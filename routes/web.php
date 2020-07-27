@@ -29,5 +29,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('kamar', 'KamarController');
     });
 
+    Route::group(['prefix' => 'transaksi'], function () {
+        Route::get('check-in', 'TransaksiController@checkIn');
+        Route::get('booking', 'TransaksiController@booking');
+        Route::resource('transaksi', 'TransaksiController');
+    });
+
     // new route here
 });

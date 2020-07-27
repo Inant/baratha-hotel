@@ -26,6 +26,7 @@ class CreateTransaksiTable extends Migration
             $table->enum('status_bayar', ['Sudah', 'Belum']);
             $table->timestamps();
 
+            $table->primary('kode_transaksi');
             $table->foreign('id_kamar')
                     ->references('id')
                     ->on('kamar');
