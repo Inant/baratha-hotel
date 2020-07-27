@@ -21,6 +21,7 @@ class TransaksiController extends Controller
 
         $keyword = $request->get('keyword');
         $keywordKamar = $request->get('kamar');
+        $status = $request->get('status');
         
         $kamar = \DB::table(\DB::raw('kamar k'))
                     ->select('k.id', 'k.no_kamar')
@@ -35,6 +36,10 @@ class TransaksiController extends Controller
 
         if ($keywordKamar) {
             $transaksi->where('id_kamar', "$keywordKamar");
+        }
+        
+        if ($status) {
+            $transaksi->where('status', $status);
         }
 
         return \view('transaksi.transaksi.list-transaksi', ['transaksi' => $transaksi->paginate(10), 'kamar' => $kamar], $this->param);
@@ -79,6 +84,24 @@ class TransaksiController extends Controller
         })->orderBy('id','asc')->get();
 
         return \view('transaksi.transaksi.check-in', $this->param);
+    }
+
+    public function booking()
+    {
+        $this->param['pageInfo'] = 'Booking';
+        $this->param['btnRight']['text'] = 'Lihat Data';
+        $this->param['btnRight']['link'] = route('transaksi.index');
+        $this->param['kode_transaksi'] = $this->getKode();
+        $this->param['kamar'] = \DB::table('kamar')->whereNotIn('id', function($query){
+            $query->select('id_kamar')->from('transaksi')->whereIn('status', ['Check In', 'Booking']);
+        })->orderBy('id','asc')->get();
+
+        return \view('transaksi.transaksi.booking', $this->param);
+    }
+
+    public function getKamarTersedia($tgl_checkin, $tgl_checkout)
+    {
+        
     }
 
     public function store(Request $request)

@@ -8,18 +8,25 @@
                     <div class="col-2">
                     <h3 class="mb-0">{{$pageInfo}}</h3>
                     </div>
-                    <div class="col-6 offset-4">
+                    <div class="col-8 offset-4">
                         <form action="{{ route('transaksi.index') }}">
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-3 ml-7">
                                     <input name="keyword" class="form-control" placeholder="Cari tamu..." type="text" value="{{Request::get('keyword')}}">
                                 </div>
-                                <div class="col-5">
+                                <div class="col-3">
                                     <select name="kamar" id="kamar" class="form-control select2" width="100%">
                                         <option value="">Semua Kamar</option>
                                         @foreach ($kamar as $item)
                                             <option value="{{$item->id}}" {{Request::get('kamar') == $item->id ? 'selected' : ''}} > {{$item->no_kamar}} </option>
                                         @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <select name="status" id="status" class="form-control select2" width="100%">
+                                        <option value="">Semua Status</option>
+                                        <option value="Booking" {{Request::get('status') == 'Booking' ? 'selected' : ''}} > Booking</option>
+                                        <option value="Check In" {{Request::get('status') == 'Check In' ? 'selected' : ''}} > Check In</option>
                                     </select>
                                 </div>
                                 <div class="col-1">
@@ -33,9 +40,14 @@
                 </div>
             </div>
             <div class="row mt-3 ml-2 mb-3">
-                <div class="col-2">
+                <div class="col-1">
                     <a href="{{ url('transaksi/check-in') }}">
                         <button class="btn btn-sm btn-success">Check In</button>
+                    </a>
+                </div>
+                <div class="col-1">
+                    <a href="{{ url('transaksi/booking') }}">
+                        <button class="btn btn-sm btn-secondary">Booking</button>
                     </a>
                 </div>
             </div>
@@ -55,9 +67,9 @@
                     <th scope="col" class="sort" data-sort="name">#</th>
                     <th scope="col" class="sort" data-sort="budget">Nomor Kamar</th>
                     <th scope="col" class="sort" data-sort="name">Nama Tamu</th>
-                    <th scope="col" class="sort" data-sort="name">Status</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check In</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check Out</th>
+                    <th scope="col" class="sort" data-sort="name">Status</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -74,8 +86,8 @@
                             <td>{{$no}}</td>
                             <td>{{$no_kamar}}</td>
                             <td>{{$value->nama_tamu}}</td>
-                            <td>{{$value->tgl_checkin}}</td>
-                            <td>{{$value->tgl_checkout}}</td>
+                            <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
+                            <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>
                             <td>
                               @if ($value->status == 'Check In')
                                 <span class="badge badge-success">{{$value->status}}</span>
