@@ -8,7 +8,7 @@
     <meta name="author" content="Creative Tim">
     <title>{{isset($pageInfo) ? $pageInfo.' - ' : ''}}Baratha Coffee</title>
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('img/coffee.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('img/hotel.png') }}" type="image/png">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <!-- Icons -->

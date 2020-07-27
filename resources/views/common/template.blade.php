@@ -77,6 +77,25 @@
               </a>
             </li>
             @endif
+            
+            <li class="nav-item">
+              <a class="nav-link collapsed {{Request::segment(1) == 'master-kamar' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-kamar" aria-expanded='false'>
+                <i class="ni ni-building text-info"></i>
+                <span class="nav-link-text">Master Kamar</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="master-kamar">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-kamar/kategori-kamar')}}">
+                      <span class="nav-link-text">Kategori Kamar</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-kamar/kamar')}}">
+                      <span class="nav-link-text">Kamar</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
 
           </ul>
           <!-- Divider -->
@@ -327,7 +346,7 @@
         <div class="row align-items-center justify-content-lg-between">
           <div class="col-lg-6">
             <div class="copyright text-center  text-lg-left  text-muted">
-              &copy; 2020 <a href="https://limadigital.id/" class="font-weight-bold ml-1" target="_blank">Resto By Lima Digital</a>
+              &copy; 2020 <a href="https://limadigital.id/" class="font-weight-bold ml-1" target="_blank">Baratha Hotel By Lima Digital</a>
             </div>
           </div>
 <!--           <div class="col-lg-6">

@@ -23,6 +23,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('user/update-password/{id}', 'UserController@updatePassword')->name('user.update-password');
 
     Route::resource('user', 'UserController');
+    
+    Route::group(['prefix' => 'master-kamar'], function () {
+        Route::resource('kategori-kamar', 'KategoriKamarController');
+        Route::resource('kamar', 'KamarController');
+    });
 
     // new route here
 });
