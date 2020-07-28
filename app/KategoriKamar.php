@@ -12,4 +12,9 @@ class KategoriKamar extends Model
     {
         return $this->hasMany('App\Kamar');
     }
+
+    public function service()
+    {
+        return $this->belongsToMany('App\Service', 'kategori_kamar_service', 'id_kategori_kamar', 'id_service');
+    }
 }

@@ -53,8 +53,21 @@
                   @enderror
                   <br>
 
-                  <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
-                  <button class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
+                <label for="" class="form-control-label">Service</label>
+                <select name="id_service[]" id="id_service" class="form-control select2 @error('id_service') ? 'is-invalid' : '' @enderror" multiple>
+                    @foreach ($service as $item)
+                        <option value="{{$item->id}}" {{old('id_service') && in_array($item->id, old('id_service')) ? 'selected' : ''}}>{{$item->service}}</option>
+                    @endforeach
+                </select>
+                @error('id_service')
+                    <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                <br>
+                <br>
+                <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
+                <button class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
                 </div>
             </form>
         </div>

@@ -40,19 +40,18 @@
                 </div>
             </div>
             <div class="row mt-3 ml-2 mb-3">
-                <div class="col-1">
+                <div class="col-3">
                     <a href="{{ url('transaksi/check-in') }}">
                         <button class="btn btn-sm btn-success">Check In</button>
                     </a>
-                </div>
-                <div class="col-1">
-                    <a href="{{ url('transaksi/booking') }}">
+                    <a href="{{ url('transaksi/booking') }}" class="ml-4">
                         <button class="btn btn-sm btn-secondary">Booking</button>
                     </a>
                 </div>
+                {{-- <div class="col-1"> --}}
+                </div>
             </div>
             @if (session('status'))
-                <br>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('status') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -97,17 +96,30 @@
                             </td>
                             <td class="text-right">
                                 <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                <a class="dropdown-item" href="{{ route('transaksi.edit', $value->kode_transaksi) }}">Edit</a>
-                                <form action="{{ route('transaksi.destroy', $value->kode_transaksi) }}" method="post">
-                                @csrf
-                                @method('delete')
-                                <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">Hapus</button>
-                                </form>
-                                </div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                        <a class="dropdown-item" href="{{ route('transaksi.edit', $value->kode_transaksi) }}">Edit</a>
+                                        @if ($value->status == 'Check In' && $value->tgl_checkout == date('Y-m-d'))
+                                            <a class="dropdown-item" href="{{ route('transaksi.checkout', $value->kode_transaksi) }}">Check Out</a>
+                                        @elseIf($value->status == 'Booking' && $value->tgl_checkin == date('Y-m-d'))
+                                            <a class="dropdown-item" href="{{ route('transaksi.checkin-booking', $value->kode_transaksi) }}">Check In</a>
+                                        @endif
+                                        @if ($value->status == 'Check In')
+                                            <form action="{{ route('transaksi.destroy', $value->kode_transaksi) }}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">Hapus</button>
+                                            </form>
+                                        @elseif($value->status == 'Booking')
+                                            <form action="{{ route('transaksi.destroy', $value->kode_transaksi) }}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">Batal</button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
                             </td>
                         </tr>

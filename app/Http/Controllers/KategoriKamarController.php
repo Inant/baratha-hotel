@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\KategoriKamar;
+use \App\Service;
 
 class KategoriKamarController extends Controller
 {
@@ -17,10 +18,10 @@ class KategoriKamarController extends Controller
     {
         $keyword = $request->get('keyword');
         if($keyword){
-            $kategori = KategoriKamar::where('kategori_kamar', 'LIKE', "%$keyword%")->paginate(10);
+            $kategori = KategoriKamar::with('service')->where('kategori_kamar', 'LIKE', "%$keyword%")->paginate(10);
         }
         else{
-            $kategori = KategoriKamar::paginate(10);
+            $kategori = KategoriKamar::with('service')->paginate(10);
         }
 
         $this->param['pageInfo'] = 'List Data';
@@ -35,6 +36,7 @@ class KategoriKamarController extends Controller
         $this->param['pageInfo'] = 'Tambah Kategori Kamar';
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('kategori-kamar.index');
+        $this->param['service'] = Service::get();
 
         return view('master-kamar.kategori-kamar.tambah-kategori-kamar', $this->param);
     }
@@ -44,6 +46,7 @@ class KategoriKamarController extends Controller
         $validatedData = $request->validate([
             'kategori_kamar' => 'required|unique:kategori_kamar|max:30',
             'harga' => 'required|numeric',
+            'service.*' => 'required'
         ]);
 
         $newKategoriKamar = new KategoriKamar;
@@ -51,8 +54,9 @@ class KategoriKamarController extends Controller
         $newKategoriKamar->kategori_kamar = $request->get('kategori_kamar');
         $newKategoriKamar->harga = $request->get('harga');
         $newKategoriKamar->deskripsi = $request->get('deskripsi');
-
+        
         $newKategoriKamar->save();
+        $newKategoriKamar->service()->attach($request->get('id_service'));
 
         return redirect()->route('kategori-kamar.create')->withStatus('Data berhasil ditambahkan.');
     }
@@ -63,6 +67,8 @@ class KategoriKamarController extends Controller
         $this->param['pageInfo'] = 'Edit Kategori Kamar';
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('kategori-kamar.index');
+        $this->param['service'] = Service::get();
+        $this->param['selected'] = \DB::table('kategori_kamar_service')->select('id_service')->where('id_kategori_kamar' , $id)->get()->toArray();
 
         return view('master-kamar.kategori-kamar.edit-kategori-kamar', ['kategori' => $kategori], $this->param);
     }
@@ -75,6 +81,7 @@ class KategoriKamarController extends Controller
         $validatedData = $request->validate([
             'kategori_kamar' => 'required|max:30'.$isUnique,
             'harga' => 'required|numeric',
+            'service.*' => 'required'
         ]);
 
         $KategoriKamar->kategori_kamar = $request->get('kategori_kamar');
@@ -82,6 +89,7 @@ class KategoriKamarController extends Controller
         $KategoriKamar->deskripsi = $request->get('deskripsi');
 
         $KategoriKamar->save();
+        $KategoriKamar->service()->sync($request->get('id_service'));
 
         return redirect()->route('kategori-kamar.index')->withStatus('Data berhasil diperbarui.');
     }

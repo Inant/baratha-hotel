@@ -79,6 +79,25 @@
             @endif
             
             <li class="nav-item">
+              <a class="nav-link collapsed {{Request::segment(1) == 'master-service' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-service" aria-expanded='false'>
+                <i class="ni ni-support-16 text-purple"></i>
+                <span class="nav-link-text">Master Service</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="master-service">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-service/kategori-service')}}">
+                      <span class="nav-link-text">Kategori Service</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-service/service')}}">
+                      <span class="nav-link-text">Service</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'master-kamar' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-kamar" aria-expanded='false'>
                 <i class="ni ni-building text-info"></i>
                 <span class="nav-link-text">Master Kamar</span>

@@ -79,7 +79,7 @@ class TransaksiController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('transaksi.index');
         $this->param['kode_transaksi'] = $this->getKode();
-        $this->param['kamar'] = \DB::table('kamar')->whereNotIn('id', function($query){
+        $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function($query){
             $query->select('id_kamar')->from('transaksi')->whereIn('status', ['Check In', 'Booking']);
         })->orderBy('id','asc')->get();
 
@@ -92,7 +92,7 @@ class TransaksiController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('transaksi.index');
         $this->param['kode_transaksi'] = $this->getKode();
-        $this->param['kamar'] = \DB::table('kamar')->whereNotIn('id', function($query){
+        $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function($query){
             $query->select('id_kamar')->from('transaksi')->whereIn('status', ['Check In', 'Booking']);
         })->orderBy('id','asc')->get();
 
@@ -104,6 +104,24 @@ class TransaksiController extends Controller
         
     }
 
+    public function checkOut($kode)
+    {
+        $transaksi = Transaksi::find($kode);
+        $transaksi->status = 'Check Out';
+        $transaksi->save();
+
+        return redirect()->route('transaksi.pembayaran', ['kode' => $kode]);
+    }
+
+    public function checkInBooking($kode)
+    {
+        $transaksi = Transaksi::find($kode);
+        $transaksi->status = 'Check In';
+        $transaksi->save();
+
+        return redirect()->back()->withStatus('Berhasil Check In.');
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -111,7 +129,7 @@ class TransaksiController extends Controller
             'jenis_identitas' => 'required',
             'no_identitas' => 'required',
             'tgl_checkin' => 'required|date',
-            'tgl_checkout' => 'required|date',
+            'tgl_checkout' => 'required|date|after:tgl_checkin',
             'id_kamar' => 'required|numeric',
         ]);
 
@@ -130,51 +148,59 @@ class TransaksiController extends Controller
 
         $newCheckIn->save();
 
+        $kamar = Kamar::find($request->get('id_kamar'));
+        $kamar->status = 'Tidak Tersedia';
+        $kamar->save();
+
         return redirect()->back()->withStatus('Data berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function pembayaran($kode)
     {
-        //
+        
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit($kode)
     {
-        //
+        $this->param['pageInfo'] = 'Edit Transaksi';
+        $this->param['btnRight']['text'] = 'Lihat Data';
+        $this->param['btnRight']['link'] = route('transaksi.index');
+        $this->param['kamar'] = \DB::table('kamar')->get();
+
+        $this->param['transaksi'] = Transaksi::findOrFail($kode);
+
+        return view('transaksi.transaksi.edit-transaksi', $this->param);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, $kode)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_tamu' => 'required',
+            'jenis_identitas' => 'required',
+            'no_identitas' => 'required',
+            'tgl_checkin' => 'required|date',
+            'tgl_checkout' => 'required|date|after:tgl_checkin',
+            'id_kamar' => 'required|numeric',
+        ]);
+
+        $transaksi = Transaksi::findOrFail($kode);
+        $transaksi->nama_tamu = $request->get('nama_tamu');
+        $transaksi->jenis_identitas = $request->get('jenis_identitas');
+        $transaksi->no_identitas = $request->get('no_identitas');
+        $transaksi->id_kamar = $request->get('id_kamar');
+        $transaksi->tgl_checkin = $request->get('tgl_checkin');
+        $transaksi->tgl_checkout = $request->get('tgl_checkout');
+
+        $transaksi->save();
+
+        return redirect()->route('transaksi.index')->withStatus('Data berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy($kode)
     {
-        //
+        $transaksi = Transaksi::findOrFail($kode);
+        $transaksi->delete();
+
+        return redirect()->route('transaksi.index')->withStatus('Data berhasil dihapus.');
     }
 }

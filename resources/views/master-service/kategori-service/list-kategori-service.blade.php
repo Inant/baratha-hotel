@@ -39,10 +39,7 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="name">#</th>
-                    <th scope="col" class="sort" data-sort="budget">Kategori Kamar</th>
-                    <th scope="col" class="sort" data-sort="budget">Tarif</th>
-                    <th scope="col" class="sort" data-sort="budget">Deskripsi</th>
-                    <th scope="col" class="sort" data-sort="budget">Service</th>
+                    <th scope="col" class="sort" data-sort="budget">Kategori Service</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -51,37 +48,24 @@
                     $page = Request::get('page');
                     $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                   @endphp
-                  @foreach ($kategori_kamar as $value)
+                  @foreach ($kategori as $value)
                       <tr>
                         <td>{{$no}}</td>
-                        <td>{{$value->kategori_kamar}}</td>
-                        <td>{{number_format($value->harga, 0, ',', '.')}}</td>
-                        <td>{{$value->deskripsi}}</td>
-                        <td>
-                          @php
-                            $lg = count($value->service);
-                            // echo $lg;
-                          @endphp
-                          @foreach ($value->service as $key => $item)
-                            {{$item->service}}
-                            {{$key + 1 < $lg ? ', ':''}}
-                          @endforeach
-                        </td>
+                        <td>{{$value->kategori}}</td>
                         <td class="text-right">
                           <div class="dropdown">
                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                              <a class="dropdown-item" href="{{ route('kategori-kamar.edit', $value->id) }}">Edit</a>
-                              {{--<form action="{{ route('kategori-menu.destroy', $value->id_kategori_menu) }}" method="post">
+                              <a class="dropdown-item" href="{{ route('kategori-service.edit', $value->id) }}">Edit</a>
+                              {{-- <form action="{{ route('kategori-service.destroy', $value->id) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">
                                   Hapus
                                 </button>
-                              </form>--}}
-                              
+                              </form> --}}
                             </div>
                           </div>
                         </td>
@@ -92,7 +76,7 @@
                   @endforeach
                 </tbody>
               </table>
-              {{$kategori_kamar->appends(Request::all())->links()}}
+              {{$kategori->appends(Request::all())->links()}}
             </div>
          </div>
     </div>
