@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Transaksi;
 use \App\Kamar;
+use \App\Pembayaran;
 use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
@@ -28,7 +29,7 @@ class TransaksiController extends Controller
                     ->join(\DB::raw('transaksi t'), 'k.id', '=', 't.id_kamar')
                     ->where('t.status', '!=', 'Check Out')
                     ->get();
-        $transaksi =Transaksi::where('status', '!=', 'Check Out');
+        $transaksi =Transaksi::with('kamar')->where('status', '!=', 'Check Out');
 
         if($keyword){
             $transaksi->where('nama_tamu', 'LIKE',"%$keyword%");
@@ -155,11 +156,6 @@ class TransaksiController extends Controller
         return redirect()->back()->withStatus('Data berhasil ditambahkan.');
     }
 
-    public function pembayaran($kode)
-    {
-        
-    }
-
     public function edit($kode)
     {
         $this->param['pageInfo'] = 'Edit Transaksi';
@@ -202,5 +198,43 @@ class TransaksiController extends Controller
         $transaksi->delete();
 
         return redirect()->route('transaksi.index')->withStatus('Data berhasil dihapus.');
+    }
+
+    public function pembayaran($kode)
+    {
+        $this->param['pageInfo'] = 'Pembayaran';
+        $this->param['btnRight']['text'] = 'Lihat Data';
+        $this->param['btnRight']['link'] = route('transaksi.index');
+
+        $this->param['transaksi'] = Transaksi::with('kamar')->findOrFail($kode);
+
+        return view('transaksi.pembayaran.pembayaran', $this->param);
+    }
+
+    public function savePembayaran(Request $request)
+    {
+        $validatedData = $request->validate([
+            'bayar' => 'required|numeric|gte:grandtotal',
+            'jenis_pembayaran' => 'required'
+        ]);
+
+        $newPembayaran = new Pembayaran;
+        $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
+        $newPembayaran->waktu = date('Y-m-d H:i:s');
+        $newPembayaran->jenis_pembayaran = $request->get('jenis_pembayaran');
+        $newPembayaran->total = $request->get('total');
+        $newPembayaran->diskon = $request->get('diskon');
+        $newPembayaran->tax = 0;
+        $newPembayaran->charge = $request->get('charge');
+        $newPembayaran->grandtotal = $request->get('grandtotal');
+        $newPembayaran->bayar = $request->get('bayar');
+
+        $newPembayaran->save();
+
+        $transaksi = Transaksi::find($request->get('kode_transaksi'));
+        $transaksi->status_bayar = 'Sudah';
+        $transaksi->save();
+
+        return redirect()->route('transaksi.index')->withStatus('Data berhasil disimpan.');
     }
 }

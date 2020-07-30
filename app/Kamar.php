@@ -15,6 +15,6 @@ class Kamar extends Model
 
     public function transaksi()
     {
-        return $this->hasOne('App\Transaksi', 'id_kamar');
+        return $this->hasMany('App\Transaksi', 'id_kamar');
     }
 }

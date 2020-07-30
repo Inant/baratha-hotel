@@ -22,7 +22,6 @@ class KategoriServiceController extends Controller
         else{
             $kategori = KategoriService::paginate(10);
         }
-
         $this->param['pageInfo'] = 'List Data';
         $this->param['btnRight']['text'] = 'Tambah Data';
         $this->param['btnRight']['link'] = route('kategori-service.create');

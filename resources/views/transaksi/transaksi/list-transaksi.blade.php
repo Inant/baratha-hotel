@@ -49,7 +49,7 @@
                     </a>
                 </div>
                 {{-- <div class="col-1"> --}}
-                </div>
+                {{-- </div> --}}
             </div>
             @if (session('status'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -78,12 +78,9 @@
                     $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                     @endphp
                     @foreach ($transaksi as $value)
-                        @php
-                            $no_kamar = App\Kamar::select('no_kamar')->where('id', $value->id_kamar)->get()[0]->no_kamar;
-                        @endphp
                         <tr>
                             <td>{{$no}}</td>
-                            <td>{{$no_kamar}}</td>
+                            <td>{{$value->kamar->no_kamar}}</td>
                             <td>{{$value->nama_tamu}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>
@@ -101,9 +98,9 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                         <a class="dropdown-item" href="{{ route('transaksi.edit', $value->kode_transaksi) }}">Edit</a>
-                                        @if ($value->status == 'Check In' && $value->tgl_checkout == date('Y-m-d'))
+                                        @if ($value->status == 'Check In' && $value->tgl_checkout <= date('Y-m-d'))
                                             <a class="dropdown-item" href="{{ route('transaksi.checkout', $value->kode_transaksi) }}">Check Out</a>
-                                        @elseIf($value->status == 'Booking' && $value->tgl_checkin == date('Y-m-d'))
+                                        @elseIf($value->status == 'Booking' && $value->tgl_checkin <= date('Y-m-d'))
                                             <a class="dropdown-item" href="{{ route('transaksi.checkin-booking', $value->kode_transaksi) }}">Check In</a>
                                         @endif
                                         @if ($value->status == 'Check In')

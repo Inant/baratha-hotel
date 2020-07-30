@@ -12,6 +12,11 @@ class Transaksi extends Model
 
     public function kamar()
     {
-        return $this->hasOne('App\Kamar', 'id');
+        return $this->belongsTo('App\Kamar', 'id_kamar');
+    }
+
+    public function pembayaran()
+    {
+        return $this->hasOne('App\Pembayaran', 'kode_transaksi');
     }
 }
