@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', 'UserController');
     
     Route::group(['prefix' => 'master-kamar'], function () {
+        Route::get('kategori-kamar/foto/addFoto', 'KategoriKamarController@addFoto');
         Route::resource('kategori-kamar', 'KategoriKamarController');
         Route::resource('kamar', 'KamarController');
     });

@@ -67,7 +67,17 @@
                     @enderror
                     <br>
                     <br>
-
+                    <label for="" class="form-control-label">Foto</label>
+                    <br>
+                    @php
+                        $allFoto = explode('|', $kategori->foto);
+                    @endphp
+                    @foreach ($allFoto as $foto)
+                        
+                        <img src="{{ asset('img/foto-kamar').'/'.$foto }}" alt="" width="200px" height="100px">
+                    @endforeach
+                    <br>
+                    <br>
                   <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
                 </div>

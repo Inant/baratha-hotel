@@ -54,7 +54,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost/baratha-hotel'),
 
-    'asset_url' => env('ASSET_URL', 'http://localhost/baratha-hotel/public/assets/'),
+    'asset_url' => env('ASSET_URL', 'http://localhost/baratha-hotel/public/assets'),
 
     /*
     |--------------------------------------------------------------------------

@@ -23,7 +23,7 @@
                     @endif
                 </div>
             </div>
-            <form action="{{ route('kategori-kamar.store') }}" method="POST">
+            <form action="{{ route('kategori-kamar.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                   <label for="" class="form-control-label">Kategori Kamar</label>
@@ -46,7 +46,7 @@
 
                   <label for="" class="form-control-label">Deskripsi</label>
                   <textarea name="deskripsi" id="deskripsi" class="form-control @error('kategori_kamar') is-invalid @enderror">{{old('deskripsi', '-')}}</textarea>
-                  @error('harga')
+                  @error('deskripsi')
                       <span class="invalid-feedback" role="alert">
                       <strong>{{ $message }}</strong>
                       </span>
@@ -65,6 +65,17 @@
                     </span>
                 @enderror
                 <br>
+                <br>
+
+                <div class="pl-lg-4" id="urlAddFoto" data-url="{{url('master-kamar/kategori-kamar/foto/addFoto')}}">
+                    @if (!is_null(old('foto')))
+                      @foreach (old('foto') as $n => $value)
+                        @php $no++ @endphp
+                        @include('master-kamar.kategori-kamar.tambah-foto', ['hapus' => false, 'no' => $no])
+                      @endforeach
+                    @endif
+                      @include('master-kamar.kategori-kamar.tambah-foto', ['hapus' => false, 'no' => 1])
+                </div>
                 <br>
                 <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                 <button class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>

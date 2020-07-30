@@ -111,4 +111,63 @@ $(document).ready(function() {
         var thisVal = $(this).val();
         getCharge(thisVal);
     });
+
+    function addFoto(thisParam) {
+        var biggestNo = 0; //setting awal No/Id terbesar
+        $(".row-detail").each(function() {
+            var currentNo = parseInt($(this).attr("data-no"));
+            if (currentNo > biggestNo) {
+                biggestNo = currentNo;
+            }
+        }); //mencari No teresar
+
+        var next = parseInt(biggestNo) + 1; // No selanjutnya ketika ditambah field baru
+        var thisNo = thisParam.data("no"); // No pada a href
+        var url = $("#urlAddFoto").data("url");
+        $.ajax({
+            type: "get",
+            url: url,
+            data: { biggestNo: biggestNo },
+            beforeSend: function() {
+                $(".loading").addClass("show");
+            },
+            success: function(response) {
+                $(".loading").removeClass("show");
+                $(".row-detail[data-no='" + thisNo + "']").after(response);
+
+                $(".addFoto[data-no='" + next + "']").click(function(e) {
+                    e.preventDefault();
+                    addFoto($(this));
+                });
+
+                $(".deleteFoto").click(function(e) {
+                    e.preventDefault();
+                    deleteFoto($(this));
+                });
+            }
+        });
+    }
+    $(".addFoto").click(function(e) {
+        e.preventDefault();
+        addFoto($(this));
+    });
+    function deleteFoto(thisParam) {
+        var delNo = thisParam.data("no");
+        var parent = ".row-detail[data-no='" + delNo + "']";
+        var idFoto = $(parent + " .idFoto").val();
+        if (thisParam.hasClass("addDeleteId") && idFoto != 0) {
+            $(".idDelete").append(
+                "<input type='hidden' name='id_delete[]' value='" +
+                    idFoto +
+                    "'>"
+            );
+        }
+        $(parent).remove();
+        getTotal();
+        getTotalQty(thisParam);
+    }
+    $(".deleteFoto").click(function(e) {
+        e.preventDefault();
+        deleteFoto($(this));
+    });
 });

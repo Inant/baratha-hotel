@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\KategoriKamar;
 use \App\Service;
+use \App\FotoKategori;
 
 class KategoriKamarController extends Controller
 {
@@ -46,7 +47,7 @@ class KategoriKamarController extends Controller
         $validatedData = $request->validate([
             'kategori_kamar' => 'required|unique:kategori_kamar|max:30',
             'harga' => 'required|numeric',
-            'service.*' => 'required'
+            'service.*' => 'required',
         ]);
 
         $newKategoriKamar = new KategoriKamar;
@@ -54,6 +55,24 @@ class KategoriKamarController extends Controller
         $newKategoriKamar->kategori_kamar = $request->get('kategori_kamar');
         $newKategoriKamar->harga = $request->get('harga');
         $newKategoriKamar->deskripsi = $request->get('deskripsi');
+
+        if($request->file('foto')){
+            $allFoto = "";
+            $foto = $request->file('foto');
+            $lg = count($foto);
+            foreach ($foto as $key => $value) {
+                $pathUpload = 'public/assets/img/foto-kamar';
+                $foto[$key]->move($pathUpload,time().".".$foto[$key]->getClientOriginalName());
+                $namaFoto = time().".".$foto[$key]->getClientOriginalName();
+                // $menu->foto = $namaFoto;
+                $allFoto .= $namaFoto;
+                $key + 1 < $lg ? $allFoto.='|':'';
+            }
+        $newKategoriKamar->foto = $allFoto;
+        }
+        else{
+            $newKategoriKamar->foto = 'kamar-default.png';
+        }
         
         $newKategoriKamar->save();
         $newKategoriKamar->service()->attach($request->get('id_service'));
@@ -100,5 +119,14 @@ class KategoriKamarController extends Controller
         $KategoriKamar->delete();
 
         return redirect()->route('kategori-kamar.index')->withStatus('Data berhasil dihapus.');
+    }
+
+    public function addFoto()
+    {
+        $fields = array(
+            'foto' => 'foto',
+        );
+        $next = $_GET['biggestNo']+1;
+        return view('master-kamar.kategori-kamar.tambah-foto', ['hapus' => true, 'no' => $next, 'fields' => $fields, 'idFoto' => '0']);
     }
 }
