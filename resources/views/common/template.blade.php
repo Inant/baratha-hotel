@@ -127,6 +127,11 @@
                       <span class="nav-link-text">Transaksi</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/laporan?tipe=general')}}">
+                      <span class="nav-link-text">Laporan</span>
+                    </a>
+                  </li>
                   {{-- <li class="nav-item">
                     <a class="nav-link" href="{{url('transaksi/pembayaran')}}">
                       <span class="nav-link-text">Pembayaran</span>

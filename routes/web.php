@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('checkin-booking/{kode}', 'TransaksiController@checkInBooking')->name('transaksi.checkin-booking');
         Route::get('pembayaran/{kode}', 'TransaksiController@pembayaran')->name('transaksi.pembayaran');
         Route::get('pembayaran/{kode}', 'TransaksiController@pembayaran')->name('transaksi.pembayaran');
+        Route::get('laporan', 'TransaksiController@laporan');
         Route::post('save-pembayaran', 'TransaksiController@savePembayaran')->name('transaksi.save-pembayaran');
         Route::resource('transaksi', 'TransaksiController');
     });

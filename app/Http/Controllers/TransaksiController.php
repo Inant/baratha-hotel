@@ -237,4 +237,47 @@ class TransaksiController extends Controller
 
         return redirect()->route('transaksi.index')->withStatus('Data berhasil disimpan.');
     }
+
+    public function getLaporanGeneral($dari, $sampai, $tipe='')
+    {
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 't.nama_tamu', 't.id_kamar', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran','k.no_kamar')
+        ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
+        ->join(\DB::raw('kamar k'), 'k.id', '=', 't.id_kamar')
+        ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+        ->where('t.status_bayar', 'Sudah');
+        if ($tipe) {
+            $laporan->where('p.jenis_pembayaran', 'LIKE', "%$tipe");
+        }
+        return $laporan->get();
+    }
+
+    public function getKamarFavorit($dari, $sampai)
+    {
+        if($dari && $sampai){
+            $laporan = \DB::table(\DB::raw('transaksi t'))
+                        ->select('k.no_kamar', \DB::raw('COUNT(t.id_kamar) as jml'))
+                        ->join(\DB::raw('kamar k'), 'k.id', '=', 't.id_kamar')
+                        ->whereBetween('waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+                        ->groupBy('t.id_kamar')
+                        ->orderBy(\DB::raw('jml'))
+                        ->get();
+        }
+        return $laporan;
+    }
+
+    public function laporan()
+    {
+        $this->param['pageInfo'] = 'Laporan';
+        // $this->param['btnRight']['text'] = 'Tambah Penjualan';
+        // $this->param['btnRight']['link'] = route('penjualan.create');
+        if(isset($_GET['dari']) && isset($_GET['sampai'])){
+            if($_GET['tipe']=='general'){
+                $this->param['laporan'] = $this->getLaporanGeneral($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
+            }
+            else if($_GET['tipe']=='kamar-favorit'){
+                $this->param['laporan'] = $this->getKamarFavorit($_GET['dari'], $_GET['sampai']);
+            }
+        }
+        return view('transaksi.laporan.laporan', $this->param);
+    }
 }
