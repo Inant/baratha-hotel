@@ -59,20 +59,53 @@
                                   $month = date('m');
                                   $year = date('Y');
                                   $current = $year.'-'.$month.'-'.$tgl;
-                                  $cek = \DB::table('transaksi')
-                                  ->select('status')
+                                  $checkIn = \DB::table('transaksi')
                                   ->where('id_kamar', $val->id)
                                   ->where('tgl_checkin', '<=', $current)
                                   ->where('tgl_checkout', '>=', $current)
+                                  ->where('status', 'Check In')
                                   ->count();
+
+                                  $booking = \DB::table('transaksi')
+                                  ->where('id_kamar', $val->id)
+                                  ->where('tgl_checkin', '<=', $current)
+                                  ->where('tgl_checkout', '>=', $current)
+                                  ->where('status', 'Booking')
+                                  ->count();
+
+                                  if ($checkIn == 1) {
+                                    $class = 'bg-red';
+                                  }
+                                  elseif ($booking == 1) {
+                                    $class = 'bg-yellow';
+                                  }
+                                  else{
+                                    $class = 'bg-success';
+                                  }
                                 @endphp
-                                <td class="text-white {{$cek == 1 ? 'bg-red' : 'bg-success'}}">{{$i < 10 ? '0'.$i : $i}}</td>
+                                <td class="text-white {{$class}}">{{$i < 10 ? '0'.$i : $i}}</td>
                               @endfor
                             </tr>
                         @endforeach
                       </tbody>
                     </table>
                   </div>
+                  <br>
+                  <table>
+                    <tr>
+                      <td class="bg-red" width="25px"></td>
+                      <td></td>
+                      <td>Check In</td>
+
+                      <td class="bg-yellow" width="25px"></td>
+                      <td></td>
+                      <td>Booking</td>
+                      
+                      <td class="bg-success" width="25px"></td>
+                      <td></td>
+                      <td>Available</td>
+                    </tr>
+                  </table>
                 @endif
             </div>
         </div>
