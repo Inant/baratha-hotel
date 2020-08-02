@@ -111,4 +111,19 @@ class KamarController extends Controller
 
         return redirect()->route('kamar.index')->withStatus('Data berhasil dihapus.');
     }
+
+    public function reservationChart()
+    {
+        $dari = date('Y-m-d');
+        if (isset($_GET['dari'])) {
+            $dari = $_GET['dari'];
+        }
+
+        $this->param['pageInfo'] = 'Edit Kamar';
+        $this->param['dari'] = $dari;
+        $this->param['kamar'] = Kamar::get();
+        // $this->param['btnRight']['text'] = 'Lihat Data';
+        // $this->param['btnRight']['link'] = route('kamar.index');
+        return view('master-kamar.kamar.reservation-chart', $this->param);
+    }
 }

@@ -170,4 +170,33 @@ $(document).ready(function() {
         e.preventDefault();
         deleteFoto($(this));
     });
+
+    $('#tgl_checkout').change(function (e) {  
+        $('#id_kamar')
+        .find('option')
+        .remove()
+        .end()
+        .append('<option value="">Pilih Kamar</option>');
+
+        var url = $('#id_kamar').data("url");
+        var tgl_checkin = $('#tgl_checkin').val();
+        var tgl_checkout = $(this).val();
+        $.ajax({
+            type: "get",
+            url: url,
+            data: { tgl_checkin: tgl_checkin, tgl_checkout: tgl_checkout },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                $.each(data, function(i, item) {
+                    // alert(item.id);
+                    $('#id_kamar').append(
+                        "<option value='" +
+                        item.id +
+                            "'> " + item.no_kamar +" </option>"
+                    );
+                });
+            }
+        });
+    });
 });

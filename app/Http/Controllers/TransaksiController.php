@@ -100,9 +100,21 @@ class TransaksiController extends Controller
         return \view('transaksi.transaksi.booking', $this->param);
     }
 
-    public function getKamarTersedia($tgl_checkin, $tgl_checkout)
+    public function getKamarTersedia()
     {
-        
+        $tgl_checkin = $_GET['tgl_checkin'];
+        $tgl_checkout = $_GET['tgl_checkout'];
+        $kamar = \DB::table('kamar AS k')
+                        ->select('k.id', 'k.no_kamar')
+                        ->whereNotIn('id', function($query) use ($tgl_checkin, $tgl_checkout){
+                            $query->select('id_kamar')->from('transaksi')
+                            ->whereBetween('tgl_checkin', [$tgl_checkin, $tgl_checkout])
+                            ->orWhereBetween('tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                            ->where('status', '!=', 'Check Out');
+                        })
+                        ->orderBy('id', 'asc')
+                        ->get();
+        return json_encode($kamar);
     }
 
     public function checkOut($kode)

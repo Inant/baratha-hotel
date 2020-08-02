@@ -23,7 +23,7 @@
                     @endif
                 </div>
             </div>
-            <form action="{{ route('kategori-kamar.update', $kategori->id) }}" method="POST">
+            <form action="{{ route('kategori-kamar.update', $kategori->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="card-body">
@@ -72,11 +72,25 @@
                     @php
                         $allFoto = explode('|', $kategori->foto);
                     @endphp
-                    @foreach ($allFoto as $foto)
-                        
-                        <img src="{{ asset('img/foto-kamar').'/'.$foto }}" alt="" width="200px" height="100px">
-                    @endforeach
+                    <div class="row">
+                        <div class="col-12">
+                            @foreach ($allFoto as $foto)
+                                <img src="{{ asset('img/foto-kamar').'/'.$foto }}" alt="" width="220px" height="150px">
+                            @endforeach
+                        </div>
+                    </div>
                     <br>
+                    <br>
+                    <div class="pl-lg-4" id="urlAddFoto" data-url="{{url('master-kamar/kategori-kamar/foto/addFoto')}}">
+                        @if (!is_null(old('foto')))
+                          @foreach (old('foto') as $n => $value)
+                            @php $no++ @endphp
+                            @include('master-kamar.kategori-kamar.tambah-foto', ['hapus' => false, 'no' => $no])
+                          @endforeach
+                        @endif
+                          @include('master-kamar.kategori-kamar.tambah-foto', ['hapus' => false, 'no' => 1])
+                          <h5 class="text-muted">*abaikan jika tidak ingin mengubah foto</h5>
+                    </div>
                     <br>
                   <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>

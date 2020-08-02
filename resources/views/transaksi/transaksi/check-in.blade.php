@@ -81,23 +81,8 @@
                     @enderror
                     <br>
 
-                    <label for="" class="form-control-label">Nomor Kamar</label>
-                    <select name="id_kamar" id="id_kamar" class="form-control select2">
-                        <option value="">--Pilih Kamar--</option>
-                        @foreach ($kamar as $item)
-                            <option value="{{$item->id}}">{{$item->no_kamar}}</option>
-                        @endforeach
-                    </select>
-                    @error('id_kamar')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                    <br>
-                    <br>
-
                     <label for="" class="form-control-label">Tanggal Check In</label>
-                    <input type="date" name="tgl_checkin" value="{{old('tgl_checkin', date('Y-m-d'))}}" class="form-control datepicker @error('tgl_checkin') is-invalid @enderror">
+                    <input type="date" name="tgl_checkin" value="{{old('tgl_checkin', date('Y-m-d'))}}" class="form-control datepicker @error('tgl_checkin') is-invalid @enderror" id="tgl_checkin">
                     @error('tgl_checkin')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -106,12 +91,24 @@
                     <br>
 
                     <label for="" class="form-control-label">Tanggal Check Out</label>
-                    <input type="date" name="tgl_checkout" value="{{old('tgl_checkout')}}" class="form-control datepicker @error('tgl_checkout') is-invalid @enderror">
+                    <input type="date" name="tgl_checkout" value="{{old('tgl_checkout')}}" class="form-control datepicker @error('tgl_checkout') is-invalid @enderror" id="tgl_checkout">
                     @error('tgl_checkout')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                    <br>
+
+                    <label for="" class="form-control-label">Nomor Kamar</label>
+                    <select name="id_kamar" id="id_kamar" class="form-control select2" required data-url="{{url('transaksi/get-kamar')}}">
+                        <option value="">--Pilih Kamar--</option>
+                    </select>
+                    @error('id_kamar')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    <br>
                     <br>
 
                     <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

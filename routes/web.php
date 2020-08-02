@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::group(['prefix' => 'master-kamar'], function () {
         Route::get('kategori-kamar/foto/addFoto', 'KategoriKamarController@addFoto');
+        Route::get('reservation-chart', 'KamarController@reservationChart');
         Route::resource('kategori-kamar', 'KategoriKamarController');
         Route::resource('kamar', 'KamarController');
     });
@@ -44,6 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('pembayaran/{kode}', 'TransaksiController@pembayaran')->name('transaksi.pembayaran');
         Route::get('laporan', 'TransaksiController@laporan');
         Route::post('save-pembayaran', 'TransaksiController@savePembayaran')->name('transaksi.save-pembayaran');
+        Route::get('get-kamar', 'TransaksiController@getKamarTersedia');
         Route::resource('transaksi', 'TransaksiController');
     });
 

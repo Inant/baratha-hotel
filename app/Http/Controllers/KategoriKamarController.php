@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use \App\KategoriKamar;
 use \App\Service;
@@ -62,8 +62,8 @@ class KategoriKamarController extends Controller
             $lg = count($foto);
             foreach ($foto as $key => $value) {
                 $pathUpload = 'public/assets/img/foto-kamar';
-                $foto[$key]->move($pathUpload,time().".".$foto[$key]->getClientOriginalName());
                 $namaFoto = time().".".$foto[$key]->getClientOriginalName();
+                $foto[$key]->move($pathUpload,$namaFoto);
                 // $menu->foto = $namaFoto;
                 $allFoto .= $namaFoto;
                 $key + 1 < $lg ? $allFoto.='|':'';
@@ -96,7 +96,7 @@ class KategoriKamarController extends Controller
     {
         $KategoriKamar = KategoriKamar::findOrFail($id);
         $isUnique = $KategoriKamar->kategori_kamar == $request->get('kategori_kamar') ? "" : "|unique:kategori_kamar";
-
+        $kamar = explode('|', $KategoriKamar->foto);
         $validatedData = $request->validate([
             'kategori_kamar' => 'required|max:30'.$isUnique,
             'harga' => 'required|numeric',
@@ -106,6 +106,30 @@ class KategoriKamarController extends Controller
         $KategoriKamar->kategori_kamar = $request->get('kategori_kamar');
         $KategoriKamar->harga = $request->get('harga');
         $KategoriKamar->deskripsi = $request->get('deskripsi');
+        
+        if($request->file('foto')){
+            if ($kamar != 'kamar-default.png') {
+                foreach ($kamar as $key => $value) {
+                    $file_path = asset('img/foto-kamar').'/'. $value;
+                    Storage::delete($file_path);
+                }
+            }
+            $allFoto = "";
+            $foto = $request->file('foto');
+            $lg = count($foto);
+            foreach ($foto as $key => $value) {
+                $pathUpload = 'public/assets/img/foto-kamar';
+                $namaFoto = time().".".$foto[$key]->getClientOriginalName();
+                $foto[$key]->move($pathUpload, $namaFoto);
+                // $menu->foto = $namaFoto;
+                $allFoto .= $namaFoto;
+                $key + 1 < $lg ? $allFoto.='|':'';
+            }
+        $KategoriKamar->foto = $allFoto;
+        }
+        // else{
+        //     $KategoriKamar->foto = 'kamar-default.png';
+        // }
 
         $KategoriKamar->save();
         $KategoriKamar->service()->sync($request->get('id_service'));
