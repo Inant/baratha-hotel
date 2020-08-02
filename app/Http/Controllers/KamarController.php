@@ -119,7 +119,7 @@ class KamarController extends Controller
             $dari = $_GET['dari'];
         }
 
-        $this->param['pageInfo'] = 'Edit Kamar';
+        $this->param['pageInfo'] = 'Reservation Chart';
         $this->param['dari'] = $dari;
         $this->param['kamar'] = Kamar::get();
         // $this->param['btnRight']['text'] = 'Lihat Data';
