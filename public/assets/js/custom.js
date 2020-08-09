@@ -41,7 +41,7 @@ $(document).ready(function() {
         return rupiah;
     }
 
-    $('#tax').val(parseInt($("#total").val()) * 10 /100);
+    // $('#tax').val(parseInt($("#total").val()) * 10 /100);
 
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());

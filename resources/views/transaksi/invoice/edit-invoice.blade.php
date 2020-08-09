@@ -63,13 +63,24 @@
                       </tr>
                     </thead>
                     <tbody class="list">
-                    @php 
-                      $subtotal = 0;
+                      @php                       
                       $kamar = \App\Kamar::with('kategori')->where('id', $transaksi->id_kamar)->get()[0];
                       $diff = strtotime($transaksi->tgl_checkout) - strtotime($transaksi->tgl_checkin);
                       $durasi = abs(round($diff / 86400));
                       $subtotal = $durasi * $kamar->kategori->harga;
                       $tax = $subtotal * 10 /100;
+                      $diskon = 0;
+
+                      $cekPembayaran = \App\Pembayaran::where('kode_transaksi', $transaksi->kode_transaksi)->count();
+                      if ($cekPembayaran > 0) {
+                        $pembayaran = \App\Pembayaran::select('total', 'diskon', 'tax', 'charge', 'grandtotal', 'jenis_pembayaran')->where('kode_transaksi', $transaksi->kode_transaksi)->get()[0];
+                        $subtotal = $pembayaran->total;
+                        $diskon = $pembayaran->diskon;
+                        $tax = $pembayaran->tax;
+                        $charge = $pembayaran->charge;
+                        $grandtotal = $pembayaran->grandtotal;
+                        $jenis_pembayaran = $pembayaran->jenis_pembayaran;
+                      }
                     @endphp
                       <tr>
                         <td>{{$kamar->kategori->kategori_kamar}}</td>
@@ -95,7 +106,7 @@
                     <input type="hidden" name="total" id="total" class="form-control" value="{{$subtotal}}" readonly>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
-                      <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', 0)}}" data-tipe='rp'>
+                      <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', $diskon)}}" data-tipe='rp'>
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>PPN 10%</strong></label>
@@ -104,11 +115,11 @@
                     <div class="col-4 mb-2">
                       <label for=""><strong>Metode Pembayaran</strong></label>
                       <select name="jenis_pembayaran" class="form-control select2 @error('bayar') is-invalid @enderror" id="jenis_bayar">
-                        <option value="Tunai" {{old('jenis_pembayaran') == 'Tunai' ? 'selected' : ''}}>Tunai</option>
-                        <option value="Debit BCA" {{old('jenis_pembayaran') == 'Debit BCA' ? 'selected' : ''}}>Debit BCA</option>
-                        <option value="Debit BRI" {{old('jenis_pembayaran') == 'Debit BRI' ? 'selected' : ''}}>Debit BRI</option>
-                        <option value="Kredit BCA" {{old('jenis_pembayaran') == 'Kredit BCA' ? 'selected' : ''}}>Kredit BCA</option>
-                        <option value="Kredit BRI" {{old('jenis_pembayaran') == 'Kredit BRI' ? 'selected' : ''}}>Kredit BRI</option>
+                        <option value="Tunai" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Tunai' ? 'selected' : ''}}>Tunai</option>
+                        <option value="Debit BCA" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Debit BCA' ? 'selected' : ''}}>Debit BCA</option>
+                        <option value="Debit BRI" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Debit BRI' ? 'selected' : ''}}>Debit BRI</option>
+                        <option value="Kredit BCA" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Kredit BCA' ? 'selected' : ''}}>Kredit BCA</option>
+                        <option value="Kredit BRI" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Kredit BRI' ? 'selected' : ''}}>Kredit BRI</option>
                       </select>
                       @error('jenis_pembayaran')
                         <span class="invalid-feedback" role="alert">
@@ -118,20 +129,9 @@
                     </div>                    
                     
                     <div class="col-4 mb-2">
-                      <div id="debit_only">
-                        <label for=""><strong>Nomor Kartu</strong></label>
-                        <input type="number" name="no_kartu" id="no_kartu" class="form-control" value="{{old('no_kartu')}}">
-                        {{-- @error('jenis_pembayaran')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror --}}
-                      </div>
-                    </div>
-                    <div class="col-4 mb-2">
                       <div id="">
                         <label for=""><strong>Charge</strong></label>
-                        <input type="number" name="charge" id="charge" class="form-control" value="{{old('charge', 0)}}" readonly>
+                        <input type="number" name="charge" id="charge" class="form-control" value="{{old('charge', $charge)}}" readonly>
                         {{-- @error('jenis_pembayaran')
                           <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -149,8 +149,8 @@
                     </div> --}}
                     {{-- <div class="col-4"></div> --}}
                     <div class="col-md-4 mt-4">
-                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($subtotal + $tax,0,',','.')}}</span></h1>
-                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$subtotal + $tax}}">
+                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($grandtotal,0,',','.')}}</span></h1>
+                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$grandtotal}}">
                     </div>
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

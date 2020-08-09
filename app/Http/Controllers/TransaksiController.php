@@ -320,7 +320,7 @@ class TransaksiController extends Controller
     {
         $this->param['pageInfo'] = 'Edit Invoice';
         $this->param['btnRight']['text'] = 'Lihat Data';
-        $this->param['btnRight']['link'] = route('transaksi.index');
+        $this->param['btnRight']['link'] = route('transaksi.list-invoice');
 
         $this->param['transaksi'] = Transaksi::with('kamar')->findOrFail($kode);
 
