@@ -69,6 +69,7 @@
                       $diff = strtotime($transaksi->tgl_checkout) - strtotime($transaksi->tgl_checkin);
                       $durasi = abs(round($diff / 86400));
                       $subtotal = $durasi * $kamar->kategori->harga;
+                      $tax = $subtotal * 10 /100;
                     @endphp
                       <tr>
                         <td>{{$kamar->kategori->kategori_kamar}}</td>
@@ -91,10 +92,14 @@
                   </table>
                   <hr>
                   <div class="row">
-                      <input type="hidden" name="total" id="total" class="form-control" value="{{$subtotal}}" readonly>
+                    <input type="hidden" name="total" id="total" class="form-control" value="{{$subtotal}}" readonly>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
                       <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', 0)}}" data-tipe='rp'>
+                    </div>
+                    <div class="col-4 mb-2">
+                      <label for=""><strong>PPN 10%</strong></label>
+                      <input type="number" name="tax" class="form-control" value="{{old('tax', $tax)}}" data-tipe='rp' readonly id="tax">
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Metode Pembayaran</strong></label>
@@ -155,9 +160,10 @@
                         <h5 class="text-default">*Khusus Customer Travel</h5>
                       </div>
                     </div> --}}
+                    <div class="col-4"></div>
                     <div class="col-md-4 mt-4">
-                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($subtotal,0,',','.')}}</span></h1>
-                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$subtotal}}">
+                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($subtotal + $tax,0,',','.')}}</span></h1>
+                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$subtotal + $tax}}">
                     </div>
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

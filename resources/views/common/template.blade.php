@@ -133,6 +133,11 @@
                     </a>
                   </li>
                   <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/invoice')}}">
+                      <span class="nav-link-text">Invoice</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a class="nav-link" href="{{url('transaksi/laporan?tipe=general')}}">
                       <span class="nav-link-text">Laporan</span>
                     </a>
@@ -435,7 +440,7 @@
   <script src="{{ asset('js/custom.js') }}"></script>
   @if (Request::segment(1) == '')
       
-  {{-- {!! $penjualanChart->script() !!} --}}
+  {!! $pemasukanChart->script() !!}
   @endif
 </body>
 

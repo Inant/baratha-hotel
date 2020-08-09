@@ -42,7 +42,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('checkout/{kode}', 'TransaksiController@checkOut')->name('transaksi.checkout');
         Route::get('checkin-booking/{kode}', 'TransaksiController@checkInBooking')->name('transaksi.checkin-booking');
         Route::get('pembayaran/{kode}', 'TransaksiController@pembayaran')->name('transaksi.pembayaran');
-        Route::get('pembayaran/{kode}', 'TransaksiController@pembayaran')->name('transaksi.pembayaran');
+        Route::get('invoice', 'TransaksiController@listInvoice')->name('transaksi.list-invoice');
+        Route::get('edit-invoice/{kode}', 'TransaksiController@editInvoice')->name('transaksi.edit-invoice');
+        Route::post('save-invoice', 'TransaksiController@saveInvoice')->name('transaksi.save-invoice');
+        Route::get('paid/{kode}', 'TransaksiController@paid')->name('transaksi.paid');
+        Route::get('invoice/{kode}', 'TransaksiController@invoice')->name('transaksi.invoice');
         Route::get('laporan', 'TransaksiController@laporan');
         Route::post('save-pembayaran', 'TransaksiController@savePembayaran')->name('transaksi.save-pembayaran');
         Route::get('get-kamar', 'TransaksiController@getKamarTersedia');

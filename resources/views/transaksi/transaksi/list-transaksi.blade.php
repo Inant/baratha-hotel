@@ -98,6 +98,7 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                         <a class="dropdown-item" href="{{ route('transaksi.edit', $value->kode_transaksi) }}">Edit</a>
+                                        <a class="dropdown-item" href="{{ route('transaksi.invoice', $value->kode_transaksi) }}" target="_blank">Invoice</a>
                                         @if ($value->status == 'Check In' && $value->tgl_checkout <= date('Y-m-d'))
                                             <a class="dropdown-item" href="{{ route('transaksi.checkout', $value->kode_transaksi) }}">Check Out</a>
                                         @elseIf($value->status == 'Booking' && $value->tgl_checkin <= date('Y-m-d'))

@@ -123,7 +123,7 @@ class TransaksiController extends Controller
         $transaksi->status = 'Check Out';
         $transaksi->save();
 
-        return redirect()->route('transaksi.pembayaran', ['kode' => $kode]);
+        return redirect()->route('transaksi.index');
     }
 
     public function checkInBooking($kode)
@@ -236,7 +236,7 @@ class TransaksiController extends Controller
         $newPembayaran->jenis_pembayaran = $request->get('jenis_pembayaran');
         $newPembayaran->total = $request->get('total');
         $newPembayaran->diskon = $request->get('diskon');
-        $newPembayaran->tax = 0;
+        $newPembayaran->tax = $request->get('tax');
         $newPembayaran->charge = $request->get('charge');
         $newPembayaran->grandtotal = $request->get('grandtotal');
         $newPembayaran->bayar = $request->get('bayar');
@@ -275,6 +275,85 @@ class TransaksiController extends Controller
                         ->get();
         }
         return $laporan;
+    }
+
+    public function listInvoice(Request $request)
+    {
+        $this->param['pageInfo'] = 'INVOICE';
+
+        $keyword = $request->get('keyword');
+        $keywordKamar = $request->get('kamar');
+        $status = $request->get('status');
+        
+        $kamar = \DB::table(\DB::raw('kamar k'))
+                    ->select('k.id', 'k.no_kamar')
+                    ->join(\DB::raw('transaksi t'), 'k.id', '=', 't.id_kamar')
+                    ->where('t.status', '!=', 'Check Out')
+                    ->get();
+        $transaksi =Transaksi::with('kamar')->where('status_bayar', '!=', 'Sudah');
+
+        if($keyword){
+            $transaksi->where('nama_tamu', 'LIKE',"%$keyword%");
+        }
+
+        if ($keywordKamar) {
+            $transaksi->where('id_kamar', "$keywordKamar");
+        }
+        
+        if ($status) {
+            $transaksi->where('status', $status);
+        }
+
+        return \view('transaksi.invoice.list-invoice', ['transaksi' => $transaksi->paginate(10), 'kamar' => $kamar], $this->param);
+    }
+
+    public function paid($kode)
+    {
+        $transaksi = Transaksi::find($kode);
+        $transaksi->status_bayar = 'Sudah';
+        $transaksi->save();
+
+        return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil disimpan.');
+    }
+
+    public function editInvoice($kode)
+    {
+        $this->param['pageInfo'] = 'Edit Invoice';
+        $this->param['btnRight']['text'] = 'Lihat Data';
+        $this->param['btnRight']['link'] = route('transaksi.index');
+
+        $this->param['transaksi'] = Transaksi::with('kamar')->findOrFail($kode);
+
+        return view('transaksi.invoice.edit-invoice', $this->param);
+    }
+
+    public function saveInvoice(Request $request)
+    {
+        $validatedData = $request->validate([
+            // 'bayar' => 'required|numeric|gte:grandtotal',
+            'jenis_pembayaran' => 'required'
+        ]);
+
+        $newPembayaran = new Pembayaran;
+        $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
+        $newPembayaran->waktu = date('Y-m-d H:i:s');
+        $newPembayaran->jenis_pembayaran = $request->get('jenis_pembayaran');
+        $newPembayaran->total = $request->get('total');
+        $newPembayaran->diskon = $request->get('diskon');
+        $newPembayaran->tax = $request->get('tax');
+        $newPembayaran->charge = $request->get('charge');
+        $newPembayaran->grandtotal = $request->get('grandtotal');
+        $newPembayaran->bayar = 0;
+
+        $newPembayaran->save();
+
+        return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil disimpan.');
+    }
+
+    public function invoice($kode)
+    {
+        $this->param['transaksi'] = Transaksi::find($kode);
+        return view('transaksi.invoice.invoice', $this->param);
     }
 
     public function laporan()
