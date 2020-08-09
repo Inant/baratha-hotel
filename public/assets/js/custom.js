@@ -41,11 +41,14 @@ $(document).ready(function() {
         return rupiah;
     }
 
+    $('#tax').val(parseInt($("#total").val()) * 10 /100);
+
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
         var tipe = $(this).data('tipe')
         var total = parseInt($("#total").val());
         var diskon = 0;
+        var tax = parseInt($("#tax").val());
         if(tipe=='persen'){
             var otherDisc = parseInt($(".diskon_tambahan[data-tipe='rp']").val())
             diskon = (diskon_tambahan * total / 100) + otherDisc;
@@ -59,8 +62,9 @@ $(document).ready(function() {
             diskon = diskon_tambahan + otherDisc
         }
         var grand_total = total - diskon;
-        $("#grand_total").val(grand_total);
-        $("#idrGrandTotal").html(formatRupiah(grand_total));
+        $("#grand_total").val(grand_total + (grand_total * 10 / 100));
+        $("#tax").val(grand_total * 10 / 100);
+        $("#idrGrandTotal").html(formatRupiah(grand_total + (grand_total * 10 / 100)));
     });
 
     $("#bayar").keyup(function() {
@@ -73,9 +77,9 @@ $(document).ready(function() {
     $("#no_kartu").prop('disabled',true);
     // $("#charge").prop('disabled',true);
 
-    temp_grand_total = parseInt($('#grand_total').val());
+    // var temp_grand_total = parseInt($('#grand_total').val());
     function getCharge(thisVal) {
-        var grand_total = temp_grand_total;
+        var grand_total = parseInt($('#grand_total').val());
         var charge = 0;
         if (thisVal != 'Tunai') {
             $("#no_kartu").prop('disabled',false);
