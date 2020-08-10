@@ -15,7 +15,7 @@
     <tr>
       <td>Name</td>
       <td>:</td>
-      <td>{{$transaksi->nama_tamu}}</td>      
+      <td>{{$transaksi->tamu->nama}}</td>      
 
       <td>Number</td>
       <td>:</td>
@@ -25,7 +25,7 @@
     <tr>
       <td>Company Name</td>
       <td>:</td>
-      <td>Baratha Hotel</td>      
+      <td>{{$transaksi->tamu->company}}</td>      
 
       <td>Date of Arrival</td>
       <td>:</td>
@@ -35,7 +35,7 @@
     <tr>
       <td>Street Address</td>
       <td>:</td>
-      <td>Jl. Saliwiryo Pranowo Gg. Taman No.11</td>      
+      <td>{{$transaksi->tamu->street}}</td>      
 
       <td>Date of Departure</td>
       <td>:</td>
@@ -44,7 +44,7 @@
     <tr>
       <td>City, ST ZIP Code</td>
       <td>:</td>
-      <td>Kotakulon, Bondowoso 68213</td>      
+      <td>{{$transaksi->tamu->city}}</td>      
 
       {{-- <td>Date of Departure</td>
       <td>:</td>
@@ -53,7 +53,7 @@
     <tr>
       <td>Phone</td>
       <td>:</td>
-      <td>(0332) 424555 / 082-228-111-778</td>      
+      <td>{{$transaksi->tamu->phone}}</td>      
 
       {{-- <td>Date of Departure</td>
       <td>:</td>

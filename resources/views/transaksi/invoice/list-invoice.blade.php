@@ -11,8 +11,13 @@
                     <div class="col-8 offset-4">
                         <form action="{{ route('transaksi.index') }}">
                             <div class="row">
-                                <div class="col-3 ml-7">
-                                    <input name="keyword" class="form-control" placeholder="Cari tamu..." type="text" value="{{Request::get('keyword')}}">
+                                <div class="col-4">
+                                    <select name="keyTamu" id="keyTamu" class="form-control select2" width="100%">
+                                        <option value="">Semua Tamu</option>
+                                        @foreach ($tamu as $item)
+                                            <option value="{{$item->id}}" {{Request::get('keyTamu') == $item->id ? 'selected' : ''}} > {{$item->nama}} </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-3">
                                     <select name="kamar" id="kamar" class="form-control select2" width="100%">
@@ -69,7 +74,7 @@
                         <tr>
                             <td>{{$no}}</td>
                             <td>{{$value->kamar->no_kamar}}</td>
-                            <td>{{$value->nama_tamu}}</td>
+                            <td>{{$value->tamu->nama}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>
                             <td>
@@ -85,9 +90,12 @@
                                     <i class="fas fa-ellipsis-v"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                        <a class="dropdown-item" href="{{ route('transaksi.edit-invoice', $value->kode_transaksi) }}">Edit Invoice</a>
-                                        <a class="dropdown-item" href="{{ route('transaksi.invoice', $value->kode_transaksi) }}" target="_blank">Cetak Invoice</a>
-                                        <a class="dropdown-item" href="{{ route('transaksi.paid', $value->kode_transaksi) }}" onclick="return confirm('{{ __("Apakah anda yakin? (Pastikan sudah mencetak invoice.)") }}')">Telah Terbayar</a>
+                                        @php
+                                            $kodeTrx = str_replace('/', '-', $value->kode_transaksi);
+                                        @endphp
+                                        <a class="dropdown-item" href="{{ route('transaksi.edit-invoice', $kodeTrx) }}">Edit Invoice</a>
+                                        <a class="dropdown-item" href="{{ route('transaksi.invoice', $kodeTrx) }}" target="_blank">Cetak Invoice</a>
+                                        <a class="dropdown-item" href="{{ route('transaksi.paid', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin? (Pastikan sudah mencetak invoice.)") }}')">Telah Terbayar</a>
                                     </div>
                                 </div>
                             </td>

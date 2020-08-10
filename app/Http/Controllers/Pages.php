@@ -22,7 +22,12 @@ class Pages extends Controller
         foreach ($bulan as $key => $val) {
             $cekPemasukan = \App\Pembayaran::whereYear('waktu', $tahun)->whereMonth('waktu', $val)->count();
             if ($cekPemasukan > 0) {
-                $pemasukan = \DB::table('pembayaran')->select(\DB::raw('SUM(grandtotal) AS pemasukan'))->whereYear('waktu', $tahun)->whereMonth('waktu', $val)->get();
+                $pemasukan = \DB::table(\DB::raw('pembayaran p'))
+                                ->select(\DB::raw('SUM(p.grandtotal) AS pemasukan'))
+                                ->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')
+                                ->where('t.status_bayar', '=', 'Sudah')
+                                ->whereYear('p.waktu', $tahun)
+                                ->whereMonth('p.waktu', $val)->get();
                 array_push($pemasukanPerBulan, $pemasukan[0]->pemasukan);
             }
             else{

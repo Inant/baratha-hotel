@@ -14,6 +14,11 @@ class Transaksi extends Model
     {
         return $this->belongsTo('App\Kamar', 'id_kamar');
     }
+    
+    public function tamu()
+    {
+        return $this->belongsTo('App\Tamu', 'id_tamu');
+    }
 
     public function pembayaran()
     {

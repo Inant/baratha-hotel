@@ -124,12 +124,17 @@
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'transaksi' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#transaksi" aria-expanded='false'>
                 <i class="ni ni-credit-card text-orange"></i>
-                <span class="nav-link-text">Transaksi</span>
+                <span class="nav-link-text">Reservasi</span>
               </a>
                 <ul class="navbar-nav nav-collapse collapse" id="transaksi">
                   <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/tamu')}}">
+                      <span class="nav-link-text">Master Tamu</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a class="nav-link" href="{{url('transaksi/transaksi')}}">
-                      <span class="nav-link-text">Transaksi</span>
+                      <span class="nav-link-text">Reservasi</span>
                     </a>
                   </li>
                   <li class="nav-item">
@@ -367,6 +372,7 @@
                     else{
                         for ($i=1; $i <= $segments ; $i++) { 
                             $text = ucwords(str_replace('-',' ',Request::segment($i)));
+                            $text = $text == 'Transaksi' ? 'Reservasi' : $text;
                             if($i==$segments){
                                 echo "<li class='breadcrumb-item active'>$text</li>";
                             }

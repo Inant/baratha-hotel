@@ -20,7 +20,7 @@
                         <label for="" class="form-control-label">Nama Tamu</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
-                          <input type="text" class="form-control form-line @error('nama_tamu') is-invalid @enderror" name='nama_tamu' value="{{$transaksi->nama_tamu}}" readonly>
+                          <input type="text" class="form-control form-line @error('nama_tamu') is-invalid @enderror" name='nama_tamu' value="{{$transaksi->tamu->nama}}" readonly>
                         </div>
                     </div>
 
@@ -28,7 +28,7 @@
                         <label for="" class="form-control-label">Jenis Identitas</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
-                          <input type="text" class="form-control form-line @error('jenis_identitas') is-invalid @enderror" name='jenis_identitas' value="{{$transaksi->jenis_identitas}}" readonly>
+                          <input type="text" class="form-control form-line @error('jenis_identitas') is-invalid @enderror" name='jenis_identitas' value="{{$transaksi->tamu->jenis_identitas}}" readonly>
                       </div>
                     </div>
                     
@@ -36,7 +36,7 @@
                         <label for="" class="form-control-label">No Identitas</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
-                          <input type="text" class="form-control form-line @error('no_identitas') is-invalid @enderror" name='no_identitas' value="{{$transaksi->no_identitas}}" readonly>
+                          <input type="text" class="form-control form-line @error('no_identitas') is-invalid @enderror" name='no_identitas' value="{{$transaksi->tamu->no_identitas}}" readonly>
                         </div>
                     </div>
 
@@ -70,7 +70,9 @@
                       $subtotal = $durasi * $kamar->kategori->harga;
                       $tax = $subtotal * 10 /100;
                       $diskon = 0;
-
+                      $charge = 0;
+                      $grandtotal = $subtotal + $tax;
+                      $jenis_pembayaran = 'Tunai';
                       $cekPembayaran = \App\Pembayaran::where('kode_transaksi', $transaksi->kode_transaksi)->count();
                       if ($cekPembayaran > 0) {
                         $pembayaran = \App\Pembayaran::select('total', 'diskon', 'tax', 'charge', 'grandtotal', 'jenis_pembayaran')->where('kode_transaksi', $transaksi->kode_transaksi)->get()[0];

@@ -58,7 +58,7 @@
             <div class="card-body">
               <div class="row">
                 <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-2">Transaksi</h5>
+                  <h5 class="card-title text-uppercase text-muted mb-2">Reservasi</h5>
                   @php
                       $month = date('m');
                       $year = date('Y');
@@ -85,7 +85,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-2">Pemasukan Bulan Ini</h5>
-                  <span class="h2 font-weight-bold mb-1"> {{number_format(\App\Pembayaran::select(\DB::raw('SUM(grandtotal) as pemasukan'))->whereMonth('waktu', $month)->whereYear('waktu', $year)->get()[0]->pemasukan, 0, ',', '.')}} </span>
+                  <span class="h2 font-weight-bold mb-1"> {{number_format(\DB::table(\DB::raw('pembayaran p'))->select(\DB::raw('SUM(p.grandtotal) as pemasukan'))->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')->where('t.status_bayar', '=', 'Sudah')->whereMonth('p.waktu', $month)->whereYear('p.waktu', $year)->get()[0]->pemasukan, 0, ',', '.')}} </span>
                 </div>
                 <div class="col-auto mt-1">
                   <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
@@ -126,7 +126,7 @@
           <div class="card-header bg-transparent">
             <div class="row align-items-center">
               <div class="col">
-                {{-- <h6 class="text-light text-uppercase ls-1 mb-1">Reservation Chart</h6> --}}
+                <h6 class="text-light text-uppercase ls-1 mb-1">{{date('F')}} </h6>
                 <h5 class="h3 mb-0">Reservation Chart</h5>
               </div>
             </div>
@@ -184,7 +184,7 @@
                               $class = 'bg-success';
                             }
                           @endphp
-                          <td class="text-white {{$class}}">{{$i < 10 ? '0'.$i : $i}}</td>
+                          <td class="text-white {{$class}}">{{$tgl}}</td>
                         @endfor
                       </tr>
                   @endforeach

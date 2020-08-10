@@ -43,42 +43,20 @@
                         </span>
                     @enderror
                     <br> --}}
-
+                    
                     <label for="" class="form-control-label">Nama Tamu</label>
-                    <input type="text" name="nama_tamu" value="{{old('nama_tamu')}}" class="form-control @error('nama_tamu') is-invalid @enderror">
-                    @error('nama_tamu')
+                    <select name="id_tamu" class="form-control select2  @error('id_tamu') is-invalid @enderror">
+                        <option value="">-- Pilih Tamu --</option>
+                        @foreach ($tamu as $item)
+                            <option value="{{$item->id}}" {{old('id_tamu') == $item->id ? 'selected' : ''}} > {{$item->nama}} </option>
+                        @endforeach
+                    </select>
+                    @error('id_tamu')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
                     <br>
-                    
-                    <label for="" class="form-control-label">Jenis Identitas</label>
-                    <br>                  
-                    <div class="custom-control custom-radio custom-control-inline  ml-2 mr-5">
-                        <input type="radio" value="KTP" id="customRadioInline1" name="jenis_identitas" class="custom-control-input" @error('jenis_identitas') is-invalid @enderror" {{old('jenis_identitas') == 'KTP' ? 'checked' : ''}}>
-                        <label class="custom-control-label" for="customRadioInline1">KTP</label>
-                    </div>
-                    
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" value="SIM" id="customRadioInline2" name="jenis_identitas" class="custom-control-input" @error('jenis_identitas') is-invalid @enderror" {{old('jenis_identitas') == 'SIM' ? 'checked' : ''}}>
-                        <label class="custom-control-label" for="customRadioInline2">SIM</label>
-                    </div>
-                    @error('jenis_identitas')
-                        <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                    <br>
-                    <br>
-
-                    <label for="" class="form-control-label">Nomor Identitas</label>
-                    <input type="text" name="no_identitas" value="{{old('no_identitas')}}" class="form-control @error('no_identitas') is-invalid @enderror">
-                    @error('no_identitas')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
                     <br>
 
                     <label for="" class="form-control-label">Tanggal Check In</label>
@@ -109,6 +87,15 @@
                         </span>
                     @enderror
                     <br>
+                    <br>
+
+                    <label for="" class="form-control-label">Keterangan</label>
+                    <input type="text" name="keterangan" value="{{old('keterangan')}}" class="form-control @error('keterangan') is-invalid @enderror">
+                    @error('keterangan')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                     <br>
 
                     <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

@@ -40,7 +40,7 @@
           <td>{{$loop->iteration}}</td>
           <td>{{$value->kode_transaksi}}</td>
           <td>{{date('d-m-Y H:i', strtotime($value->waktu))}}</td>
-          <td>{{$value->nama_tamu}}</td>
+          <td>{{$value->nama}}</td>
           <td>{{$value->no_kamar}}</td>
           <td>{{$durasi}}</td>
           <td>{{$value->diskon}}</td>
