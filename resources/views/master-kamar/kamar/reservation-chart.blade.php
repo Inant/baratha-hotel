@@ -53,7 +53,7 @@
                         @foreach ($kamar as $val)
                             <tr>
                               <td>{{$val->no_kamar}}</td>
-                              @for ($i = $awal; $i < $tgl_akhir; $i++)
+                              @for ($i = $awal; $i <= $tgl_akhir; $i++)
                                 @php
                                   $tgl = $i < 10 ? '0'.$i : $i;
                                   $month = date('m');

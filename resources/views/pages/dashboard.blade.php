@@ -133,8 +133,10 @@
           </div>
           <div class="card-body">
             @php
-              $tgl_akhir = date('t');
-              $awal = date('d', strtotime($dari));
+              $tgl_akhir = date('Y-m-t');
+              $tgl_akhir = explode('-', $tgl_akhir);
+              $tgl_akhir = $tgl_akhir[2];
+              $awal = '1';
               $awal = str_replace('0', '', $awal);
             @endphp
             <br>
@@ -154,7 +156,7 @@
                   @foreach ($kamar as $val)
                       <tr>
                         <td>{{$val->no_kamar}}</td>
-                        @for ($i = $awal; $i < $tgl_akhir; $i++)
+                        @for ($i = $awal; $i <= $tgl_akhir; $i++)
                           @php
                             $tgl = $i < 10 ? '0'.$i : $i;
                             $month = date('m');
@@ -184,7 +186,13 @@
                               $class = 'bg-success';
                             }
                           @endphp
-                          <td class="text-white {{$class}}">{{$tgl}}</td>
+                          <td class="text-white {{$class}}">
+                            @if ($class == 'bg-success' && $current >= date('Y-m-d'))
+                              <a href="{{ url('transaksi/reservasi') . '?id_kamar='.$val->id.'&tgl_checkin='.$current }}" class="text-white">{{$tgl}}</a>
+                            @else
+                              {{$tgl}}
+                            @endif
+                          </td>
                         @endfor
                       </tr>
                   @endforeach

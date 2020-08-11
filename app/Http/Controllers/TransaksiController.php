@@ -112,6 +112,19 @@ class TransaksiController extends Controller
         return \view('transaksi.transaksi.booking', $this->param);
     }
 
+    public function reservasi()
+    {
+        $this->param['pageInfo'] = 'Reservasi';
+        $this->param['btnRight']['text'] = 'Lihat Data';
+        $this->param['btnRight']['link'] = route('transaksi.index');
+        $this->param['kode_transaksi'] = $this->getKode();
+        $this->param['tamu'] = Tamu::select('id', 'nama')->get();
+        $this->param['kamar'] = Kamar::where('id',$_GET['id_kamar'])->get();
+        $this->param['tgl_checkin'] = $_GET['tgl_checkin'];
+
+        return \view('transaksi.transaksi.reservasi-by-chart', $this->param);
+    }
+
     public function getKamarTersedia()
     {
         $tgl_checkin = $_GET['tgl_checkin'];
@@ -156,6 +169,7 @@ class TransaksiController extends Controller
             'tgl_checkin' => 'required|date',
             'tgl_checkout' => 'required|date|after:tgl_checkin',
             'id_kamar' => 'required|numeric',
+            'status' => 'required',
         ]);
 
         $newCheckIn = new Transaksi;
@@ -172,9 +186,9 @@ class TransaksiController extends Controller
 
         $newCheckIn->save();
 
-        $kamar = Kamar::find($request->get('id_kamar'));
-        $kamar->status = 'Tidak Tersedia';
-        $kamar->save();
+        // $kamar = Kamar::find($request->get('id_kamar'));
+        // $kamar->status = 'Tidak Tersedia';
+        // $kamar->save();
 
         return redirect()->back()->withStatus('Data berhasil ditambahkan.');
     }
