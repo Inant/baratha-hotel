@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
     <meta name="author" content="Creative Tim">
-    <title>{{isset($pageInfo) ? $pageInfo.' - ' : ''}}Baratha Coffee</title>
+    <title>{{isset($pageInfo) ? $pageInfo.' - ' : ''}}Baratha Hotel</title>
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('img/hotel.png') }}" type="image/png">
     <!-- Fonts -->
