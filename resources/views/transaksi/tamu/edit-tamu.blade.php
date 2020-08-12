@@ -64,7 +64,7 @@
                     @enderror
                     <br>
                     
-                    <img src="{{ asset('img/foto-id-tamu') . '/' . $tamu->foto_identitas }}" alt="" width="200px">
+                    <!-- <img src="{{ asset('img/foto-id-tamu') . '/' . $tamu->foto_identitas }}" alt="" width="200px">
                     <h5 class="text-muted">* Abaikan jika tidak ingin mengubah foto identitas</h5>
                     <label for="" class="form-control-label">Foto Identitas</label>
                     <input type="file" name="foto_identitas" value="{{old('foto_identitas')}}" class="form-control @error('foto_identitas') is-invalid @enderror">
@@ -73,7 +73,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                    <br>
+                    <br> -->
 
                     <label for="" class="form-control-label">Company</label>
                     <input type="text" name="company" value="{{old('company', $tamu->company)}}" class="form-control @error('company') is-invalid @enderror">

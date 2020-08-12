@@ -231,6 +231,7 @@ class TransaksiController extends Controller
     public function destroy($kode)
     {
         $kode = str_replace('-', '/', $kode);
+        Pembayaran::where('kode_transaksi', $kode)->delete();
         $transaksi = Transaksi::findOrFail($kode);
         $transaksi->delete();
 

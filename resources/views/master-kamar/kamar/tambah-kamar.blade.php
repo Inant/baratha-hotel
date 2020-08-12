@@ -53,7 +53,7 @@
                     <label for="" class="form-control-label">Status Kamar</label>
                     <br>                  
                     <div class="custom-control custom-radio custom-control-inline  ml-2 mr-5">
-                      <input type="radio" value="Tersedia" id="tersedia" name="status" class="custom-control-input" @error('status') is-invalid @enderror" {{old('status') == 'Tersedia' ? 'checked' : ''}}>
+                      <input type="radio" value="Tersedia" id="tersedia" name="status" class="custom-control-input" @error('status') is-invalid @enderror" {{old('status') == 'Tersedia' ? 'checked' : ''}} checked>
                       <label class="custom-control-label" for="tersedia">Tersedia</label>
                     </div>
                     

@@ -44,7 +44,7 @@ class TamuController extends Controller
             'nama' => 'required|max:40',
             'jenis_identitas' => 'required',
             'no_identitas' => 'required',
-            'foto_identitas' => 'required|image',
+            // 'foto_identitas' => 'required|image',
         ]);
 
         $newTamu = new Tamu;

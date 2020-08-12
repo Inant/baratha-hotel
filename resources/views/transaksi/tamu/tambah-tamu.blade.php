@@ -63,14 +63,14 @@
                     @enderror
                     <br>
                     
-                    <label for="" class="form-control-label">Foto Identitas</label>
+                    <!-- <label for="" class="form-control-label">Foto Identitas</label>
                     <input type="file" name="foto_identitas" value="{{old('foto_identitas')}}" class="form-control @error('foto_identitas') is-invalid @enderror">
                     @error('foto_identitas')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                    <br>
+                    <br> -->
 
                     <label for="" class="form-control-label">Company</label>
                     <input type="text" name="company" value="{{old('company')}}" class="form-control @error('company') is-invalid @enderror">
