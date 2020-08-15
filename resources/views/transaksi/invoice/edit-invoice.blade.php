@@ -105,7 +105,10 @@
                   </table>
                   <hr>
                   <div class="row">
-                    <input type="hidden" name="total" id="total" class="form-control" value="{{$subtotal}}" readonly>
+                    <div class="col-4 mb-2">
+                      <label for=""><strong>Total</strong></label>
+                      <input type="number" name="total" id="total" class="form-control" value="{{$subtotal}}"> 
+                    </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
                       <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', $diskon)}}" data-tipe='rp'>

@@ -63,7 +63,7 @@ $(document).ready(function() {
         }
         var grand_total = total - diskon;
         $("#grand_total").val(grand_total + (grand_total * 10 / 100));
-        $("#tax").val(grand_total * 10 / 100);
+        $("#tax").val((total - diskon) * 10 / 100);
         $("#idrGrandTotal").html(formatRupiah(grand_total + (grand_total * 10 / 100)));
     });
 

@@ -70,7 +70,8 @@
       $subtotal = $kamar->kategori->harga * $durasi;
       // $tax = $subtotal * 10 / 100;
 
-      $pembayaran = \App\Pembayaran::select('diskon', 'tax', 'charge', 'grandtotal')->where('kode_transaksi', $transaksi->kode_transaksi)->get()[0];
+      $pembayaran = \App\Pembayaran::select('total', 'diskon', 'tax', 'charge', 'grandtotal')->where('kode_transaksi', $transaksi->kode_transaksi)->get()[0];
+      $total = $pembayaran->total;
       $diskon = $pembayaran->diskon;
       $tax = $pembayaran->tax;
       $charge = $pembayaran->charge;
@@ -92,7 +93,7 @@
         <td>{{$durasi}}</td>
         <td>{{number_format($kamar->kategori->harga, 0, ',', '.')}}</td>
         <td>{{number_format(0, 0, ',', '.')}}</td>
-        <td>{{number_format($subtotal, 0, ',', '.')}}</td>
+        <td>{{number_format($total, 0, ',', '.')}}</td>
       </tr>
     </tbody>
   </table>
@@ -102,7 +103,7 @@
     <tr>
       <td><b>Subtotal</b></td>
       <td>:</td>
-      <td>{{number_format($subtotal, 0, ',', '.')}}</td>
+      <td>{{number_format($total, 0, ',', '.')}}</td>
     </tr>
     <tr>
       <td><b>Diskon</b></td>
