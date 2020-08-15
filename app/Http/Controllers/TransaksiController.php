@@ -149,7 +149,7 @@ class TransaksiController extends Controller
         $transaksi->status = 'Check Out';
         $transaksi->save();
 
-        return redirect()->route('transaksi.index');
+        return redirect()->route('transaksi.index')->withStatus('Berhasil Check Out.');
     }
 
     public function checkInBooking($kode)
@@ -316,13 +316,15 @@ class TransaksiController extends Controller
         $kamar = \DB::table(\DB::raw('kamar k'))
                     ->select('k.id', 'k.no_kamar')
                     ->join(\DB::raw('transaksi t'), 'k.id', '=', 't.id_kamar')
-                    ->where('t.status', '!=', 'Check Out')
+                    ->where('t.status_bayar', '=', 'Belum')
+                    ->distinct()
                     ->get();
 
         $tamu = \DB::table(\DB::raw('tamu t'))
                     ->select('t.id', 't.nama')
                     ->join(\DB::raw('transaksi tk'), 't.id', '=', 'tk.id_tamu')
-                    ->where('tk.status', '!=', 'Check Out')
+                    ->where('tk.status_bayar', '=', 'Belum')
+                    ->distinct()
                     ->get();
 
         $transaksi =Transaksi::with('kamar')->with('tamu')->where('status_bayar', '!=', 'Sudah');

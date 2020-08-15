@@ -9,7 +9,7 @@
                     <h3 class="mb-0">{{$pageInfo}}</h3>
                     </div>
                     <div class="col-8 offset-4">
-                        <form action="{{ route('transaksi.index') }}">
+                        <form action="{{ route('transaksi.list-invoice') }}">
                             <div class="row">
                                 <div class="col-4">
                                     <select name="keyTamu" id="keyTamu" class="form-control select2" width="100%">
@@ -92,10 +92,13 @@
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                         @php
                                             $kodeTrx = str_replace('/', '-', $value->kode_transaksi);
+                                            $cek = \App\Pembayaran::where('kode_transaksi', $value->kode_transaksi)->count();
                                         @endphp
                                         <a class="dropdown-item" href="{{ route('transaksi.edit-invoice', $kodeTrx) }}">Edit Invoice</a>
-                                        <a class="dropdown-item" href="{{ route('transaksi.invoice', $kodeTrx) }}" target="_blank">Cetak Invoice</a>
-                                        <a class="dropdown-item" href="{{ route('transaksi.paid', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin? (Pastikan sudah mencetak invoice.)") }}')">Telah Terbayar</a>
+                                        @if ($cek > 0)
+                                            <a class="dropdown-item" href="{{ route('transaksi.invoice', $kodeTrx) }}" target="_blank">Cetak Invoice</a>
+                                            <a class="dropdown-item" href="{{ route('transaksi.paid', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin? (Pastikan sudah mencetak invoice.)") }}')">Telah Terbayar</a>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
