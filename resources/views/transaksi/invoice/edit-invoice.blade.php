@@ -67,6 +67,7 @@
                       $kamar = \App\Kamar::with('kategori')->where('id', $transaksi->id_kamar)->get()[0];
                       $diff = strtotime($transaksi->tgl_checkout) - strtotime($transaksi->tgl_checkin);
                       $durasi = abs(round($diff / 86400));
+                      $tarif = $kamar->kategori->harga;
                       $subtotal = $durasi * $kamar->kategori->harga;
                       $tax = $subtotal * 10 /100;
                       $diskon = 0;
@@ -82,6 +83,7 @@
                         $charge = $pembayaran->charge;
                         $grandtotal = $pembayaran->grandtotal;
                         $jenis_pembayaran = $pembayaran->jenis_pembayaran;
+                        $tarif = $subtotal;
                       }
                     @endphp
                       <tr>
@@ -89,7 +91,7 @@
                         <td>{{$transaksi->kamar->no_kamar}}</td>
                         <td>{{date('d-m-Y', strtotime($transaksi->tgl_checkin))}}</td>
                         <td>{{date('d-m-Y', strtotime($transaksi->tgl_checkout))}}</td>
-                        <td>{{number_format($kamar->kategori->harga, 0, ',', '.')}}</td>
+                        <td>{{number_format($subtotal, 0, ',', '.')}}</td>
                         <td>{{$durasi}}</td>
                         <td>{{number_format($subtotal, 0, ',', '.')}}</td>
                       </tr>
