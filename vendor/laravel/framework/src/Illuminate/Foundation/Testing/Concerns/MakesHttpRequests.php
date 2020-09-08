@@ -3,7 +3,6 @@
 namespace Illuminate\Foundation\Testing\Concerns;
 
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
-use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -600,8 +599,8 @@ trait MakesHttpRequests
             return array_merge($this->defaultCookies, $this->unencryptedCookies);
         }
 
-        return collect($this->defaultCookies)->map(function ($value, $key) {
-            return encrypt(CookieValuePrefix::create($key, app('encrypter')->getKey()).$value, false);
+        return collect($this->defaultCookies)->map(function ($value) {
+            return encrypt($value, false);
         })->merge($this->unencryptedCookies)->all();
     }
 

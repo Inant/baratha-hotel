@@ -171,7 +171,7 @@ trait EnumeratesValues
     {
         call_user_func_array([$this, 'dump'], $args);
 
-        exit(1);
+        die(1);
     }
 
     /**
@@ -807,20 +807,20 @@ trait EnumeratesValues
     }
 
     /**
-     * Count the number of items in the collection by a field or using a callback.
+     * Count the number of items in the collection using a given truth test.
      *
-     * @param  array|callable|string $countBy
+     * @param  callable|null  $callback
      * @return static
      */
-    public function countBy($countBy = null)
+    public function countBy($callback = null)
     {
-        if (is_null($countBy)) {
-            $countBy = function ($value) {
+        if (is_null($callback)) {
+            $callback = function ($value) {
                 return $value;
             };
         }
 
-        return new static($this->groupBy($countBy)->map(function ($value) {
+        return new static($this->groupBy($callback)->map(function ($value) {
             return $value->count();
         }));
     }

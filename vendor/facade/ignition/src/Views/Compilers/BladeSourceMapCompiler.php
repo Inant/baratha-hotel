@@ -2,19 +2,13 @@
 
 namespace Facade\Ignition\Views\Compilers;
 
-use ErrorException;
 use Illuminate\View\Compilers\BladeCompiler;
 
 class BladeSourceMapCompiler extends BladeCompiler
 {
     public function detectLineNumber(string $filename, int $exceptionLineNumber): int
     {
-        try {
-            $map = $this->compileString(file_get_contents($filename));
-        } catch (ErrorException $e) {
-            return 1;
-        }
-        
+        $map = $this->compileString(file_get_contents($filename));
         $map = explode("\n", $map);
 
         $line = $map[$exceptionLineNumber - 1] ?? $exceptionLineNumber;

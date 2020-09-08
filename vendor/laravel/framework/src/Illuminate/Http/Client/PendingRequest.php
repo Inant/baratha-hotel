@@ -354,19 +354,6 @@ class PendingRequest
     }
 
     /**
-     * Specify the path where the body of the response should be stored.
-     *
-     * @param  string|resource  $to
-     * @return $this
-     */
-    public function sink($to)
-    {
-        return tap($this, function ($request) use ($to) {
-            return $this->options['sink'] = $to;
-        });
-    }
-
-    /**
      * Specify the timeout (in seconds) for the request.
      *
      * @param  int  $seconds
@@ -695,40 +682,12 @@ class PendingRequest
 
                 if (is_null($response)) {
                     return $handler($request, $options);
-                }
-
-                $response = is_array($response) ? Factory::response($response) : $response;
-
-                $sink = $options['sink'] ?? null;
-
-                if ($sink) {
-                    $response->then($this->sinkStubHandler($sink));
+                } elseif (is_array($response)) {
+                    return Factory::response($response);
                 }
 
                 return $response;
             };
-        };
-    }
-
-    /**
-     * Get the sink stub handler callback.
-     *
-     * @param  string  $sink
-     * @return \Closure
-     */
-    protected function sinkStubHandler($sink)
-    {
-        return function ($response) use ($sink) {
-            $body = $response->getBody()->getContents();
-
-            if (is_string($sink)) {
-                file_put_contents($sink, $body);
-
-                return;
-            }
-
-            fwrite($sink, $body);
-            rewind($sink);
         };
     }
 

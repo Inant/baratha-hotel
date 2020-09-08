@@ -633,7 +633,7 @@ class Collection extends BaseCollection implements QueueableCollection
     /**
      * Get the Eloquent query builder from the collection.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquen\Builder
      *
      * @throws \LogicException
      */

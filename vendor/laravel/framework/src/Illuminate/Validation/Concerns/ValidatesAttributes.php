@@ -933,10 +933,6 @@ trait ValidatesAttributes
             return $this->getSize($attribute, $value) > $parameters[0];
         }
 
-        if (is_numeric($parameters[0])) {
-            return false;
-        }
-
         if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
             return $value > $comparedToValue;
         }
@@ -966,10 +962,6 @@ trait ValidatesAttributes
 
         if (is_null($comparedToValue) && (is_numeric($value) && is_numeric($parameters[0]))) {
             return $this->getSize($attribute, $value) < $parameters[0];
-        }
-
-        if (is_numeric($parameters[0])) {
-            return false;
         }
 
         if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
@@ -1003,10 +995,6 @@ trait ValidatesAttributes
             return $this->getSize($attribute, $value) >= $parameters[0];
         }
 
-        if (is_numeric($parameters[0])) {
-            return false;
-        }
-
         if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
             return $value >= $comparedToValue;
         }
@@ -1036,10 +1024,6 @@ trait ValidatesAttributes
 
         if (is_null($comparedToValue) && (is_numeric($value) && is_numeric($parameters[0]))) {
             return $this->getSize($attribute, $value) <= $parameters[0];
-        }
-
-        if (is_numeric($parameters[0])) {
-            return false;
         }
 
         if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
@@ -1532,9 +1516,11 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'required_unless');
 
-        [$values, $other] = $this->prepareValuesAndOther($parameters);
+        $data = Arr::get($this->data, $parameters[0]);
 
-        if (! in_array($other, $values)) {
+        $values = array_slice($parameters, 1);
+
+        if (! in_array($data, $values)) {
             return $this->validateRequired($attribute, $value);
         }
 
