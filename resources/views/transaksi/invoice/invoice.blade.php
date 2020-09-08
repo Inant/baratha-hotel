@@ -91,7 +91,7 @@
       <tr>
         <td>{{$kamar->no_kamar}}</td>
         <td>{{$durasi}}</td>
-        <td>{{number_format($kamar->kategori->harga, 0, ',', '.')}}</td>
+        <td>{{number_format($total, 0, ',', '.')}}</td>
         <td>{{number_format(0, 0, ',', '.')}}</td>
         <td>{{number_format($total, 0, ',', '.')}}</td>
       </tr>
