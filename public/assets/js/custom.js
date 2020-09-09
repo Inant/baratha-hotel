@@ -74,41 +74,43 @@ $(document).ready(function() {
         $("#kembalian").val(kembalian);
     });
 
-    $("#no_kartu").prop('disabled',true);
-    // $("#charge").prop('disabled',true);
+    $("#no_kartu").prop("disabled", true);
+    $("#charge").prop("disabled", true);
 
-    // var temp_grand_total = parseInt($('#grand_total').val());
+    temp_grand_total = parseInt($("#grand_total").val());
     function getCharge(thisVal) {
-        var grand_total = parseInt($('#grand_total').val());
+        var grand_total = temp_grand_total;
         var charge = 0;
-        if (thisVal != 'Tunai') {
-            $("#no_kartu").prop('disabled',false);
+        if (thisVal != "Tunai") {
+            $("#no_kartu").prop("disabled", false);
             $("#no_kartu").attr("required", true);
 
-            $("#charge").prop('disabled',false);
+            $("#charge").prop("disabled", false);
             $("#charge").attr("required", true);
-        }
-        else {
-            $("#no_kartu").prop('disabled',true);
-            $("#charge").prop('disabled',true);
-            $('#charge').val(0);
+        } else {
+            $("#no_kartu").prop("disabled", true);
+            $("#charge").prop("disabled", true);
+            $("#charge").val(0);
         }
 
         if (thisVal == "Debit BCA") {
-            charge = grand_total * 1 / 100; 
+            charge = (grand_total * 1) / 100;
+        } else if (thisVal == "Debit BRI") {
+            charge = (grand_total * 0.15) / 100;
+        } else if (thisVal == "Kredit BCA") {
+            charge = (grand_total * 1.8) / 100;
+        } else if (thisVal == "Kredit BRI") {
+            charge = (grand_total * 1.5) / 100;
+        } else if (thisVal == "Debit Bank Lain") {
+            charge = (grand_total * 0.15) / 100;
+        } else if (thisVal == "Kredit Bank Lain") {
+            charge = (grand_total * 1.5) / 100;
         }
-        else if(thisVal == 'Debit BRI'){
-            charge = grand_total * 0.15 / 100; 
-        }
-        else if(thisVal == 'Kredit BCA'){
-            charge = grand_total * 1.80 / 100; 
-        }
-        else if(thisVal == 'Kredit BRI'){
-            charge = grand_total * 1.50 / 100; 
-        }
-        $('#charge').val(Math.round(charge));
-        $('#grand_total').val(grand_total + Math.round(charge));
-        $('#idrGrandTotal').html(formatRupiah(grand_total + Math.round(charge)));
+        $("#charge").val(Math.round(charge));
+        $("#grand_total").val(grand_total + Math.round(charge));
+        $("#idrGrandTotal").html(
+            formatRupiah(grand_total + Math.round(charge))
+        );
     }
 
     $("#jenis_bayar").change(function() {

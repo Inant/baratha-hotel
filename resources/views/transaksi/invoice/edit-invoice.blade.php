@@ -67,7 +67,6 @@
                       $kamar = \App\Kamar::with('kategori')->where('id', $transaksi->id_kamar)->get()[0];
                       $diff = strtotime($transaksi->tgl_checkout) - strtotime($transaksi->tgl_checkin);
                       $durasi = abs(round($diff / 86400));
-                      $tarif = $kamar->kategori->harga;
                       $subtotal = $durasi * $kamar->kategori->harga;
                       $tax = $subtotal * 10 /100;
                       $diskon = 0;
@@ -83,7 +82,6 @@
                         $charge = $pembayaran->charge;
                         $grandtotal = $pembayaran->grandtotal;
                         $jenis_pembayaran = $pembayaran->jenis_pembayaran;
-                        $tarif = $subtotal;
                       }
                     @endphp
                       <tr>
@@ -91,7 +89,7 @@
                         <td>{{$transaksi->kamar->no_kamar}}</td>
                         <td>{{date('d-m-Y', strtotime($transaksi->tgl_checkin))}}</td>
                         <td>{{date('d-m-Y', strtotime($transaksi->tgl_checkout))}}</td>
-                        <td>{{number_format($subtotal, 0, ',', '.')}}</td>
+                        <td>{{number_format($kamar->kategori->harga, 0, ',', '.')}}</td>
                         <td>{{$durasi}}</td>
                         <td>{{number_format($subtotal, 0, ',', '.')}}</td>
                       </tr>
@@ -107,10 +105,7 @@
                   </table>
                   <hr>
                   <div class="row">
-                    <div class="col-4 mb-2">
-                      <label for=""><strong>Total</strong></label>
-                      <input type="number" name="total" id="total" class="form-control" value="{{$subtotal}}"> 
-                    </div>
+                    <input type="hidden" name="total" id="total" class="form-control" value="{{$subtotal}}" readonly>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
                       <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', $diskon)}}" data-tipe='rp'>
@@ -125,8 +120,10 @@
                         <option value="Tunai" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Tunai' ? 'selected' : ''}}>Tunai</option>
                         <option value="Debit BCA" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Debit BCA' ? 'selected' : ''}}>Debit BCA</option>
                         <option value="Debit BRI" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Debit BRI' ? 'selected' : ''}}>Debit BRI</option>
+                        <option value="Debit Bank Lain" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Debit Bank Lain' ? 'selected' : ''}}>Debit Bank Lain</option>
                         <option value="Kredit BCA" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Kredit BCA' ? 'selected' : ''}}>Kredit BCA</option>
                         <option value="Kredit BRI" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Kredit BRI' ? 'selected' : ''}}>Kredit BRI</option>
+                        <option value="Kredit Bank Lain" {{old('jenis_pembayaran', $jenis_pembayaran) == 'Kredit Bank Lain' ? 'selected' : ''}}>Kredit Bank Lain</option>
                       </select>
                       @error('jenis_pembayaran')
                         <span class="invalid-feedback" role="alert">
