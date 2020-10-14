@@ -353,3 +353,7 @@ select.form-line, input.form-line,textarea.form-line, .form-line .select2-contai
 .cursor-disabled{
     cursor: no-drop;
 }
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+    background: #ffc107;
+    color : white;
+}

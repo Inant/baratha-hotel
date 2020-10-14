@@ -24,7 +24,7 @@ class KategoriServiceController extends Controller
         }
         $this->param['pageInfo'] = 'List Data';
         $this->param['btnRight']['text'] = 'Tambah Data';
-        $this->param['btnRight']['link'] = route('kategori-service.create');
+        $this->param['btnRight']['link'] = route('kategori-fasilitas.create');
 
         return view('master-service.kategori-service.list-kategori-service', ['kategori' => $kategori], $this->param);
     }
@@ -33,7 +33,7 @@ class KategoriServiceController extends Controller
     {
         $this->param['pageInfo'] = 'Tambah Kategori Service';
         $this->param['btnRight']['text'] = 'Lihat Data';
-        $this->param['btnRight']['link'] = route('kategori-service.index');
+        $this->param['btnRight']['link'] = route('kategori-fasilitas.index');
 
         return view('master-service.kategori-service.tambah-kategori-service', $this->param);
     }
@@ -50,7 +50,7 @@ class KategoriServiceController extends Controller
 
         $newKategoriService->save();
 
-        return redirect()->route('kategori-service.create')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('kategori-fasilitas.create')->withStatus('Data berhasil ditambahkan.');
     }
 
     function edit($id)
@@ -58,7 +58,7 @@ class KategoriServiceController extends Controller
         $kategori = KategoriService::findOrFail($id);
         $this->param['pageInfo'] = 'Edit Kategori Service';
         $this->param['btnRight']['text'] = 'Lihat Data';
-        $this->param['btnRight']['link'] = route('kategori-service.index');
+        $this->param['btnRight']['link'] = route('kategori-fasilitas.index');
 
         return view('master-service.kategori-service.edit-kategori-service', ['kategori' => $kategori], $this->param);
     }
@@ -76,7 +76,7 @@ class KategoriServiceController extends Controller
 
         $KategoriService->save();
 
-        return redirect()->route('kategori-service.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('kategori-fasilitas.index')->withStatus('Data berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -84,6 +84,6 @@ class KategoriServiceController extends Controller
         $KategoriService = KategoriService::findOrFail($id);
         $KategoriService->delete();
 
-        return redirect()->route('kategori-service.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('kategori-fasilitas.index')->withStatus('Data berhasil dihapus.');
     }
 }

@@ -8,19 +8,11 @@
                 <div class="col-2">
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
-                <div class="col-6 offset-4">
+                <div class="col-10">
                     <form action="{{ route('kamar.index') }}">
-                        <div class="row">
+                        <div class="row justify-content-end">
                             <div class="col-5">
                                 <input name="keyword" class="form-control" placeholder="Cari kamar..." type="text" value="{{Request::get('keyword')}}">
-                            </div>
-                            <div class="col-5">
-                                <select name="kategori-kamar" id="kategori-kamar" class="form-control select2" width="100%">
-                                    <option value="">Semua Kategori</option>
-                                    @foreach ($kategori as $item)
-                                        <option value="{{$item->id}}" {{Request::get('kategori-kamar') == $item->id ? 'selected' : ''}} > {{$item->kategori_kamar}} </option>
-                                    @endforeach
-                                </select>
                             </div>
                             <div class="col-1">
                                 <button type="submit" class="btn btn-info">
@@ -31,6 +23,16 @@
                     </form>
                 </div>
               </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                @foreach ($kategori as $item)
+                    <?php 
+                        $selected = isset($_GET['id_kategori']) && $_GET['id_kategori']==$item->id ? "danger" : "success";
+                    ?>
+                    <a href="{{url('master-kamar/kamar?id_kategori='.$item->id)}}" class="btn btn-{{$selected}} btn-sm">{{$item->kategori_kamar}}</a>
+                @endforeach
+                </div>
+            </div>
             </div>
             @if (session('status'))
                 <br>
@@ -94,7 +96,6 @@
                   </tr>
                 </tbody>
             </table>
-            {{$kamar->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

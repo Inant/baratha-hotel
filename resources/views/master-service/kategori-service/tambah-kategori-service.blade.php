@@ -23,10 +23,10 @@
                     @endif
                 </div>
             </div>
-            <form action="{{ route('kategori-service.store') }}" method="POST">
+            <form action="{{ route('kategori-fasilitas.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
-                  <label for="" class="form-control-label">Kategori Service</label>
+                  <label for="" class="form-control-label">Kategori Fasilitas</label>
                   <input type="text" name="kategori" class="form-control @error('kategori') is-invalid @enderror" value="{{old('kategori')}}" placeholder="ex : Hiburan">
                   @error('kategori')
                       <span class="invalid-feedback" role="alert">

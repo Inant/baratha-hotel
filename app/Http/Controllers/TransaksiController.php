@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Transaksi;
+use \App\Detail_transaksi;
 use \App\Kamar;
 use \App\Pembayaran;
 use \App\Tamu;
@@ -26,19 +27,19 @@ class TransaksiController extends Controller
         $keyTamu = $request->get('keyTamu');
         $status = $request->get('status');
         
-        $kamar = \DB::table(\DB::raw('kamar k'))
+/*         $kamar = \DB::table(\DB::raw('kamar k'))
                     ->select('k.id', 'k.no_kamar')
                     ->join(\DB::raw('transaksi t'), 'k.id', '=', 't.id_kamar')
                     ->where('t.status', '!=', 'Check Out')
                     ->get();
-        
+ */        
         $tamu = \DB::table(\DB::raw('tamu t'))
         ->select('t.id', 't.nama')
         ->join(\DB::raw('transaksi tk'), 't.id', '=', 'tk.id_tamu')
         ->where('tk.status', '!=', 'Check Out')
         ->get();
 
-        $transaksi =Transaksi::with('kamar')->with('tamu')->where('status', '!=', 'Check Out');
+        $transaksi =Transaksi::with('tamu')->where('status', '!=', 'Check Out');
 
         if($keyTamu){
             $transaksi->where('id_tamu', $keyTamu);
@@ -52,7 +53,7 @@ class TransaksiController extends Controller
             $transaksi->where('status', $status);
         }
 
-        return \view('transaksi.transaksi.list-transaksi', ['transaksi' => $transaksi->paginate(10), 'kamar' => $kamar, 'tamu' => $tamu], $this->param);
+        return \view('transaksi.transaksi.list-transaksi', ['transaksi' => $transaksi->paginate(10), 'kamar' => /*$kamar */[], 'tamu' => $tamu], $this->param);
     }
 
     public function getKode()
@@ -92,7 +93,7 @@ class TransaksiController extends Controller
         $this->param['kode_transaksi'] = $this->getKode();
         $this->param['tamu'] = Tamu::select('id', 'nama')->get();
         $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function($query){
-            $query->select('id_kamar')->from('transaksi')->whereIn('status', ['Check In', 'Booking']);
+            $query->select('d.id_kamar')->from('detail_transaksi as d')->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')->whereIn('t.status', ['Check In', 'Booking']);
         })->orderBy('id','asc')->get();
 
         return \view('transaksi.transaksi.check-in', $this->param);
@@ -131,11 +132,13 @@ class TransaksiController extends Controller
         $tgl_checkout = $_GET['tgl_checkout'];
         $kamar = \DB::table('kamar AS k')
                         ->select('k.id', 'k.no_kamar')
+                        ->where('status','Tersedia')
                         ->whereNotIn('id', function($query) use ($tgl_checkin, $tgl_checkout){
-                            $query->select('id_kamar')->from('transaksi')
-                            ->whereBetween('tgl_checkin', [$tgl_checkin, $tgl_checkout])
-                            ->orWhereBetween('tgl_checkout', [$tgl_checkin, $tgl_checkout])
-                            ->where('status', '!=', 'Check Out');
+                            $query->select('d.id_kamar')->from('detail_transaksi as d')
+                            ->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')
+                            ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
+                            ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                            ->where('t.status', '!=', 'Check Out');
                         })
                         ->orderBy('id', 'asc')
                         ->get();
@@ -168,7 +171,6 @@ class TransaksiController extends Controller
             'id_tamu' => 'required',
             'tgl_checkin' => 'required|date',
             'tgl_checkout' => 'required|date|after:tgl_checkin',
-            'id_kamar' => 'required|numeric',
             'status' => 'required',
         ]);
 
@@ -179,18 +181,28 @@ class TransaksiController extends Controller
         $newCheckIn->id_tamu = $request->get('id_tamu');
         $newCheckIn->tgl_checkin = $request->get('tgl_checkin');
         $newCheckIn->tgl_checkout = $request->get('tgl_checkout');
-        $newCheckIn->id_kamar = $request->get('id_kamar');
         $newCheckIn->status = $request->get('status');
         $newCheckIn->keterangan = $request->get('keterangan');
         $newCheckIn->status_bayar = 'Belum';
+//        $newCheckIn->id_kamar = $request->get('id_kamar');
 
         $newCheckIn->save();
+
+        foreach ($_POST['id_kamar'] as $value) {
+            $detail = new Detail_transaksi;
+            $detail->kode_transaksi = $request->get('kode_transaksi');
+            $detail->id_kamar = $value;
+
+            $detail->save();
+        }
+
+
 
         // $kamar = Kamar::find($request->get('id_kamar'));
         // $kamar->status = 'Tidak Tersedia';
         // $kamar->save();
 
-        return redirect()->back()->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil ditambahkan.');
     }
 
     public function edit($kode)
@@ -315,7 +327,8 @@ class TransaksiController extends Controller
         
         $kamar = \DB::table(\DB::raw('kamar k'))
                     ->select('k.id', 'k.no_kamar')
-                    ->join(\DB::raw('transaksi t'), 'k.id', '=', 't.id_kamar')
+                    ->join(\DB::raw('detail_transaksi dt'), 'k.id', '=', 'dt.id_kamar')
+                    ->join(\DB::raw('transaksi t'), 'dt.kode_transaksi', '=', 't.kode_transaksi')
                     ->where('t.status_bayar', '=', 'Belum')
                     ->distinct()
                     ->get();
@@ -327,19 +340,22 @@ class TransaksiController extends Controller
                     ->distinct()
                     ->get();
 
-        $transaksi =Transaksi::with('kamar')->with('tamu')->where('status_bayar', '!=', 'Sudah');
+        $transaksi =Transaksi::with('tamu');
 
         if($keyTamu){
             $transaksi->where('id_tamu', $keyTamu);
         }
-
-        if ($keywordKamar) {
-            $transaksi->where('id_kamar', "$keywordKamar");
-        }
-        
         if ($status) {
             $transaksi->where('status', $status);
         }
+
+        $transaksi->where('status_bayar', '!=', 'Sudah');
+        if ($keywordKamar) {
+            $transaksi->where('dt.id_kamar', "$keywordKamar")
+            ->join('detail_transaksi as dt','transaksi.kode_transaksi','dt.kode_transaksi')
+            ->groupBy('transaksi.kode_transaksi');
+        }
+        
 
         return \view('transaksi.invoice.list-invoice', ['transaksi' => $transaksi->paginate(10), 'kamar' => $kamar, 'tamu' => $tamu], $this->param);
     }
@@ -361,7 +377,7 @@ class TransaksiController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('transaksi.list-invoice');
 
-        $this->param['transaksi'] = Transaksi::with('kamar')->findOrFail($kode);
+        $this->param['transaksi'] = Transaksi::findOrFail($kode);
 
         return view('transaksi.invoice.edit-invoice', $this->param);
     }

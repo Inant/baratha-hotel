@@ -13,8 +13,8 @@ class Kamar extends Model
         return $this->belongsTo('App\KategoriKamar', 'id_kategori_kamar');
     }
 
-    public function transaksi()
+    public function detail_transaksi()
     {
-        return $this->hasMany('App\Transaksi', 'id_kamar');
+        return $this->belongsTo('App\Kamar','id_kamar');
     }
 }

@@ -39,7 +39,7 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="name">#</th>
-                    <th scope="col" class="sort" data-sort="budget">Kategori Service</th>
+                    <th scope="col" class="sort" data-sort="budget">Kategori Fasilitas</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -58,8 +58,8 @@
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                              <a class="dropdown-item" href="{{ route('kategori-service.edit', $value->id) }}">Edit</a>
-                              {{-- <form action="{{ route('kategori-service.destroy', $value->id) }}" method="post">
+                              <a class="dropdown-item" href="{{ route('kategori-fasilitas.edit', $value->id) }}">Edit</a>
+                              {{-- <form action="{{ route('kategori-fasilitas.destroy', $value->id) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">

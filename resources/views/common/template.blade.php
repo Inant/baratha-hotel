@@ -81,17 +81,17 @@
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'master-service' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-service" aria-expanded='false'>
                 <i class="ni ni-support-16 text-purple"></i>
-                <span class="nav-link-text">Master Service</span>
+                <span class="nav-link-text">Master Fasilitas</span>
               </a>
                 <ul class="navbar-nav nav-collapse collapse" id="master-service">
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url('master-service/kategori-service')}}">
-                      <span class="nav-link-text">Kategori Service</span>
+                    <a class="nav-link" href="{{url('master-fasilitas/kategori-fasilitas')}}">
+                      <span class="nav-link-text">Kategori Fasilitas</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url('master-service/service')}}">
-                      <span class="nav-link-text">Service</span>
+                    <a class="nav-link" href="{{url('master-fasilitas/fasilitas')}}">
+                      <span class="nav-link-text">Fasilitas</span>
                     </a>
                   </li>
                 </ul>
@@ -109,7 +109,7 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url('master-kamar/kamar')}}">
+                    <a class="nav-link" href="{{url('master-kamar/kamar?id_kategori=4')}}">
                       <span class="nav-link-text">Kamar</span>
                     </a>
                   </li>

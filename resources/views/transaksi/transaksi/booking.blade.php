@@ -48,7 +48,10 @@
                     <select name="id_tamu" class="form-control select2  @error('id_tamu') is-invalid @enderror">
                         <option value="">-- Pilih Tamu --</option>
                         @foreach ($tamu as $item)
-                            <option value="{{$item->id}}" {{old('id_tamu') == $item->id ? 'selected' : ''}} > {{$item->nama}} </option>
+                            <?php 
+                                $tamu = (isset($_GET['id_tamu'])) && $_GET['id_tamu']==$item->id ? 'selected' : '';
+                            ?>
+                            <option value="{{$item->id}}" {{old('id_tamu') == $item->id ? 'selected' : ''}}  {{$tamu}}> {{$item->nama}} </option>
                         @endforeach
                     </select>
                     @error('id_tamu')
@@ -60,7 +63,7 @@
                     <br>
 
                     <label for="" class="form-control-label">Tanggal Check In</label>
-                    <input type="date" name="tgl_checkin" value="{{old('tgl_checkin')}}" class="form-control datepicker @error('tgl_checkin') is-invalid @enderror" id="tgl_checkin">
+                    <input type="text" name="tgl_checkin" value="{{old('tgl_checkin')}}" class="form-control datepicker @error('tgl_checkin') is-invalid @enderror" id="tgl_checkin">
                     @error('tgl_checkin')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -69,7 +72,7 @@
                     <br>
 
                     <label for="" class="form-control-label">Tanggal Check Out</label>
-                    <input type="date" name="tgl_checkout" value="{{old('tgl_checkout')}}" class="form-control datepicker @error('tgl_checkout') is-invalid @enderror" id="tgl_checkout">
+                    <input type="text" name="tgl_checkout" value="{{old('tgl_checkout')}}" class="form-control datepicker @error('tgl_checkout') is-invalid @enderror" id="tgl_checkout">
                     @error('tgl_checkout')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

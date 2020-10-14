@@ -71,9 +71,21 @@
                     $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                     @endphp
                     @foreach ($transaksi as $value)
+                    <?php 
+                        $detail = \DB::table('detail_transaksi as dt')->select('k.no_kamar')->join('kamar as k','dt.id_kamar','k.id')->where('kode_transaksi',$value->kode_transaksi)->get();
+                        $count = count($detail);
+                    ?>
                         <tr>
                             <td>{{$no}}</td>
-                            <td>{{$value->kamar->no_kamar}}</td>
+                            <td>
+                                @foreach($detail as $c => $d)
+                                <?php 
+                                    $c++;
+                                    $glue = $count!=$c ? ', ' : '';
+                                ?>
+                                    {{$d->no_kamar.$glue}}
+                                @endforeach
+                            </td>
                             <td>{{$value->tamu->nama}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>

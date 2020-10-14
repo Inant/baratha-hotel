@@ -46,10 +46,13 @@
             </div>
             <div class="row mt-3 ml-2 mb-3">
                 <div class="col-3">
-                    <a href="{{ url('transaksi/check-in') }}">
+                    <?php 
+                        $idTamu = isset($_GET['id_tamu']) ? "?id_tamu=".$_GET['id_tamu'] : "";
+                    ?>
+                    <a href="{{ url('transaksi/check-in'.$idTamu) }}">
                         <button class="btn btn-sm btn-success">Check In</button>
                     </a>
-                    <a href="{{ url('transaksi/booking') }}" class="ml-4">
+                    <a href="{{ url('transaksi/booking'.$idTamu) }}" class="ml-4">
                         <button class="btn btn-sm btn-secondary">Booking</button>
                     </a>
                 </div>

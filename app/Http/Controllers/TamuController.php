@@ -71,8 +71,10 @@ class TamuController extends Controller
 
         $newTamu->save();
 
-        return redirect()->route('tamu.create')->withStatus('Data berhasil ditambahkan.');
-    }    
+        $getId = Tamu::select('id')->orderBy('id','desc')->take(1)->get();
+
+        return redirect()->to('transaksi/transaksi?id_tamu='.$getId[0]->id)->withStatus('Data berhasil ditambahkan.');
+    }
 
     public function edit($id)
     {

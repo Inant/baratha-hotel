@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $(".datepicker").datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
     });
     $(".select2").select2();
     $(".fullpage-version").click(function(e) {
@@ -75,9 +75,9 @@ $(document).ready(function() {
     });
 
     $("#no_kartu").prop("disabled", true);
-    $("#charge").prop("disabled", true);
+//    $("#charge").prop("disabled", true);
 
-    temp_grand_total = parseInt($("#grand_total").val());
+    temp_grand_total = parseInt($("#subtotal").val());
     function getCharge(thisVal) {
         var grand_total = temp_grand_total;
         var charge = 0;
@@ -85,13 +85,13 @@ $(document).ready(function() {
             $("#no_kartu").prop("disabled", false);
             $("#no_kartu").attr("required", true);
 
-            $("#charge").prop("disabled", false);
+/*             $("#charge").prop("disabled", false);
             $("#charge").attr("required", true);
-        } else {
+ */        } else {
             $("#no_kartu").prop("disabled", true);
-            $("#charge").prop("disabled", true);
+/*             $("#charge").prop("disabled", true);
             $("#charge").val(0);
-        }
+ */        }
 
         if (thisVal == "Debit BCA") {
             charge = (grand_total * 1) / 100;
@@ -112,6 +112,17 @@ $(document).ready(function() {
             formatRupiah(grand_total + Math.round(charge))
         );
     }
+
+    $("#charge").keyup(function(){
+        var change = parseInt($(this).val())
+        var subtotal = parseInt($("#subtotal").val())
+        var newGrandTotal = subtotal + change;
+        $("#grand_total").val(newGrandTotal);
+        $("#idrGrandTotal").html(
+            formatRupiah(newGrandTotal)
+        );
+
+    })
 
     $("#jenis_bayar").change(function() {
         var thisVal = $(this).val();

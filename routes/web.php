@@ -31,9 +31,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('kamar', 'KamarController');
     });
 
-    Route::group(['prefix' => 'master-service'], function () {
-        Route::resource('kategori-service', 'KategoriServiceController');
-        Route::resource('service', 'ServiceController');
+    Route::group(['prefix' => 'master-fasilitas'], function () {
+        Route::resource('kategori-fasilitas', 'KategoriServiceController');
+        Route::resource('fasilitas', 'ServiceController');
     });
 
     Route::group(['prefix' => 'transaksi'], function () {

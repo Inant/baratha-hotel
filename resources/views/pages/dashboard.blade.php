@@ -162,18 +162,20 @@
                             $month = date('m');
                             $year = date('Y');
                             $current = $year.'-'.$month.'-'.$tgl;
-                            $checkIn = \DB::table('transaksi')
-                            ->where('id_kamar', $val->id)
-                            ->where('tgl_checkin', '<=', $current)
-                            ->where('tgl_checkout', '>=', $current)
-                            ->where('status', 'Check In')
+                            $checkIn = \DB::table('transaksi as t')
+                            ->join('detail_transaksi as dt','t.kode_transaksi','dt.kode_transaksi')
+                            ->where('dt.id_kamar', $val->id)
+                            ->where('t.tgl_checkin', '<=', $current)
+                            ->where('t.tgl_checkout', '>=', $current)
+                            ->where('t.status', 'Check In')
                             ->count();
 
-                            $booking = \DB::table('transaksi')
-                            ->where('id_kamar', $val->id)
-                            ->where('tgl_checkin', '<=', $current)
-                            ->where('tgl_checkout', '>=', $current)
-                            ->where('status', 'Booking')
+                            $booking = \DB::table('transaksi as t')
+                            ->join('detail_transaksi as dt','t.kode_transaksi','dt.kode_transaksi')
+                            ->where('dt.id_kamar', $val->id)
+                            ->where('t.tgl_checkin', '<=', $current)
+                            ->where('t.tgl_checkout', '>=', $current)
+                            ->where('t.status', 'Booking')
                             ->count();
 
                             if ($checkIn == 1) {

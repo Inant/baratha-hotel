@@ -17,7 +17,7 @@ class CreatePembayaranTable extends Migration
             $table->increments('id');
             $table->string('kode_transaksi', 15);
             $table->dateTime('waktu');
-            $table->enum('jenis_pembayaran', ['Tunai', 'Debit BCA', 'Debit BRI', 'Kredit BCA', 'Kredit BRI']);
+            $table->enum('jenis_pembayaran', ['Tunai', 'Debit BCA', 'Debit BRI', 'Kredit BCA', 'Kredit BRI','Kredit Bank Lain','Debit Bank Lain']);
             $table->integer('total');
             $table->integer('diskon');
             $table->integer('tax');

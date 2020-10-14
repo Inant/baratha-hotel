@@ -21,19 +21,20 @@ class KamarController extends Controller
         $this->param['btnRight']['link'] = route('kamar.create');
 
         $keyword = $request->get('keyword');
-        $keywordKategori = $request->get('kategori-kamar');
+//        $keywordKategori = $request->get('kategori-kamar');
         
-        $kategori = KategoriKamar::get();
+        $kategori = KategoriKamar::orderBy('kategori_kamar','asc')->get();
         $kamar = Kamar::with('kategori');
-
-        if($keywordKategori){
-            $kamar->where('id_kategori_kamar', $keywordKategori);
+        
+        if(isset($_GET['id_kategori'])){
+            $kamar->where('id_kategori_kamar', $_GET['id_kategori']);
         }
 
         if ($keyword) {
             $kamar->where('no_kamar', 'LIKE', "%$keyword%");
         }
-        return \view('master-kamar.kamar.list-kamar', ['kamar' => $kamar->paginate(10), 'kategori' => $kategori], $this->param);
+        
+        return \view('master-kamar.kamar.list-kamar', ['kamar' => $kamar->get(), 'kategori' => $kategori], $this->param);
     }
 
     public function create()

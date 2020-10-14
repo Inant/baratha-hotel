@@ -23,7 +23,7 @@
                     @endif
                 </div>
             </div>
-            <form action="{{ route('service.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('fasilitas.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <label for="" class="form-control-label">Service</label>
