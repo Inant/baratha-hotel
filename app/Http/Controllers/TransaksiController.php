@@ -425,6 +425,42 @@ class TransaksiController extends Controller
         $kode = str_replace('-', '/', $kode);
         $this->param['transaksi'] = Transaksi::with('tamu')->find($kode);
         return view('transaksi.invoice.invoice', $this->param);
+        // return $this->param;
+    }
+
+    public function online()
+    {
+        $data = Pembayaran::whereNotNull('bukti')->get();
+        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon','ni-credit-card text-orange');
+    }
+
+    public function searchPembayaranOnline(Request $req)
+    {
+        $data = Pembayaran::where('kode_transaksi','like','%'.$req->get('keyword').'%')
+                        ->whereNotNull('bukti')->get();
+        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon','ni-credit-card text-orange');
+    }
+
+    public function detailPembayaran($kode)
+    {
+        $kode = str_replace('-', '/', $kode);
+        $data = Pembayaran::where('kode_transaksi', $kode)->get();
+        return view('transaksi.pembayaran.detail-pembayaran')->with('data', $data)->with('pageInfo', 'Detail Pembayaran Online')->with('icon','ni-credit-card text-orange');
+    }
+
+    public function updatePembayaranOnline(Request $req)
+    {
+        try{
+            DB::table('transaksi')->where('kode_transaksi', $req->kode)->update([
+                'status' => 'Check In',
+                'updated_at' => date('y-m-d H:i:s')
+            ]);
+    
+            return 'berhasil';
+        }
+        catch(\Illuminate\Database\QueryException $e){
+            return $e->getMessage();
+        }
     }
 
     public function laporan()

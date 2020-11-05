@@ -51,6 +51,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('save-pembayaran', 'TransaksiController@savePembayaran')->name('transaksi.save-pembayaran');
         Route::get('get-kamar', 'TransaksiController@getKamarTersedia');
         Route::get('reservasi', 'TransaksiController@reservasi');
+        Route::get('online', 'TransaksiController@online');
+        Route::get('online/detail/{kode}', 'TransaksiController@detailPembayaran');
+        Route::post('online/accept', 'TransaksiController@updatePembayaranOnline');
         Route::resource('tamu', 'TamuController');
         Route::resource('transaksi', 'TransaksiController');
     });
