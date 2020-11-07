@@ -443,7 +443,6 @@ class TransaksiController extends Controller
 
     public function detailPembayaran($kode)
     {
-        $kode = str_replace('-', '/', $kode);
         $data = Pembayaran::where('kode_transaksi', $kode)->get();
         return view('transaksi.pembayaran.detail-pembayaran')->with('data', $data)->with('pageInfo', 'Detail Pembayaran Online')->with('icon','ni-credit-card text-orange');
     }
@@ -455,8 +454,9 @@ class TransaksiController extends Controller
                 'status' => 'Check In',
                 'updated_at' => date('y-m-d H:i:s')
             ]);
-    
-            return 'berhasil';
+            $kode = str_replace('/', '-', $req->kode);
+            $url = 'http://localhost:8080/baratha-hotel-api/api/send-acc-mail/'.$kode;
+            return redirect()->to($url);
         }
         catch(\Illuminate\Database\QueryException $e){
             return $e->getMessage();
