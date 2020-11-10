@@ -9,7 +9,7 @@
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
                 <div class="col-6 offset-4">
-                    <form action="{{ route('service.index') }}">
+                    <form action="{{ route('fasilitas.index') }}">
                         <div class="row">
                             <div class="col-5">
                                 <input name="keyword" class="form-control" placeholder="Cari service..." type="text" value="{{Request::get('keyword')}}">
@@ -69,8 +69,8 @@
                                     <i class="fas fa-ellipsis-v"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                <a class="dropdown-item" href="{{ route('service.edit', $value->id) }}">Edit</a>
-                                {{-- <form action="{{ route('service.destroy', $value->id) }}" method="post">
+                                <a class="dropdown-item" href="{{ route('fasilitas.edit', $value->id) }}">Edit</a>
+                                {{-- <form action="{{ route('fasilitas.destroy', $value->id) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">Hapus</button>

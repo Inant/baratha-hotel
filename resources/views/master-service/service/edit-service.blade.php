@@ -23,7 +23,7 @@
                     @endif
                 </div>
             </div>
-            <form action="{{ route('service.update', $service->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('fasilitas.update', $service->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="card-body">

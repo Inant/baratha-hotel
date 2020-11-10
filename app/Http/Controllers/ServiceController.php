@@ -18,7 +18,7 @@ class ServiceController extends Controller
     {
         $this->param['pageInfo'] = 'List Data';
         $this->param['btnRight']['text'] = 'Tambah Data';
-        $this->param['btnRight']['link'] = route('service.create');
+        $this->param['btnRight']['link'] = route('fasilitas.create');
 
         $keyword = $request->get('keyword');
         $keywordKategori = $request->get('kategori-service');
@@ -40,7 +40,7 @@ class ServiceController extends Controller
     {
         $this->param['pageInfo'] = 'Tambah Service';
         $this->param['btnRight']['text'] = 'Lihat Data';
-        $this->param['btnRight']['link'] = route('service.index');
+        $this->param['btnRight']['link'] = route('fasilitas.index');
 
         $kategoris = KategoriService::get();
         return \view('master-service.service.tambah-service', ['kategoris' => $kategoris], $this->param);
@@ -62,14 +62,14 @@ class ServiceController extends Controller
 
         $newService->save();
 
-        return redirect()->route('service.create')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('fasilitas.create')->withStatus('Data berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
         $this->param['pageInfo'] = 'Edit Service';
         $this->param['btnRight']['text'] = 'Lihat Data';
-        $this->param['btnRight']['link'] = route('service.index');
+        $this->param['btnRight']['link'] = route('fasilitas.index');
 
         $kategoris = KategoriService::get();
         $service = Service::findOrFail($id);
@@ -101,7 +101,7 @@ class ServiceController extends Controller
 
         $service->save();
 
-        return redirect()->route('service.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('fasilitas.index')->withStatus('Data berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -109,6 +109,6 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
         $service->delete();
 
-        return redirect()->route('service.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('fasilitas.index')->withStatus('Data berhasil dihapus.');
     }
 }
