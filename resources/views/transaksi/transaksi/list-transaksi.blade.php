@@ -87,9 +87,20 @@
                     $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                     @endphp
                     @foreach ($transaksi as $value)
+                        @php
+                            $getNoKamar = \DB::table(\DB::raw('kamar k'))->select(\DB::raw('no_kamar'))->join(\DB::raw('detail_transaksi d'), 'd.id_kamar', '=', 'k.id')->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'd.kode_transaksi')->where('t.kode_transaksi', '=', $value->kode_transaksi)->get();
+                        @endphp
                         <tr>
                             <td>{{$no}}</td>
-                            <td>{{$value->kamar->no_kamar}}</td>
+                            <td>
+                                @foreach ($getNoKamar as $item)
+                                    @if ($value->status == 'Check In')
+                                        <span class="badge badge-success">{{$item->no_kamar}}</span>
+                                    @elseif($value->status == 'Booking')
+                                        <span class="badge badge-secondary">{{$item->no_kamar}}</span>
+                                    @endif
+                                @endforeach
+                            </td>
                             <td>{{$value->tamu->nama}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>

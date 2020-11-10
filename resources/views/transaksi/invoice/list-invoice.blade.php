@@ -79,11 +79,11 @@
                             <td>{{$no}}</td>
                             <td>
                                 @foreach($detail as $c => $d)
-                                <?php 
-                                    $c++;
-                                    $glue = $count!=$c ? ', ' : '';
-                                ?>
-                                    {{$d->no_kamar.$glue}}
+                                @if ($value->status == 'Check In')
+                                    <span class="badge badge-success">{{$d->no_kamar}}</span>
+                                @elseif($value->status == 'Booking')
+                                    <span class="badge badge-secondary">{{$d->no_kamar}}</span>
+                                @endif
                                 @endforeach
                             </td>
                             <td>{{$value->tamu->nama}}</td>

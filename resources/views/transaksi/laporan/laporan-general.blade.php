@@ -34,14 +34,18 @@
       $durasi = abs(round($diff / 86400));
 
       // $kamar = \App\Kamar::with('transaksi')->where('id', $value->id_kamar)->get()[0];
-      
+      $kamar = \DB::table(\DB::raw('kamar k'))->select('k.no_kamar')->join(\DB::raw('detail_transaksi d'), 'k.id', '=', 'd.id_kamar')->where('d.kode_transaksi', $value->kode_transaksi)->get();      
   ?>
           <tr>
           <td>{{$loop->iteration}}</td>
           <td>{{$value->kode_transaksi}}</td>
           <td>{{date('d-m-Y H:i', strtotime($value->waktu))}}</td>
           <td>{{$value->nama}}</td>
-          <td>{{$value->no_kamar}}</td>
+          <td>
+            @foreach ($kamar as $item)
+                <span class="badge badge-success"> {{$item->no_kamar}} </span>
+            @endforeach
+          </td>
           <td>{{$durasi}}</td>
           <td>{{$value->diskon}}</td>
           <td>{{number_format($subtotal,0,',','.')}}</td>

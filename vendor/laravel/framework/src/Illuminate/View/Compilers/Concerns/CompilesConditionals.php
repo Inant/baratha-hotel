@@ -2,6 +2,8 @@
 
 namespace Illuminate\View\Compilers\Concerns;
 
+use Illuminate\Support\Str;
+
 trait CompilesConditionals
 {
     /**
@@ -136,6 +138,17 @@ trait CompilesConditionals
     }
 
     /**
+     * Compile the section-missing statements into valid PHP.
+     *
+     * @param  string  $expression
+     * @return string
+     */
+    protected function compileSectionMissing($expression)
+    {
+        return "<?php if (empty(trim(\$__env->yieldContent{$expression}))): ?>";
+    }
+
+    /**
      * Compile the if statements into valid PHP.
      *
      * @param  string  $expression
@@ -267,5 +280,27 @@ trait CompilesConditionals
     protected function compileEndSwitch()
     {
         return '<?php endswitch; ?>';
+    }
+
+    /**
+     * Compile an once block into valid PHP.
+     *
+     * @return string
+     */
+    protected function compileOnce($id = null)
+    {
+        $id = $id ? $this->stripParentheses($id) : "'".(string) Str::uuid()."'";
+
+        return '<?php if (! $__env->hasRenderedOnce('.$id.')): $__env->markAsRenderedOnce('.$id.'); ?>';
+    }
+
+    /**
+     * Compile an end-once block into valid PHP.
+     *
+     * @return string
+     */
+    public function compileEndOnce()
+    {
+        return '<?php endif; ?>';
     }
 }

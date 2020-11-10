@@ -39,7 +39,7 @@ class TransaksiController extends Controller
         ->where('tk.status', '!=', 'Check Out')
         ->get();
 
-        $transaksi =Transaksi::with('tamu')->where('status', '!=', 'Check Out');
+        $transaksi =Transaksi::with('tamu')->with('detail_transaksi')->where('status', '!=', 'Check Out');
 
         if($keyTamu){
             $transaksi->where('id_tamu', $keyTamu);
@@ -107,7 +107,7 @@ class TransaksiController extends Controller
         $this->param['kode_transaksi'] = $this->getKode();
         $this->param['tamu'] = Tamu::select('id', 'nama')->get();
         $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function($query){
-            $query->select('id_kamar')->from('transaksi')->whereIn('status', ['Check In', 'Booking']);
+            $query->select('d.id_kamar')->from('detail_transaksi as d')->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')->whereIn('t.status', ['Check In', 'Booking']);
         })->orderBy('id','asc')->get();
 
         return \view('transaksi.transaksi.booking', $this->param);
@@ -291,9 +291,8 @@ class TransaksiController extends Controller
 
     public function getLaporanGeneral($dari, $sampai, $tipe='')
     {
-        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.id_kamar', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran','k.no_kamar')
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran')
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
-        ->join(\DB::raw('kamar k'), 'k.id', '=', 't.id_kamar')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
         ->where('t.status_bayar', 'Sudah');
@@ -307,11 +306,12 @@ class TransaksiController extends Controller
     {
         if($dari && $sampai){
             $laporan = \DB::table(\DB::raw('transaksi t'))
-                        ->select('k.no_kamar', \DB::raw('COUNT(t.id_kamar) as jml'))
-                        ->join(\DB::raw('kamar k'), 'k.id', '=', 't.id_kamar')
+                        ->select('k.no_kamar', \DB::raw('COUNT(d.id_kamar) as jml'))
+                        ->join(\DB::raw('detail_transaksi d'), 'd.kode_transaksi', '=', 't.kode_transaksi')
+                        ->join(\DB::raw('kamar k'), 'k.id', '=', 'd.id_kamar')
                         ->whereBetween('waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-                        ->groupBy('t.id_kamar')
-                        ->orderBy(\DB::raw('jml'))
+                        ->groupBy('d.id_kamar')
+                        ->orderBy(\DB::raw('jml'), 'desc')
                         ->get();
         }
         return $laporan;

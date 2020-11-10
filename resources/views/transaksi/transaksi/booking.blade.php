@@ -81,7 +81,7 @@
                     <br>
 
                     <label for="" class="form-control-label">Nomor Kamar</label>
-                    <select name="id_kamar" id="id_kamar" class="form-control select2" data-url="{{url('transaksi/get-kamar')}}">
+                    <select name="id_kamar[]" multiple='multiple' id="id_kamar" class="form-control select2" required data-url="{{url('transaksi/get-kamar')}}">
                         <option value="">--Pilih Kamar--</option>
                     </select>
                     @error('id_kamar')

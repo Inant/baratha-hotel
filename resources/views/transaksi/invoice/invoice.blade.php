@@ -62,12 +62,13 @@
   </table>
   <br>
   @php
-      $kamar = \App\Kamar::with('kategori')->where('id', $transaksi->id_kamar)->get()[0];
+      $kamar = \DB::table(\DB::raw('kamar k'))->select('k.no_kamar', 'kt.harga')->join(\DB::raw('kategori_kamar kt'), 'k.id_kategori_kamar', '=', 'kt.id')->join(\DB::raw('detail_transaksi d'), 'k.id', '=', 'd.id_kamar')->where('d.kode_transaksi', $transaksi->kode_transaksi)->get();
 
       $diff = strtotime($transaksi->tgl_checkout) - strtotime($transaksi->tgl_checkin);
       $durasi = abs(round($diff / 86400));
-
-      $subtotal = $kamar->kategori->harga * $durasi;
+      // foreach ($kamar as $key => $value) {
+      //   $subtotal = $value->harga * $durasi;
+      // }
       // $tax = $subtotal * 10 / 100;
 
       $pembayaran = \App\Pembayaran::select('total', 'diskon', 'tax', 'charge', 'grandtotal')->where('kode_transaksi', $transaksi->kode_transaksi)->get()[0];
@@ -88,13 +89,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>{{$kamar->no_kamar}}</td>
-        <td>{{$durasi}}</td>
-        <td>{{number_format($total, 0, ',', '.')}}</td>
-        <td>{{number_format(0, 0, ',', '.')}}</td>
-        <td>{{number_format($total, 0, ',', '.')}}</td>
-      </tr>
+      @foreach ($kamar as $item)
+        @php
+            $subtotal = $item->harga * $durasi;
+        @endphp
+        <tr>
+          <td>{{$item->no_kamar}}</td>
+          <td>{{$durasi}}</td>
+          <td>{{number_format($item->harga, 0, ',', '.')}}</td>
+          <td>{{number_format(0, 0, ',', '.')}}</td>
+          <td>{{number_format($subtotal, 0, ',', '.')}}</td>
+        </tr>
+      @endforeach
     </tbody>
   </table>
   <br>
