@@ -96,19 +96,19 @@
                         foreach($kamar as $data){
                           $subtotal = $data->harga * $durasi;
                           $total+=$subtotal;
-                      ?>
-                        <tr>
-                          <td>{{$data->kategori_kamar}}</td>
-                          <td>{{$data->no_kamar}}</td>
-                          <td>{{number_format($data->harga,0,',','.')}}</td>
-                          <td>{{$durasi}} Hari</td>
-                          <td>{{number_format($subtotal,0,',','.')}}</td>
-                        </tr>
-                      <?php
+                          ?>
+                            <tr>
+                              <td>{{$data->kategori_kamar}}</td>
+                              <td>{{$data->no_kamar}}</td>
+                              <td>{{number_format($data->harga,0,',','.')}}</td>
+                              <td>{{$durasi}} Hari</td>
+                              <td>{{number_format($subtotal,0,',','.')}}</td>
+                            </tr>
+                          <?php
                         }
                         $tax = 10 * $total / 100;
                         $grandtotal = $tax + $total;
-                      ?>
+                          ?>
                     </tbody>
                     <tfoot>
                         <tr class="bg-dark text-white">
@@ -119,7 +119,7 @@
                   </table>
                   <hr>
                   <div class="row">
-                    <input type="hidden" name="total" id="total" class="form-control" value="{{$subtotal}}" readonly>
+                    <input type="hidden" name="total" id="total" class="form-control" value="{{$total}}" readonly>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
                       <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', $diskon)}}" data-tipe='rp'>
