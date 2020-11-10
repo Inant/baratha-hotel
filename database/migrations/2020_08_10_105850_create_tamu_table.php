@@ -16,6 +16,7 @@ class CreateTamuTable extends Migration
         Schema::create('tamu', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nama', 40);
+            $table->string('email', 50);
             $table->enum('jenis_identitas', ['KTP', 'SIM'])->nullable();
             $table->string('no_identitas', 20)->nullable();
             $table->string('foto_identitas')->nullable();
