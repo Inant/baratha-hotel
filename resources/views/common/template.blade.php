@@ -68,7 +68,58 @@
                 <span class="nav-link-text">Dashboard</span>
               </a>
             </li>
-
+            <li class="nav-item">
+              <a class="nav-link {{!empty(Request::segment(2)) && Request::segment(2) == 'pembayaran-online' ? 'active' :''}}" href="{{url('transaksi/pembayaran-online')}}">
+                <i class="ni ni-credit-card text-yellow"></i>
+                <?php
+                  $countPembayaran = \DB::table('transaksi')->select('kode_transaksi')->where('status_bayar','Menunggu Verifikasi')->where('tipe_pemesanan','Online')->count();
+                ?>
+                <span class="nav-link-text">Pembayaran Online  <span class="badge badge-primary">{{$countPembayaran}}</span></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{!empty(Request::segment(2)) && Request::segment(2) == 'online' ? 'active' :''}}" href="{{url('transaksi/online')}}">
+                <i class="ni ni-world-2 text-pink"></i>
+                <?php 
+                  $countPemesanan = \DB::table('transaksi')->select('kode_transaksi')->where('status_bayar','Belum')->where('tipe_pemesanan','Online')->count();
+                ?>
+                <span class="nav-link-text">Pemesanan Online <span class="badge badge-primary">{{$countPemesanan}}</span></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link collapsed {{ Request::segment(1) == 'transaksi' && Request::segment(2)!='online' && Request::segment(2) != 'pembayaran-online' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#transaksi" aria-expanded='false'>
+                <i class="ni ni-credit-card text-orange"></i>
+                <span class="nav-link-text">Reservasi</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="transaksi">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/tamu')}}">
+                      <span class="nav-link-text">Master Tamu</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/transaksi')}}">
+                      <span class="nav-link-text">Reservasi</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/invoice')}}">
+                      <span class="nav-link-text">Invoice</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/laporan?tipe=general')}}">
+                      <span class="nav-link-text">Laporan</span>
+                    </a>
+                  </li>
+                  
+                  {{-- <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/pembayaran')}}">
+                      <span class="nav-link-text">Pembayaran</span>
+                    </a>
+                  </li> --}}
+                </ul>
+            </li>
             @if (\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link {{Request::segment(1) == 'user' ? 'active' : ''}}" href="{{route('user.index')}}">
@@ -77,26 +128,6 @@
               </a>
             </li>
             @endif
-            
-            <li class="nav-item">
-              <a class="nav-link collapsed {{Request::segment(1) == 'master-service' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-service" aria-expanded='false'>
-                <i class="ni ni-support-16 text-purple"></i>
-                <span class="nav-link-text">Master Fasilitas</span>
-              </a>
-                <ul class="navbar-nav nav-collapse collapse" id="master-service">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{url('master-fasilitas/kategori-fasilitas')}}">
-                      <span class="nav-link-text">Kategori Fasilitas</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{url('master-fasilitas/fasilitas')}}">
-                      <span class="nav-link-text">Fasilitas</span>
-                    </a>
-                  </li>
-                </ul>
-            </li>
-
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'master-kamar' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-kamar" aria-expanded='false'>
                 <i class="ni ni-building text-info"></i>
@@ -122,44 +153,24 @@
             </li>
             
             <li class="nav-item">
-              <a class="nav-link collapsed {{Request::segment(1) == 'transaksi' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#transaksi" aria-expanded='false'>
-                <i class="ni ni-credit-card text-orange"></i>
-                <span class="nav-link-text">Reservasi</span>
+              <a class="nav-link collapsed {{Request::segment(1) == 'master-service' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-service" aria-expanded='false'>
+                <i class="ni ni-support-16 text-purple"></i>
+                <span class="nav-link-text">Master Fasilitas</span>
               </a>
-                <ul class="navbar-nav nav-collapse collapse" id="transaksi">
+                <ul class="navbar-nav nav-collapse collapse" id="master-service">
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url('transaksi/tamu')}}">
-                      <span class="nav-link-text">Master Tamu</span>
+                    <a class="nav-link" href="{{url('master-fasilitas/kategori-fasilitas')}}">
+                      <span class="nav-link-text">Kategori Fasilitas</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url('transaksi/transaksi')}}">
-                      <span class="nav-link-text">Reservasi</span>
+                    <a class="nav-link" href="{{url('master-fasilitas/fasilitas')}}">
+                      <span class="nav-link-text">Fasilitas</span>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{url('transaksi/invoice')}}">
-                      <span class="nav-link-text">Invoice</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{url('transaksi/online')}}">
-                      <span class="nav-link-text">Pembayaran Online</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{url('transaksi/laporan?tipe=general')}}">
-                      <span class="nav-link-text">Laporan</span>
-                    </a>
-                  </li>
-                  
-                  {{-- <li class="nav-item">
-                    <a class="nav-link" href="{{url('transaksi/pembayaran')}}">
-                      <span class="nav-link-text">Pembayaran</span>
-                    </a>
-                  </li> --}}
                 </ul>
             </li>
+
 
           </ul>
           <!-- Divider -->

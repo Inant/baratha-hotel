@@ -59,10 +59,10 @@
                         <td>{{$kode}}</td>
                         <td>{{$value->jenis_pembayaran}}</td>
                         <td>
-                          <img src="http://localhost:8080/baratha-hotel-api/public/bukti-pembayaran/{{$value->bukti}}" alt="" width="200px">
+                          <img src="{{webUrl().'public/img/bukti-pembayaran/'.$value->bukti}}" alt="" width="200px">
                         </td>
                         <td class="text-right">
-                          <a class="btn btn-primary" href="{{ url('transaksi/online/detail/'.$kode) }}">
+                          <a class="btn btn-primary btn-sm" href="{{ url('transaksi/pembayaran-online/detail/'.$kode) }}">
                             <span class="fa fa-search"></span>
                             Detail
                           </a>

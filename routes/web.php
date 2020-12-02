@@ -52,8 +52,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-kamar', 'TransaksiController@getKamarTersedia');
         Route::get('reservasi', 'TransaksiController@reservasi');
         Route::get('online', 'TransaksiController@online');
-        Route::get('online/detail/{kode}', 'TransaksiController@detailPembayaran');
-        Route::post('online/accept', 'TransaksiController@updatePembayaranOnline');
+        Route::get('pembayaran-online', 'TransaksiController@listPembayaranOnline')->name('transaksi.list-pembayaran-online');
+        Route::get('pembayaran-online/detail/{kode}', 'TransaksiController@detailPembayaran');
+        Route::get('online/verifikasi', 'TransaksiController@updatePembayaranOnline');
         Route::resource('tamu', 'TamuController');
         Route::resource('transaksi', 'TransaksiController');
     });

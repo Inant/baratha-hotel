@@ -9,9 +9,9 @@
                     <h3 class="mb-0">{{$pageInfo}}</h3>
                     </div>
                 </div>
-                <div class="col-8 offset-4 mr-auto">
+                <div class="col-12">
                     <form action="{{ route('transaksi.index') }}">
-                        <div class="row">
+                        <div class="row justify-content-end">
                             <div class="col-4">
                                 <select name="keyTamu" id="keyTamu" class="form-control select2" width="100%">
                                     <option value="">Semua Tamu</option>
@@ -20,7 +20,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-3">
+<!--                             <div class="col-3">
                                 <select name="kamar" id="kamar" class="form-control select2" width="100%">
                                     <option value="">Semua Kamar</option>
                                     @foreach ($kamar as $item)
@@ -28,11 +28,12 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-3">
+ -->                            <div class="col-3">
                                 <select name="status" id="status" class="form-control select2" width="100%">
                                     <option value="">Semua Status</option>
                                     <option value="Booking" {{Request::get('status') == 'Booking' ? 'selected' : ''}} > Booking</option>
                                     <option value="Check In" {{Request::get('status') == 'Check In' ? 'selected' : ''}} > Check In</option>
+                                    <option value="Pending" {{Request::get('status') == 'Pending' ? 'selected' : ''}} > Pemesanan Online : Pending</option>
                                 </select>
                             </div>
                             <div class="col-1">
@@ -67,7 +68,7 @@
                     </button>
                 </div>
             @endif
-            <div class="table-responsive">
+            <div class="table-responsive" style="min-height:180px">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
@@ -77,6 +78,7 @@
                     <th scope="col" class="sort" data-sort="name">Tanggal Check In</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check Out</th>
                     <th scope="col" class="sort" data-sort="name">Status</th>
+                    <th scope="col" class="sort" data-sort="name">Tipe Pemesanan</th>
                     <th scope="col" class="sort" data-sort="name">Keterangan</th>
                     <th scope="col"></th>
                   </tr>
@@ -87,9 +89,9 @@
                     $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                     @endphp
                     @foreach ($transaksi as $value)
-                        @php
-                            $getNoKamar = \DB::table(\DB::raw('kamar k'))->select(\DB::raw('no_kamar'))->join(\DB::raw('detail_transaksi d'), 'd.id_kamar', '=', 'k.id')->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'd.kode_transaksi')->where('t.kode_transaksi', '=', $value->kode_transaksi)->get();
-                        @endphp
+                    <?php
+                            $getNoKamar = \DB::table('detail_transaksi as dt')->join('kamar as k','dt.id_kamar','k.id')->select('no_kamar')->where('dt.kode_transaksi',$value->kode_transaksi)->get();
+                    ?>
                         <tr>
                             <td>{{$no}}</td>
                             <td>
@@ -98,10 +100,12 @@
                                         <span class="badge badge-success">{{$item->no_kamar}}</span>
                                     @elseif($value->status == 'Booking')
                                         <span class="badge badge-secondary">{{$item->no_kamar}}</span>
+                                    @elseif($value->status == 'Pending')
+                                        <span class="badge badge-info">{{$item->no_kamar}}</span>
                                     @endif
                                 @endforeach
                             </td>
-                            <td>{{$value->tamu->nama}}</td>
+                            <td>{{$value->nama}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>
                             <td>
@@ -109,8 +113,11 @@
                                 <span class="badge badge-success">{{$value->status}}</span>
                               @elseif($value->status == 'Booking')
                                 <span class="badge badge-secondary">{{$value->status}}</span>
+                              @elseif($value->status == 'Pending')
+                                <span class="badge badge-info">Pemesanan Online : {{$value->status}}</span>
                               @endif
                             </td>
+                            <td>{{$value->tipe_pemesanan}}</td>
                             <td>{{$value->keterangan}}</td>
                             <td class="text-right">
                                 <div class="dropdown">

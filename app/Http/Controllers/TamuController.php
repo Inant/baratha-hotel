@@ -68,7 +68,7 @@ class TamuController extends Controller
         $newTamu->street = $request->get('street');
         $newTamu->city = $request->get('city');
         $newTamu->phone = $request->get('phone');
-
+        $newTamu->tipe = 'offline';
         $newTamu->save();
 
         $getId = Tamu::select('id')->orderBy('id','desc')->take(1)->get();

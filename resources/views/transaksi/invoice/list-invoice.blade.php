@@ -52,7 +52,7 @@
                     </button>
                 </div>
             @endif
-            <div class="table-responsive">
+            <div class="table-responsive" style="min-height:180px">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
@@ -61,7 +61,6 @@
                     <th scope="col" class="sort" data-sort="name">Nama Tamu</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check In</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check Out</th>
-                    <th scope="col" class="sort" data-sort="name">Status</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -79,23 +78,12 @@
                             <td>{{$no}}</td>
                             <td>
                                 @foreach($detail as $c => $d)
-                                @if ($value->status == 'Check In')
                                     <span class="badge badge-success">{{$d->no_kamar}}</span>
-                                @elseif($value->status == 'Booking')
-                                    <span class="badge badge-secondary">{{$d->no_kamar}}</span>
-                                @endif
                                 @endforeach
                             </td>
                             <td>{{$value->tamu->nama}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>
-                            <td>
-                              @if ($value->status == 'Check In')
-                                <span class="badge badge-success">{{$value->status}}</span>
-                              @elseif($value->status == 'Booking')
-                                <span class="badge badge-secondary">{{$value->status}}</span>
-                              @endif
-                            </td>
                             <td class="text-right">
                                 <div class="dropdown">
                                     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

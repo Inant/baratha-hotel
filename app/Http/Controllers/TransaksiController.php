@@ -39,16 +39,16 @@ class TransaksiController extends Controller
         ->where('tk.status', '!=', 'Check Out')
         ->get();
 
-        $transaksi =Transaksi::with('tamu')->with('detail_transaksi')->where('status', '!=', 'Check Out');
+        $transaksi = Transaksi::select('kode_transaksi','tgl_checkin','tgl_checkout','status','keterangan','nama','tipe_pemesanan')->join('tamu','transaksi.id_tamu','tamu.id')->where('status','!=','Check Out');
 
         if($keyTamu){
             $transaksi->where('id_tamu', $keyTamu);
         }
 
-        if ($keywordKamar) {
+/*         if ($keywordKamar) {
             $transaksi->where('id_kamar', "$keywordKamar");
         }
-        
+ */        
         if ($status) {
             $transaksi->where('status', $status);
         }
@@ -152,7 +152,7 @@ class TransaksiController extends Controller
         $transaksi->status = 'Check Out';
         $transaksi->save();
 
-        return redirect()->route('transaksi.index')->withStatus('Berhasil Check Out.');
+        return redirect()->route('transaksi.list-invoice')->withStatus('Berhasil Check Out.');
     }
 
     public function checkInBooking($kode)
@@ -366,6 +366,12 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::find($kode);
         $transaksi->status_bayar = 'Sudah';
         $transaksi->save();
+        
+        $status = Transaksi::select('status_bayar')->where('kode_transaksi',$kode)->get();
+        if($status[0]->status_bayar=='DP50%'){
+            $getGrandTotal = Pembayaran::select('grandtotal')->where('kode_transaksi',$kode)->get();
+            Pembayaran::where('kode_transaksi',$kode)->update(['bayar' => $getGrandTotal[0]->grandtotal]);
+        }
 
         return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil disimpan.');
     }
@@ -392,15 +398,32 @@ class TransaksiController extends Controller
         $cekInv = Pembayaran::where('kode_transaksi', $request->get('kode_transaksi'))->count();
 
         if ($cekInv > 0) {
-            Pembayaran::where('kode_transaksi', $request->get('kode_transaksi'))->update([
-                'waktu' => date('Y-m-d H:i:s'),
-                'jenis_pembayaran' => $request->get('jenis_pembayaran'),
-                'total' => $request->get('total'),
-                'diskon' => $request->get('diskon'),
-                'tax' => $request->get('tax'),
-                'charge' => $request->get('charge'),
-                'grandtotal' => $request->get('grandtotal'),
-            ]);
+
+            if(empty($request->get('tax'))){
+                //DP50%
+                $transaksi = Pembayaran::select('total')->where('kode_transaksi',$request->get('kode_transaksi'))->get()[0];
+                $grandtotal = $transaksi->grandtotal - $request->get('diskon') + $request->get('charge');
+                $arr = array(
+                    'waktu' => date('Y-m-d H:i:s'),
+                    'jenis_pembayaran' => $request->get('jenis_pembayaran'),
+                    'diskon' => $request->get('diskon'),
+                    'charge' => $request->get('charge'),
+                    'grandtotal' => $grandtotal,
+                    'bayar' => $grandtotal,
+                );
+            }
+            else{
+                $arr = array(
+                    'waktu' => date('Y-m-d H:i:s'),
+                    'jenis_pembayaran' => $request->get('jenis_pembayaran'),
+                    'total' => $request->get('total'),
+                    'diskon' => $request->get('diskon'),
+                    'tax' => $request->get('tax'),
+                    'charge' => $request->get('charge'),
+                    'grandtotal' => $request->get('grandtotal'),
+                );
+            }
+            Pembayaran::where('kode_transaksi', $request->get('kode_transaksi'))->update($arr);
         }
         else{
             $newPembayaran = new Pembayaran;
@@ -413,6 +436,7 @@ class TransaksiController extends Controller
             $newPembayaran->charge = $request->get('charge');
             $newPembayaran->grandtotal = $request->get('grandtotal');
             $newPembayaran->bayar = 0;
+
     
             $newPembayaran->save();
         }
@@ -430,8 +454,13 @@ class TransaksiController extends Controller
 
     public function online()
     {
-        $data = Pembayaran::whereNotNull('bukti')->get();
-        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon','ni-credit-card text-orange');
+        $data = Transaksi::select('kode_transaksi','tgl_checkin','tgl_checkout','status','keterangan','nama')->join('tamu','transaksi.id_tamu','tamu.id')->where('status_bayar','Belum')->where('tipe_pemesanan','Online')->paginate(10);
+        return view('transaksi.transaksi.list-pemesanan-online')->with('data', $data)->with('pageInfo', 'Pemesanan Online')->with('icon','ni-world-2 text-pink');
+    }
+    public function listPembayaranOnline()
+    {
+        $data = \DB::table('pembayaran as p')->select('p.kode_transaksi','p.jenis_pembayaran','p.bukti')->join('transaksi as t','p.kode_transaksi','t.kode_transaksi')->where('t.status_bayar','Menunggu Verifikasi')->paginate(10);
+        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon','ni-credit-card text-yellow');
     }
 
     public function searchPembayaranOnline(Request $req)
@@ -443,24 +472,34 @@ class TransaksiController extends Controller
 
     public function detailPembayaran($kode)
     {
+        $kode = str_replace('-','/',$kode);
         $data = Pembayaran::where('kode_transaksi', $kode)->get();
         return view('transaksi.pembayaran.detail-pembayaran')->with('data', $data)->with('pageInfo', 'Detail Pembayaran Online')->with('icon','ni-credit-card text-orange');
     }
 
-    public function updatePembayaranOnline(Request $req)
+    public function updatePembayaranOnline()
     {
-        try{
-            DB::table('transaksi')->where('kode_transaksi', $req->kode)->update([
+        $kode = $_GET['kode'];
+        $kode = str_replace('-', '/', $kode);
+        $email = \DB::table('transaksi as t')->select('ta.email')->join('tamu as ta','t.id_tamu','ta.id')->where('t.kode_transaksi',$kode)->get()[0];
+        if($_GET['act']=='acc'){
+            DB::table('transaksi')->where('kode_transaksi', $kode)->update([
                 'status' => 'Check In',
+                'status_bayar' => 'DP50%',
                 'updated_at' => date('y-m-d H:i:s')
             ]);
-            $kode = str_replace('/', '-', $req->kode);
-            $url = 'http://localhost:8080/baratha-hotel-api/api/send-acc-mail/'.$kode;
-            return redirect()->to($url);
+            $tipe = 'Diterima';  
         }
-        catch(\Illuminate\Database\QueryException $e){
-            return $e->getMessage();
+        else{
+            $tipe = 'Ditolak';
+            DB::table('transaksi')->where('kode_transaksi', $kode)->update([
+                'status_bayar' => 'Belum',
+                'updated_at' => date('y-m-d H:i:s')
+            ]);
+            DB::table('pembayaran')->where('kode_transaksi', $kode)->delete();
         }
+        \Mail::to($email->email)->send(new \App\Mail\VerifikasiMail($kode,$tipe));
+        return redirect()->route('transaksi.list-pembayaran-online')->withStatus('Verifikasi Berhasil');
     }
 
     public function laporan()

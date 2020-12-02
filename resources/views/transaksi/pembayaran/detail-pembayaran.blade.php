@@ -24,9 +24,6 @@
                 </div>
             </div>
             @foreach($data as $item)
-            <form action="{{ url('transaksi/online/accept') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="kode" value="{{$item->kode_transaksi}}">
                 <div class="card-body">
                     <label for="" class="form-control-label">Kode Transaksi</label>
                     <input type="text" name="kode_transaksi" value="{{ $item->kode_transaksi }}" disabled class="form-control @error('kode_transaksi') is-invalid @enderror">
@@ -42,16 +39,28 @@
                     <br>
                     <label for="" class="form-control-label">Bukti pembayaran</label>
                     <br>
-                    <img src="http://localhost:8080/baratha-hotel-api/public/bukti-pembayaran/{{$item->bukti}}" alt="" width="350px">
-                    <br><br>
-                    <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Terima</button>
-                    <a href="../" class="btn btn-secondary">
-                        Batal
+                    <img src="{{webUrl()}}/public/img/bukti-pembayaran/{{$item->bukti}}" alt="">
+                    <br>
+                    <?php 
+                        $kode = str_replace('/','-',$item->kode_transaksi );
+                    ?>
+                    <a href="{{ url('transaksi/online/verifikasi?kode='.$kode.'&act=acc') }}" onclick="return myFunction()" class="btn btn-primary"><span class="fa fa-save"></span> Terima</a>
+                    <a href="{{ url('transaksi/online/verifikasi?kode='.$kode.'&act=decline') }}" onclick="return myFunction()" class="btn btn-secondary">
+                    <span class="fa fa-times"></span>
+                        Tolak
                     </a>
                 </div>
-            </form>
             @endforeach
         </div>
     </div>
 </div>
+<script>
+function myFunction() {
+  if (confirm("Apakah anda yakin?")) {
+      return true
+  }
+  return false
+}
+</script>
+
 @endsection

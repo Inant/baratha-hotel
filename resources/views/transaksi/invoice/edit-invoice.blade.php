@@ -13,6 +13,7 @@
             <form action="{{ route('transaksi.save-invoice')}}" method="post">
               @csrf
               <input type="hidden" id="kode" name='kode_transaksi' value="{{$transaksi->kode_transaksi}}" readonly>
+              <input type="hidden" id="kode" name='status_bayar' value="{{$transaksi->status_bayar}}">
               <div class="card-body">
               <h6 class="heading-small text-muted mb-4">Informasi Umum</h6>
                   <div class="row">
@@ -108,26 +109,55 @@
                         }
                         $tax = 10 * $total / 100;
                         $grandtotal = $tax + $total;
-                          ?>
+                        ?>
                     </tbody>
                     <tfoot>
-                        <tr class="bg-dark text-white">
+                        <tr <?php echo $transaksi->status_bayar!='DP50%' ? 'class="bg-dark text-white"' : '' ?> >
                           <td colspan='4' class='text-center font-weight-bold'>Total</td>
                           <td>{{number_format($total,0,',','.')}}</td>
                         </tr>
+                        <?php
+                        if($transaksi->status_bayar=='DP50%'){
+                          ?>
+                              <tr>
+                                <td colspan='4' class='text-center font-weight-bold'>Total + PPN 10%</td>
+                                <td>{{number_format($grandtotal,0,',','.')}}</td>
+                              </tr>                          
+                              <tr>
+                                <td colspan='4' class='text-center font-weight-bold'>DP 50%</td>
+                                <td>{{number_format($grandtotal/2,0,',','.')}}</td>
+                              </tr>                          
+                              <tr class="bg-dark text-white">
+                                <td colspan='4' class='text-center font-weight-bold'>Sisa</td>
+                                <td>{{number_format($grandtotal/2,0,',','.')}}</td>
+                              </tr>                          
+                        <?php } ?>
                     </tfoot>
                   </table>
                   <hr>
                   <div class="row">
+                  <?php 
+                      if($transaksi->status_bayar=='DP50%'){
+                        $bayar = $grandtotal/2;
+                        $total = $grandtotal/2;
+                      }
+                      else{
+                        $bayar = $grandtotal;
+                      }
+                    ?>
                     <input type="hidden" name="total" id="total" class="form-control" value="{{$total}}" readonly>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
-                      <input type="number" name="diskon" class="form-control diskon_tambahan" value="{{old('diskon', $diskon)}}" data-tipe='rp'>
+                      <input type="number" name="diskon" class="form-control diskon_tambahan <?php echo $transaksi->status_bayar=='DP50%' ? 'dp' : '' ?>" value="{{old('diskon', $diskon)}}" data-tipe='rp'>
                     </div>
+                    <?php 
+                      if($transaksi->status_bayar!='DP50%'){
+                    ?>
                     <div class="col-4 mb-2">
                       <label for=""><strong>PPN 10%</strong></label>
                       <input type="number" name="tax" class="form-control" value="{{old('tax', $tax)}}" data-tipe='rp' readonly id="tax">
                     </div>
+                    <?php } ?>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Metode Pembayaran</strong></label>
                       <select name="jenis_pembayaran" class="form-control select2 @error('bayar') is-invalid @enderror" id="jenis_bayar">
@@ -167,9 +197,10 @@
                     </div> --}}
                     {{-- <div class="col-4"></div> --}}
                     <div class="col-md-4 mt-4">
-                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($grandtotal,0,',','.')}}</span></h1>
-                      <input type="hidden" id="subtotal" value="{{$grandtotal}}">
-                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$grandtotal}}">
+                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($bayar,0,',','.')}}</span></h1>
+
+                      <input type="hidden" name="subtotal" id="subtotal" value="{{$bayar}}">
+                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$bayar}}">
                     </div>
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
