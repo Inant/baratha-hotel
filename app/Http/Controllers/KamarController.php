@@ -127,4 +127,43 @@ class KamarController extends Controller
         // $this->param['btnRight']['link'] = route('kamar.index');
         return view('master-kamar.kamar.reservation-chart', $this->param);
     }
+
+    public function getKamarTersedia()
+    {
+        $this->param['pageInfo'] = 'Cek Kamar';
+        if (isset($_GET['dari']) && isset($_GET['sampai'])) {
+            # code...
+            $tgl_checkin = $_GET['dari'];
+            $tgl_checkout = $_GET['sampai'];
+            $this->param['kamarTersedia'] = \DB::table('kamar AS k')
+                            ->select('k.id', 'k.no_kamar', 'kt.kategori_kamar')
+                            ->join('kategori_kamar AS kt', 'kt.id', '=', 'k.id_kategori_kamar')
+                            ->where('status','Tersedia')
+                            ->whereNotIn('k.id', function($query) use ($tgl_checkin, $tgl_checkout){
+                                $query->select('d.id_kamar')->from('detail_transaksi as d')
+                                ->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')
+                                ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
+                                ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                                ->where('t.status', '!=', 'Check Out');
+                            })
+                            ->orderBy('kategori_kamar', 'asc')
+                            ->get();
+
+            $this->param['kamarTidakTersedia'] = \DB::table('kamar AS k')
+                            ->select('k.id', 'k.no_kamar', 'kt.kategori_kamar')
+                            ->join('kategori_kamar AS kt', 'kt.id', '=', 'k.id_kategori_kamar')
+                            ->where('status','Tersedia')
+                            ->whereIn('k.id', function($query) use ($tgl_checkin, $tgl_checkout){
+                                $query->select('d.id_kamar')->from('detail_transaksi as d')
+                                ->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')
+                                ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
+                                ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                                ->where('t.status', '!=', 'Check Out');
+                            })
+                            ->orderBy('kategori_kamar', 'asc')
+                            ->get();
+        }
+
+        return view('master-kamar.kamar.cek-kamar', $this->param);
+    }
 }
