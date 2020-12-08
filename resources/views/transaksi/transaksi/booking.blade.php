@@ -92,6 +92,20 @@
                     <br>
                     <br>
 
+                    <label for="">Pemesanan Via</label>
+                    <select name="tipe_pemesanan" id="tipe_pemesanan" class="form-control @error('tipe_pemesanan') is-invalid @enderror">
+                        <option value="">--Pemesanan Via--</option>
+                        <option value="Offline" {{old('tipe_pemesanan') == 'Offline' ? 'selected' : ''}}>Offline</option>
+                        <option value="Traveloka" {{old('tipe_pemesanan') == 'Traveloka' ? 'selected' : ''}}>Traveloka</option>
+                        <option value="Booking" {{old('tipe_pemesanan') == 'Booking'  ?'selected' : ''}}>Booking.com</option>
+                        <option value="Travel Agent" {{old('tipe_pemesanan') == 'Travel Agent' ? 'selected' : ''}}>Travel Agent</option>
+                    </select>
+                    @error('tipe_pemesanan')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+
                     <label for="" class="form-control-label">Keterangan</label>
                     <input type="text" name="keterangan" value="{{old('keterangan')}}" class="form-control @error('keterangan') is-invalid @enderror">
                     @error('keterangan')

@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'master-kamar'], function () {
         Route::get('kategori-kamar/foto/addFoto', 'KategoriKamarController@addFoto');
         Route::get('reservation-chart', 'KamarController@reservationChart');
+        Route::get('cek-kamar', 'KamarController@getKamarTersedia');
         Route::resource('kategori-kamar', 'KategoriKamarController');
         Route::resource('kamar', 'KamarController');
     });

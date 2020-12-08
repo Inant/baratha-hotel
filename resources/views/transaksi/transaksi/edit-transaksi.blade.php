@@ -82,10 +82,9 @@
                     <br>
 
                     <label for="" class="form-control-label">Nomor Kamar</label>
-                    <select name="id_kamar" id="id_kamar" class="form-control select2" data-url="{{url('transaksi/get-kamar')}}">
-                        <option value="">--Pilih Kamar--</option>
+                    <select name="id_kamar[]" multiple='multiple' class="form-control select2" required>
                         @foreach ($kamar as $item)
-                            <option value="{{$item->id}}" {{old('id_kamar', $transaksi->id_kamar) == $item->id ? 'selected' : ''}} >{{$item->no_kamar}}</option>
+                            <option value="{{$item->id}}" {{in_array($item->id, array_column($selectedRoom, 'id_kamar')) ? 'selected' : ''}} >{{$item->no_kamar}}</option>
                         @endforeach
                     </select>
                     @error('id_kamar')
@@ -95,6 +94,20 @@
                     @enderror
                     <br>
                     <br>
+
+                    <label for="">Pemesanan Via</label>
+                    <select name="tipe_pemesanan" id="tipe_pemesanan" class="form-control @error('tipe_pemesanan') is-invalid @enderror">
+                        <option value="">--Pemesanan Via--</option>
+                        <option value="Offline" {{old('tipe_pemesanan', $transaksi->tipe_pemesanan) == 'Offline' ? 'selected' : ''}}>Offline</option>
+                        <option value="Traveloka" {{old('tipe_pemesanan', $transaksi->tipe_pemesanan) == 'Traveloka' ? 'selected' : ''}}>Traveloka</option>
+                        <option value="Booking" {{old('tipe_pemesanan', $transaksi->tipe_pemesanan) == 'Booking'  ?'selected' : ''}}>Booking.com</option>
+                        <option value="Travel Agent" {{old('tipe_pemesanan', $transaksi->tipe_pemesanan) == 'Travel Agent' ? 'selected' : ''}}>Travel Agent</option>
+                    </select>
+                    @error('tipe_pemesanan')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
 
                     <label for="" class="form-control-label">Keterangan</label>
                     <input type="text" name="keterangan" value="{{old('keterangan', $transaksi->keterangan)}}" class="form-control @error('keterangan') is-invalid @enderror">

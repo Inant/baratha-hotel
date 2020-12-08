@@ -11,6 +11,7 @@
       <th>Diskon</th>
       <th>Total</th>
       <th>Jenis Bayar</th>
+      <th>Tipe Pemesanan</th>
       {{-- <th>PPN</th> --}}
       </tr>
   </thead>
@@ -50,6 +51,7 @@
           <td>{{$value->diskon}}</td>
           <td>{{number_format($subtotal,0,',','.')}}</td>
           <td>{{$value->jenis_pembayaran}}</td>
+          <td>{{$value->tipe_pemesanan}}</td>
           {{-- @if ($value->isTravel=='True')
               <td>Travel</td>
           @else
@@ -62,6 +64,7 @@
       <tr>
       <td colspan='7' class='text-center'><b>TOTAL</b></td>
       <td>{{number_format($total,0,',','.')}}</td>
+      <td></td>
       <td></td>
       </tr>
   </tfoot>

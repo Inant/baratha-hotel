@@ -51,6 +51,17 @@
                         <option value="Bank Lain" {{Request::get('tipe_pembayaran') == 'Bank Lain' ? 'selected' : ''}} >Bank Lain</option>
                     </select>
                 </div>
+                <div class="col-3">
+                    <label for="" class="form-control-label">Tipe Pemesanan</label>
+                    <select name="tipe_pemesanan" id="" class="select2 form-control">
+                        <option value="">Semua Tipe Pemesanan</option>
+                        <option value="Website" {{Request::get('tipe_pemesanan') == 'Website' ? 'selected' : ''}} >Website</option>
+                        <option value="Offline" {{Request::get('tipe_pemesanan') == 'Offline' ? 'selected' : ''}} >Offline</option>
+                        <option value="Traveloka" {{Request::get('tipe_pemesanan') == 'Traveloka' ? 'selected' : ''}} >Traveloka</option>
+                        <option value="Booking" {{Request::get('tipe_pemesanan') == 'Booking' ? 'selected' : ''}} >Booking.com</option>
+                        <option value="Travel Agent" {{Request::get('tipe_pemesanan') == 'Travel Agent' ? 'selected' : ''}} >Travel Agent</option>
+                    </select>
+                </div>
                 @endif
                 <div class="col mt-4">
                 <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

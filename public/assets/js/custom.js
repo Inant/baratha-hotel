@@ -46,9 +46,13 @@ $(document).ready(function() {
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
         var tipe = $(this).data('tipe')
-        var total = parseInt($("#subtotal").val());
+        var tipe_pemesanan = $(this).data('tipe_pemesanan')
+        var total = parseInt($("#total").val());
         var diskon = 0;
-        var tax = parseInt($("#tax").val());
+        var tax = 0;
+        if (tipe_pemesanan =='langsung') {
+            tax = (total - diskon_tambahan) * 10 / 100;
+        }
         if(tipe=='persen'){
             var otherDisc = parseInt($(".diskon_tambahan[data-tipe='rp']").val())
             diskon = (diskon_tambahan * total / 100) + otherDisc;
@@ -61,10 +65,10 @@ $(document).ready(function() {
             }
             diskon = diskon_tambahan + otherDisc
         }
-        var grand_total = total - diskon;
-        $("#tax").val((total - diskon) * 10 / 100);
+        var grand_total = total - diskon_tambahan + tax;
+        $("#tax").val(tax);
             $("#grand_total").val(grand_total);
-            $("#total").val(grand_total);
+            $("#subtotal").val(grand_total);
             $("#idrGrandTotal").html(formatRupiah(grand_total));
         if($(this).hasClass('dp')){
         }
@@ -82,12 +86,24 @@ $(document).ready(function() {
         $("#kembalian").val(kembalian);
     });
 
+    $('#total').keyup(function () { 
+        let total = parseInt($(this).val());
+        let diskon = parseInt($('.diskon_tambahan').val());
+        let ppn = (total - diskon) * 10 /100;
+        var grand_total = total - diskon + ppn;
+        $("#tax").val(ppn);
+        $("#grand_total").val(grand_total);
+        $("#subtotal").val(grand_total);
+        // $("#total").val(grand_total);
+        $("#idrGrandTotal").html(formatRupiah(grand_total));
+    });
+
     $("#no_kartu").prop("disabled", true);
 //    $("#charge").prop("disabled", true);
 
     temp_grand_total = parseInt($("#grand_total").val());
     function getCharge(thisVal) {
-        var grand_total = parseInt($("#total").val());
+        var grand_total = parseInt($("#subtotal").val());
         var charge = 0;
         if (thisVal != "Tunai") {
             $("#no_kartu").prop("disabled", false);

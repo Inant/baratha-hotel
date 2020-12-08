@@ -61,6 +61,7 @@
                     <th scope="col" class="sort" data-sort="name">Nama Tamu</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check In</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal Check Out</th>
+                    <th scope="col" class="sort" data-sort="name">Tipe Pemesanan</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -84,6 +85,7 @@
                             <td>{{$value->tamu->nama}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkin))}}</td>
                             <td>{{date('d-m-Y', strtotime($value->tgl_checkout))}}</td>
+                            <td>{{$value->tipe_pemesanan}}</td>
                             <td class="text-right">
                                 <div class="dropdown">
                                     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

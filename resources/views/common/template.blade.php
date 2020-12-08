@@ -149,6 +149,11 @@
                       <span class="nav-link-text">Reservation Chart</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-kamar/cek-kamar')}}">
+                      <span class="nav-link-text">Cek Kamar</span>
+                    </a>
+                  </li>
                 </ul>
             </li>
             

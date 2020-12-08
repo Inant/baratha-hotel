@@ -172,6 +172,7 @@ class TransaksiController extends Controller
             'tgl_checkin' => 'required|date',
             'tgl_checkout' => 'required|date|after:tgl_checkin',
             'status' => 'required',
+            'tipe_pemesanan' => 'required',
         ]);
 
         $newCheckIn = new Transaksi;
@@ -184,6 +185,7 @@ class TransaksiController extends Controller
         $newCheckIn->status = $request->get('status');
         $newCheckIn->keterangan = $request->get('keterangan');
         $newCheckIn->status_bayar = 'Belum';
+        $newCheckIn->tipe_pemesanan = $request->get('tipe_pemesanan');
 //        $newCheckIn->id_kamar = $request->get('id_kamar');
 
         $newCheckIn->save();
@@ -215,6 +217,7 @@ class TransaksiController extends Controller
         $this->param['kamar'] = \DB::table('kamar')->get();
 
         $this->param['transaksi'] = Transaksi::findOrFail($kode);
+        $this->param['selectedRoom'] = \App\Detail_transaksi::select('id_kamar')->where('kode_transaksi', $kode)->get()->toArray();
 
         return view('transaksi.transaksi.edit-transaksi', $this->param);
     }
@@ -223,17 +226,36 @@ class TransaksiController extends Controller
     {
         $validatedData = $request->validate([
             'id_tamu' => 'required',
+            'tipe_pemesanan' => 'required',
             'tgl_checkin' => 'required|date',
             'tgl_checkout' => 'required|date|after:tgl_checkin',
-            'id_kamar' => 'required|numeric',
+            'id_kamar' => 'required',
         ]);
         $kode = str_replace('-', '/', $kode);
+
+        DB::table('detail_transaksi')->where('kode_transaksi', $kode)->delete();
+
+        foreach ($_POST['id_kamar'] as $value) {
+            $detail = new Detail_transaksi;
+            $detail->kode_transaksi = $kode;
+            $detail->id_kamar = $value;
+
+            $detail->save();
+        }
+
         $transaksi = Transaksi::findOrFail($kode);
+
         $transaksi->id_tamu = $request->get('id_tamu');
-        $transaksi->id_kamar = $request->get('id_kamar');
+        // $transaksi->id_kamar = $request->get('id_kamar');
         $transaksi->tgl_checkin = $request->get('tgl_checkin');
         $transaksi->tgl_checkout = $request->get('tgl_checkout');
+        $transaksi->tipe_pemesanan = $request->get('tipe_pemesanan');
         $transaksi->keterangan = $request->get('keterangan');
+//        $newCheckIn->id_kamar = $request->get('id_kamar');
+
+        $transaksi->save();
+
+        
 
         $transaksi->save();
 
@@ -291,7 +313,7 @@ class TransaksiController extends Controller
 
     public function getLaporanGeneral($dari, $sampai, $tipe='')
     {
-        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran')
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan')
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
@@ -299,6 +321,10 @@ class TransaksiController extends Controller
         if ($tipe) {
             $laporan->where('p.jenis_pembayaran', 'LIKE', "%$tipe");
         }
+        if ($_GET['tipe_pemesanan'] != '') {
+            $laporan->where('t.tipe_pemesanan', '=', $_GET['tipe_pemesanan']);
+        }
+        
         return $laporan->get();
     }
 
@@ -384,6 +410,8 @@ class TransaksiController extends Controller
         $this->param['btnRight']['link'] = route('transaksi.list-invoice');
 
         $this->param['transaksi'] = Transaksi::findOrFail($kode);
+        $pembayaran = Pembayaran::where('kode_transaksi',$kode)->get();
+        $this->param['pembayaran'] = count($pembayaran) > 0 ? $pembayaran[0] : '';
 
         return view('transaksi.invoice.edit-invoice', $this->param);
     }

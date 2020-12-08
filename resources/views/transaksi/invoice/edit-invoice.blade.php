@@ -40,21 +40,28 @@
                           <input type="text" class="form-control form-line @error('no_identitas') is-invalid @enderror" name='no_identitas' value="{{$transaksi->tamu->no_identitas}}" readonly>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">Check In</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
                           <input type="text" class="form-control form-line @error('tgl_checkin') is-invalid @enderror" name='tgl_checkin' value="{{$transaksi->tgl_checkin}}" readonly>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">Check Out</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
                           <input type="text" class="form-control form-line @error('tgl_checkout') is-invalid @enderror" name='tgl_checkout' value="{{$transaksi->tgl_checkout}}" readonly>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
+                        <label for="" class="form-control-label">Tipe Reservasi</label>
+                        <div class="form-line-check">
+                          <span class='fa fa-check-circle'></span>
+                          <input type="text" class="form-control form-line @error('tgl_checkout') is-invalid @enderror" name='tgl_checkout' value="{{$transaksi->tipe_pemesanan}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">Durasi</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
@@ -90,10 +97,10 @@
                     <tbody class="list">
                       <?php                       
                         $kamar = \DB::table('detail_transaksi as dt')->select('k.no_kamar','kk.kategori_kamar','kk.harga')->join('kamar as k','dt.id_kamar','k.id')->join('kategori_kamar as kk','k.id_kategori_kamar','kk.id')->where('dt.kode_transaksi',$transaksi->kode_transaksi)->get();
-                        $total = 0;
-                        $charge = 0;
-                        $diskon = 0;
                         $jenis_pembayaran = 'Tunai';
+                        $total = 0;
+                        $diskon = 0;
+                        $charge = 0;
                         foreach($kamar as $data){
                           $subtotal = $data->harga * $durasi;
                           $total+=$subtotal;
@@ -107,8 +114,17 @@
                             </tr>
                           <?php
                         }
-                        $tax = 10 * $total / 100;
-                        $grandtotal = $tax + $total;
+                        if ($pembayaran != '') {
+                          $total = $pembayaran->total;
+                          $charge = $pembayaran->charge;
+                          $diskon = $pembayaran->diskon;
+                          $tax = $pembayaran->tax;
+                          $grandtotal = $pembayaran->grandtotal;
+                        }
+                        else{
+                          $tax = $tax = $transaksi->tipe_pemesanan == 'Offline' || $transaksi->tipe_pemesanan == 'Website' ? 10 * $total / 100 : 0;
+                          $grandtotal = $tax + $total;
+                        }
                         ?>
                     </tbody>
                     <tfoot>
@@ -143,12 +159,16 @@
                       }
                       else{
                         $bayar = $grandtotal;
+                        // $total = $grandtotal;
                       }
                     ?>
-                    <input type="hidden" name="total" id="total" class="form-control" value="{{$total}}" readonly>
+                    <div class="col-4 mb-2">
+                      <label for="">Total</label>
+                      <input type="number" name="total" id="total" class="form-control" value="{{$total}}" {{$transaksi->tipe_pemesanan == 'Offline' || $transaksi->tipe_pemesanan == 'Website' ? 'readonly' : '' }}>
+                    </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
-                      <input type="number" name="diskon" class="form-control diskon_tambahan <?php echo $transaksi->status_bayar=='DP50%' ? 'dp' : '' ?>" value="{{old('diskon', $diskon)}}" data-tipe='rp'>
+                      <input type="number" name="diskon" class="form-control diskon_tambahan <?php echo $transaksi->status_bayar=='DP50%' ? 'dp' : '' ?>" value="{{old('diskon', $diskon)}}" data-tipe='rp' data-tipe_pemesanan="{{$transaksi->tipe_pemesanan == 'Offline' || $transaksi->tipe_pemesanan == 'Website' ? 'langsung' : 'travel_agent' }}" >
                     </div>
                     <?php 
                       if($transaksi->status_bayar!='DP50%'){
@@ -199,8 +219,8 @@
                     <div class="col-md-4 mt-4">
                       <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($bayar,0,',','.')}}</span></h1>
 
-                      <input type="hidden" name="subtotal" id="subtotal" value="{{$bayar}}">
-                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$bayar}}">
+                      <input type="number" name="subtotal" id="subtotal" value="{{$bayar}}">
+                      <input type="number" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$bayar}}">
                     </div>
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
