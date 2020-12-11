@@ -8,6 +8,19 @@
                 <div class="col-6">
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
+                <div class="col-6 text-right">
+                    <?php 
+                        if(isset($_GET['tipe']) && isset($_GET['dari'])){
+                    ?>
+                    @if ($_GET['tipe'] == 'general')
+                        <a href="<?= route('laporan-reservasi')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&tipe_pemesanan=$_GET[tipe_pemesanan]" ?>" class="btn btn-info btn-sm" target="_blank"><span class="fa fa-print"></span> Cetak Laporan</a>
+                        <a href="<?= route('laporan-reservasi')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&tipe_pemesanan=$_GET[tipe_pemesanan]&xls=true" ?>" class="btn btn-info btn-sm" target="_blank"><span class="fa fa-file-excel"></span> Export XLS</a>
+                    @else
+                        <a href="<?= route('laporan-reservasi')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm" target="_blank"><span class="fa fa-print"></span> Cetak Laporan</a>
+                        <a href="<?= route('laporan-reservasi')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&xls=true"?>" class="btn btn-info btn-sm" target="_blank"><span class="fa fa-file-excel"></span> Export XLS</a>
+                    @endif
+                    <?php } ?>
+                </div>
                 {{-- <div class="col-6 text-right">
                 </div> --}}
               </div>

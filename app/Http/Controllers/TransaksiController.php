@@ -545,4 +545,16 @@ class TransaksiController extends Controller
         }
         return view('transaksi.laporan.laporan', $this->param);
     }
+
+    public function printLaporan(){
+        if(isset($_GET['dari']) && isset($_GET['sampai'])){
+            if($_GET['tipe']=='general'){
+                $this->param['laporan'] = $this->getLaporanGeneral($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
+            }
+            else if($_GET['tipe']=='kamar-favorit'){
+                $this->param['laporan'] = $this->getKamarFavorit($_GET['dari'], $_GET['sampai']);
+            }
+        }
+        return view('transaksi.laporan.print-laporan-'.$_GET['tipe'], $this->param);
+    }
 }
