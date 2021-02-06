@@ -219,8 +219,8 @@
                     <div class="col-md-4 mt-4">
                       <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($bayar,0,',','.')}}</span></h1>
 
-                      <input type="number" name="subtotal" id="subtotal" value="{{$bayar}}">
-                      <input type="number" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$bayar}}">
+                      <input type="hidden" name="subtotal" id="subtotal" value="{{$bayar}}">
+                      <input type="hidden" name="grandtotal" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{$bayar}}">
                     </div>
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

@@ -24,6 +24,7 @@ class CreateTransaksiTable extends Migration
             $table->integer('id_kamar')->unsigned()->nullable();
             $table->enum('status', ['Check In', 'Check Out', 'Booking']);
             $table->enum('status_bayar', ['Sudah', 'Belum']);
+            $table->enum('tipe_pemesanan', ['Website', 'Offline', 'Traveloka', 'Booking', 'Travel Agent']);
             $table->timestamps();
 
             $table->primary('kode_transaksi');
