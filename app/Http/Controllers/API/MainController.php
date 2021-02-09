@@ -12,7 +12,7 @@ class MainController extends Controller
     {
         $status = null;
         $msg = null;
-        $penjualan = null;
+        $pembayaran = null;
         try{
             if($date == null){
                 $status = 'Failed';
@@ -31,7 +31,7 @@ class MainController extends Controller
                 ->join('transaksi', 'transaksi.kode_transaksi', 'pembayaran.kode_transaksi')
                 ->where('transaksi.status_bayar', 'Sudah')
                 ->first();
-                
+
                 $status = 'Success';
                 $msg = 'Successfully';
             }
@@ -48,7 +48,7 @@ class MainController extends Controller
             $response = [
                 'status' => $status,
                 'message' => $msg,
-                'data' => $penjualan
+                'data' => $pembayaran
             ];
             return json_encode($response);
         }
