@@ -10,15 +10,47 @@ class MainController extends Controller
 {
     public function getTotalByDate($date)
     {
-        $pembayaran = Pembayaran::select(
-                                    \DB::raw('SUM(pembayaran.total - pembayaran.diskon) AS total'),
-                                    \DB::raw('SUM(pembayaran.tax) AS total_ppn')
-                                )
-                                ->whereBetween('pembayaran.waktu', [$date.' 00:00:00', $date.' 23:59:59'])                                                
-                                ->join('transaksi', 'transaksi.kode_transaksi', 'pembayaran.kode_transaksi')
-                                ->where('transaksi.status_bayar', 'Sudah')
-                                ->first();
-        
-        return json_encode($pembayaran);
+        $status = null;
+        $msg = null;
+        $penjualan = null;
+        try{
+            if($date == null){
+                $status = 'Failed';
+                $msg = 'Date is empty';
+            }
+            elseif($date == 'null'){
+                $status = 'Failed';
+                $msg = 'Date is empty';
+            } 
+            else{
+                $pembayaran = Pembayaran::select(
+                    \DB::raw('SUM(pembayaran.total - pembayaran.diskon) AS total'),
+                    \DB::raw('SUM(pembayaran.tax) AS total_ppn')
+                )
+                ->whereBetween('pembayaran.waktu', [$date.' 00:00:00', $date.' 23:59:59'])                                                
+                ->join('transaksi', 'transaksi.kode_transaksi', 'pembayaran.kode_transaksi')
+                ->where('transaksi.status_bayar', 'Sudah')
+                ->first();
+                
+                $status = 'Success';
+                $msg = 'Successfully';
+            }
+        }
+        catch(Exception $e){
+            $status = 'Error';
+            $msg = $e->getMessage();  
+        }
+        catch(\Illuminate\Database\QueryException $e){
+            $status = 'Database Error';
+            $msg = $e->getMessage();
+        }
+        finally{
+            $response = [
+                'status' => $status,
+                'message' => $msg,
+                'data' => $penjualan
+            ];
+            return json_encode($response);
+        }
     }
 }
