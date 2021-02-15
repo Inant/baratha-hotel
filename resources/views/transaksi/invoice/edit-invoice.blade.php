@@ -164,18 +164,18 @@
                     ?>
                     <div class="col-4 mb-2">
                       <label for="">Total</label>
-                      <input type="number" name="total" id="total" class="form-control" value="{{$total}}" {{$transaksi->tipe_pemesanan == 'Offline' || $transaksi->tipe_pemesanan == 'Website' ? 'readonly' : '' }}>
+                      <input type="number" name="total" id="total" class="getGrandTotal form-control" value="{{$total}}" {{$transaksi->tipe_pemesanan == 'Website' ? 'readonly' : '' }}>
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon</strong></label>
-                      <input type="number" name="diskon" class="form-control diskon_tambahan <?php echo $transaksi->status_bayar=='DP50%' ? 'dp' : '' ?>" value="{{old('diskon', $diskon)}}" data-tipe='rp' data-tipe_pemesanan="{{$transaksi->tipe_pemesanan == 'Offline' || $transaksi->tipe_pemesanan == 'Website' ? 'langsung' : 'travel_agent' }}" >
+                      <input type="number" id="diskon_tambahan" name="diskon" class="form-control getGrandTotal <?php echo $transaksi->status_bayar=='DP50%' ? 'dp' : '' ?>" value="{{old('diskon', $diskon)}}" data-tipe='rp' data-tipe_pemesanan="{{$transaksi->tipe_pemesanan == 'Offline' || $transaksi->tipe_pemesanan == 'Website' ? 'langsung' : 'travel_agent' }}" >
                     </div>
                     <?php 
                       if($transaksi->status_bayar!='DP50%'){
                     ?>
                     <div class="col-4 mb-2">
                       <label for=""><strong>PPN 10%</strong></label>
-                      <input type="number" name="tax" class="form-control" value="{{old('tax', $tax)}}" data-tipe='rp' readonly id="tax">
+                      <input type="number" name="tax" class="form-control getGrandTotal" value="{{old('tax', $tax)}}" data-tipe='rp' {{$transaksi->tipe_pemesanan == 'Website' ? 'readonly' : '' }} id="tax">
                     </div>
                     <?php } ?>
                     <div class="col-4 mb-2">
@@ -199,7 +199,7 @@
                     <div class="col-4 mb-2">
                       <div id="">
                         <label for=""><strong>Charge</strong></label>
-                        <input type="number" name="charge" id="charge" class="form-control" value="{{old('charge', $charge)}}">
+                        <input type="number" name="charge" id="charge" class="getGrandTotal form-control" value="{{old('charge', $charge)}}">
                         {{-- @error('jenis_pembayaran')
                           <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

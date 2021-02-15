@@ -86,16 +86,30 @@ $(document).ready(function() {
         $("#kembalian").val(kembalian);
     });
 
-    $('#total').keyup(function () { 
-        let total = parseInt($(this).val());
-        let diskon = parseInt($('.diskon_tambahan').val());
-        let ppn = (total - diskon) * 10 /100;
-        var grand_total = total - diskon + ppn;
-        $("#tax").val(ppn);
-        $("#grand_total").val(grand_total);
-        $("#subtotal").val(grand_total);
-        // $("#total").val(grand_total);
-        $("#idrGrandTotal").html(formatRupiah(grand_total));
+    // $('#total').keyup(function () { 
+    //     let total = parseInt($(this).val());
+    //     let diskon = parseInt($('.diskon_tambahan').val());
+    //     let ppn = (total - diskon) * 10 /100;
+    //     var grand_total = total - diskon + ppn;
+    //     $("#tax").val(ppn);
+    //     $("#grand_total").val(grand_total);
+    //     $("#subtotal").val(grand_total);
+    //     // $("#total").val(grand_total);
+    //     $("#idrGrandTotal").html(formatRupiah(grand_total));
+    // });
+
+    $('.getGrandTotal').keyup(function (e) { 
+        var ppn = parseInt($("#tax").val());
+        var total = parseInt($("#total").val())
+        var diskon = parseInt($('#diskon_tambahan').val());
+        var charge = parseInt($('#charge').val());
+
+        var grandTotal = ppn + total - diskon + charge
+
+        $("#grand_total").val(grandTotal);
+        $("#subtotal").val(grandTotal);
+        // $("#total").val(grandTotal);
+        $("#idrGrandTotal").html(formatRupiah(grandTotal));
     });
 
     $("#no_kartu").prop("disabled", true);
@@ -137,16 +151,16 @@ $(document).ready(function() {
         );
     }
 
-    $("#charge").keyup(function(){
-        var change = parseInt($(this).val())
-        var subtotal = parseInt($("#subtotal").val())
-        var newGrandTotal = subtotal + change;
-        $("#grand_total").val(newGrandTotal);
-        $("#idrGrandTotal").html(
-            formatRupiah(newGrandTotal)
-        );
+        // $("#charge").keyup(function(){
+        //     var change = parseInt($(this).val())
+        //     var subtotal = parseInt($("#subtotal").val())
+        //     var newGrandTotal = subtotal + change;
+        //     $("#grand_total").val(newGrandTotal);
+        //     $("#idrGrandTotal").html(
+        //         formatRupiah(newGrandTotal)
+        //     );
 
-    })
+        // })
 
     $("#jenis_bayar").change(function() {
         var thisVal = $(this).val();
