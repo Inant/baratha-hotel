@@ -136,8 +136,12 @@ class TransaksiController extends Controller
                         ->whereNotIn('id', function($query) use ($tgl_checkin, $tgl_checkout){
                             $query->select('d.id_kamar')->from('detail_transaksi as d')
                             ->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')
-                            ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
-                            ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                            ->where('t.tgl_checkin', '>=', $tgl_checkin)
+                            ->where('t.tgl_checkin', '<=', $tgl_checkout)
+                            // ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
+                            // ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                            ->where('t.tgl_checkout', '>=', $tgl_checkin)
+                            ->where('t.tgl_checkout', '<=', $tgl_checkout)
                             ->where('t.status', '!=', 'Check Out');
                         })
                         ->orderBy('id', 'asc')
