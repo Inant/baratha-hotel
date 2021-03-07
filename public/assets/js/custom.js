@@ -117,7 +117,11 @@ $(document).ready(function() {
 
     temp_grand_total = parseInt($("#grand_total").val());
     function getCharge(thisVal) {
-        var grand_total = parseInt($("#subtotal").val());
+        var ppn = parseInt($("#tax").val());
+        var total = parseInt($("#total").val())
+        var diskon = parseInt($('#diskon_tambahan').val());
+
+        var grand_total = ppn + total - diskon;
         var charge = 0;
         if (thisVal != "Tunai") {
             $("#no_kartu").prop("disabled", false);

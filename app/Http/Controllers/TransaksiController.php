@@ -426,31 +426,39 @@ class TransaksiController extends Controller
         $cekInv = Pembayaran::where('kode_transaksi', $request->get('kode_transaksi'))->count();
 
         if ($cekInv > 0) {
-
-            if(empty($request->get('tax'))){
-                //DP50%
-                $transaksi = Pembayaran::select('total')->where('kode_transaksi',$request->get('kode_transaksi'))->get()[0];
-                $grandtotal = $transaksi->grandtotal - $request->get('diskon') + $request->get('charge');
-                $arr = array(
-                    'waktu' => date('Y-m-d H:i:s'),
-                    'jenis_pembayaran' => $request->get('jenis_pembayaran'),
-                    'diskon' => $request->get('diskon'),
-                    'charge' => $request->get('charge'),
-                    'grandtotal' => $grandtotal,
-                    'bayar' => $grandtotal,
-                );
-            }
-            else{
-                $arr = array(
-                    'waktu' => date('Y-m-d H:i:s'),
-                    'jenis_pembayaran' => $request->get('jenis_pembayaran'),
-                    'total' => $request->get('total'),
-                    'diskon' => $request->get('diskon'),
-                    'tax' => $request->get('tax'),
-                    'charge' => $request->get('charge'),
-                    'grandtotal' => $request->get('grandtotal'),
-                );
-            }
+            // if(empty($request->get('tax'))){
+            //     //DP50%
+            //     $transaksi = Pembayaran::select('total')->where('kode_transaksi',$request->get('kode_transaksi'))->get()[0];
+            //     $grandtotal = $transaksi->grandtotal - $request->get('diskon') + $request->get('charge');
+            //     $arr = array(
+            //         'waktu' => date('Y-m-d H:i:s'),
+            //         'jenis_pembayaran' => $request->get('jenis_pembayaran'),
+            //         'diskon' => $request->get('diskon'),
+            //         'charge' => $request->get('charge'),
+            //         'grandtotal' => $grandtotal,
+            //         'bayar' => $grandtotal,
+            //     );
+            // }
+            // else{
+            //     $arr = array(
+            //         'waktu' => date('Y-m-d H:i:s'),
+            //         'jenis_pembayaran' => $request->get('jenis_pembayaran'),
+            //         'total' => $request->get('total'),
+            //         'diskon' => $request->get('diskon'),
+            //         'tax' => $request->get('tax'),
+            //         'charge' => $request->get('charge'),
+            //         'grandtotal' => $request->get('grandtotal'),
+            //     );
+            // }
+            $arr = array(
+                'waktu' => date('Y-m-d H:i:s'),
+                'jenis_pembayaran' => $request->get('jenis_pembayaran'),
+                'total' => $request->get('total'),
+                'diskon' => $request->get('diskon'),
+                'tax' => $request->get('tax'),
+                'charge' => $request->get('charge'),
+                'grandtotal' => $request->get('grandtotal'),
+            );
             Pembayaran::where('kode_transaksi', $request->get('kode_transaksi'))->update($arr);
         }
         else{
