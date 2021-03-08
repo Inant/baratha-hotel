@@ -97,7 +97,7 @@
                     <tbody class="list">
                       <?php                       
                         $kamar = \DB::table('detail_transaksi as dt')->select('k.no_kamar','kk.kategori_kamar','kk.harga')->join('kamar as k','dt.id_kamar','k.id')->join('kategori_kamar as kk','k.id_kategori_kamar','kk.id')->where('dt.kode_transaksi',$transaksi->kode_transaksi)->get();
-                        $jenis_pembayaran = $pembayaran->jenis_pembayaran;
+                        $jenis_pembayaran = isset($pembayaran->jenis_pembayaran) ? $pembayaran->jenis_pembayaran : 'Tunai';
                         $total = 0;
                         $diskon = 0;
                         $charge = 0;
