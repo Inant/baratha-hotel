@@ -331,6 +331,23 @@ class TransaksiController extends Controller
         
         return $laporan->get();
     }
+    
+    public function getLaporanPembayaran($dari, $sampai, $tipe='')
+    {
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan')
+        ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
+        ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
+        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+        ->where('t.status_bayar', 'Sudah');
+        if ($_GET['tipe_pembayaran']) {
+            $laporan->where('p.jenis_pembayaran', 'LIKE', "%$_GET[tipe_pembayaran]");
+        }
+        if ($_GET['tipe_pemesanan'] != '') {
+            $laporan->where('t.tipe_pemesanan', '=', $_GET['tipe_pemesanan']);
+        }
+        
+        return $laporan->get();
+    }
 
     public function getKamarFavorit($dari, $sampai)
     {
@@ -551,6 +568,9 @@ class TransaksiController extends Controller
             if($_GET['tipe']=='general'){
                 $this->param['laporan'] = $this->getLaporanGeneral($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
             }
+            else if($_GET['tipe']=='pembayaran'){
+                $this->param['laporan'] = $this->getLaporanPembayaran($_GET['dari'], $_GET['sampai']);
+            }
             else if($_GET['tipe']=='kamar-favorit'){
                 $this->param['laporan'] = $this->getKamarFavorit($_GET['dari'], $_GET['sampai']);
             }
@@ -562,6 +582,9 @@ class TransaksiController extends Controller
         if(isset($_GET['dari']) && isset($_GET['sampai'])){
             if($_GET['tipe']=='general'){
                 $this->param['laporan'] = $this->getLaporanGeneral($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
+            }
+            else if($_GET['tipe']=='pembayaran'){
+                $this->param['laporan'] = $this->getLaporanPembayaran($_GET['dari'], $_GET['sampai']);
             }
             else if($_GET['tipe']=='kamar-favorit'){
                 $this->param['laporan'] = $this->getKamarFavorit($_GET['dari'], $_GET['sampai']);
