@@ -31,7 +31,7 @@ class MainController extends Controller
                 ->whereBetween('pembayaran.waktu', [$date.' 00:00:00', $date.' 23:59:59'])                                                
                 ->join('transaksi', 'transaksi.kode_transaksi', 'pembayaran.kode_transaksi')
                 ->where('transaksi.status_bayar', 'Sudah')
-                ->groupBy('jenis_pembayaran')
+                ->groupBy('pembayaran.jenis_pembayaran')
                 ->get();
 
                 $status = 'Success';
