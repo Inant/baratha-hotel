@@ -63,7 +63,7 @@
                       $month = date('m');
                       $year = date('Y');
                   @endphp
-                  <span class="h2 font-weight-bold mb-1"> {{\App\Transaksi::whereMonth('waktu', $month)->whereYear('waktu', $year)->count()}} </span>
+                  <span class="h2 font-weight-bold mb-1"> {{\App\Transaksi::whereMonth('waktu', $month)->whereYear('waktu', $year)->whereNull('deleted_at')->count()}} </span>
                 </div>
                 <div class="col-auto mt-1">
                   <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -85,7 +85,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-2">Pemasukan Bulan Ini</h5>
-                  <span class="h2 font-weight-bold mb-1"> {{number_format(\DB::table(\DB::raw('pembayaran p'))->select(\DB::raw('SUM(p.grandtotal) as pemasukan'))->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')->where('t.status_bayar', '=', 'Sudah')->whereMonth('p.waktu', $month)->whereYear('p.waktu', $year)->get()[0]->pemasukan, 0, ',', '.')}} </span>
+                  <span class="h2 font-weight-bold mb-1"> {{number_format(\DB::table(\DB::raw('pembayaran p'))->select(\DB::raw('SUM(p.grandtotal) as pemasukan'))->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')->where('t.status_bayar', '=', 'Sudah')->whereMonth('p.waktu', $month)->whereYear('p.waktu', $year)->whereNull('deleted_at')->get()[0]->pemasukan, 0, ',', '.')}} </span>
                 </div>
                 <div class="col-auto mt-1">
                   <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">

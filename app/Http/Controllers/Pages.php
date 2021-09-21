@@ -27,7 +27,9 @@ class Pages extends Controller
                                 ->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')
                                 ->where('t.status_bayar', '=', 'Sudah')
                                 ->whereYear('p.waktu', $tahun)
-                                ->whereMonth('p.waktu', $val)->get();
+                                ->whereMonth('p.waktu', $val)
+                                ->whereNull('deleted_at')
+                                ->get();
                 array_push($pemasukanPerBulan, $pemasukan[0]->pemasukan);
             }
             else{

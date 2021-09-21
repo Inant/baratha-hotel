@@ -59,6 +59,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('online/verifikasi', 'TransaksiController@updatePembayaranOnline');
         Route::resource('tamu', 'TamuController');
         Route::resource('transaksi', 'TransaksiController');
+        Route::get('all-penjualan', 'TransaksiController@allPenjualan')->name('all-penjualan');
+        Route::get('all-penjualan/delete/{kode}', 'TransaksiController@softDelete')->name('soft-delete-penjualan');
     });
 
     // new route here
