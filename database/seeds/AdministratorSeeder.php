@@ -17,9 +17,9 @@ class AdministratorSeeder extends Seeder
         $administrator->gender = 'Laki-laki';
         $administrator->no_hp = '-';
         $administrator->alamat = '-';
-        $administrator->email = 'administrator@baratha.id';
+        $administrator->email = 'administrator@baratha.com';
         $administrator->username = 'administrator';
-        $administrator->password = Hash::make('administrator');
+        $administrator->password = Hash::make('barathahotel.com');
         $administrator->level = 'Owner';
         $administrator->save();
     }
