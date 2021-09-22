@@ -112,10 +112,11 @@ $(document).ready(function() {
         $("#idrGrandTotal").html(formatRupiah(grandTotal));
     });
 
-    $("#no_kartu").prop("disabled", true);
+    // $("#no_kartu").prop("disabled", true);
 //    $("#charge").prop("disabled", true);
 
     temp_grand_total = parseInt($("#grand_total").val());
+    
     function getCharge(thisVal) {
         var ppn = parseInt($("#tax").val());
         var total = parseInt($("#total").val())
@@ -169,6 +170,12 @@ $(document).ready(function() {
     $("#jenis_bayar").change(function() {
         var thisVal = $(this).val();
         getCharge(thisVal);
+        if ($(this).val() != "Tunai") {
+            $('#no_kartu').attr({'disabled': false, 'required' : true});
+        }
+        else{
+            $('#no_kartu').attr({'disabled': true, 'required' : false});
+        }
     });
 
     function addFoto(thisParam) {
