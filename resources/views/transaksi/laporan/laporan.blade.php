@@ -70,8 +70,8 @@
                         @if (auth()->user()->level == 'Owner')
                         <li <?= $_GET['tipe'] == 'khusus' ? 'class="active"' : '' ?>><a href="?tipe=khusus">Laporan</a></li>
                         @endif
-                        <li <?= $_GET['tipe'] == 'pembayaran' ? 'class="active"' : '' ?>><a href="?tipe=pembayaran">Laporan
-                                Pembayaran</a></li>
+                        {{-- <li <?= $_GET['tipe'] == 'pembayaran' ? 'class="active"' : '' ?>><a href="?tipe=pembayaran">Laporan
+                                Pembayaran</a></li> --}}
                         <li <?= $_GET['tipe'] == 'kamar-favorit' ? 'class="active"' : '' ?>><a
                                 href="?tipe=kamar-favorit">Kamar Favorit</a></li>
                         {{-- <li <?= $_GET['tipe'] == 'tidak-terjual' ? 'class="active"' : '' ?>><a href="?tipe=tidak-terjual">Menu Tidak Terjual</a></li> --}}
