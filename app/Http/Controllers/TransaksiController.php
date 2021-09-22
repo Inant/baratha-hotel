@@ -299,6 +299,7 @@ class TransaksiController extends Controller
         $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
         $newPembayaran->waktu = date('Y-m-d H:i:s');
         $newPembayaran->jenis_pembayaran = $request->get('jenis_pembayaran');
+        $newPembayaran->jenis_pembayaran = $request->get('no_kartu');
         $newPembayaran->total = $request->get('total');
         $newPembayaran->diskon = $request->get('diskon');
         $newPembayaran->tax = $request->get('tax');
@@ -317,7 +318,7 @@ class TransaksiController extends Controller
 
     public function getLaporanGeneral($dari, $sampai, $tipe, $tipe_pembayaran='')
     {
-        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan')
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu', 't.tipe_pemesanan')
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
@@ -336,7 +337,7 @@ class TransaksiController extends Controller
     public function getLaporanKhusus($dari, $sampai, $tipe='')
     {
         if(auth()->user()->level == 'Owner') {
-            $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan')
+            $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu','t.tipe_pemesanan')
             ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
             ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
             ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
@@ -357,7 +358,7 @@ class TransaksiController extends Controller
 
     public function getLaporanPembayaran($dari, $sampai, $tipe='')
     {
-        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan')
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu','t.tipe_pemesanan')
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
@@ -498,6 +499,7 @@ class TransaksiController extends Controller
             $arr = array(
                 'waktu' => date('Y-m-d H:i:s'),
                 'jenis_pembayaran' => $request->get('jenis_pembayaran'),
+                'no_kartu' => $request->get('no_kartu'),
                 'total' => $request->get('total'),
                 'diskon' => $request->get('diskon'),
                 'tax' => $request->get('tax'),
@@ -511,6 +513,7 @@ class TransaksiController extends Controller
             $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
             $newPembayaran->waktu = date('Y-m-d H:i:s');
             $newPembayaran->jenis_pembayaran = $request->get('jenis_pembayaran');
+            $newPembayaran->no_kartu = $request->get('no_kartu');
             $newPembayaran->total = $request->get('total');
             $newPembayaran->diskon = $request->get('diskon');
             $newPembayaran->tax = $request->get('tax');

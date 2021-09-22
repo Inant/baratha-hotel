@@ -98,6 +98,7 @@
                       <?php                       
                         $kamar = \DB::table('detail_transaksi as dt')->select('k.no_kamar','kk.kategori_kamar','kk.harga')->join('kamar as k','dt.id_kamar','k.id')->join('kategori_kamar as kk','k.id_kategori_kamar','kk.id')->where('dt.kode_transaksi',$transaksi->kode_transaksi)->get();
                         $jenis_pembayaran = isset($pembayaran->jenis_pembayaran) ? $pembayaran->jenis_pembayaran : 'Tunai';
+                        $no_kartu = isset($pembayaran->no_kartu) ? $pembayaran->no_kartu : '';
                         $total = 0;
                         $diskon = 0;
                         $charge = 0;
@@ -194,7 +195,19 @@
                           <strong>{{ $message }}</strong>
                         </span>
                       @enderror
-                    </div>                    
+                    </div> 
+                    
+                    <div class="col-4 mb-2">
+                      <div id="">
+                        <label for=""><strong>No Kartu</strong></label>
+                        <input type="text" name="no_kartu" id="no_kartu" class="form-control" value="{{old('no_kartu', $no_kartu)}}">
+                        {{-- @error('jenis_pembayaran')
+                          <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror --}}
+                      </div>
+                    </div>
                     
                     <div class="col-4 mb-2">
                       <div id="">
