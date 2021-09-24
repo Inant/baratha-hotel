@@ -36,11 +36,13 @@
       $durasi = abs(round($diff / 86400));
 
       // $kamar = \App\Kamar::with('transaksi')->where('id', $value->id_kamar)->get()[0];
-      $kamar = \DB::table(\DB::raw('kamar k'))->select('k.no_kamar')->join(\DB::raw('detail_transaksi d'), 'k.id', '=', 'd.id_kamar')->where('d.kode_transaksi', $value->kode_transaksi)->get();      
+      $kamar = \DB::table(\DB::raw('kamar k'))->select('k.no_kamar')->join(\DB::raw('detail_transaksi d'), 'k.id', '=', 'd.id_kamar')->where('d.kode_transaksi', $value->kode_transaksi)->get();
+
+      $tanggal = date('d/m/y', strtotime($value->waktu));
   ?>
           <tr>
           <td>{{$loop->iteration}}</td>
-          <td>{{$value->kode_transaksi}}</td>
+          <td>{{'INV/BH/'.sprintf('%04d', $loop->iteration).'/'.$tanggal}}</td>
           <td>{{date('d-m-Y H:i', strtotime($value->waktu))}}</td>
           <td>{{$value->nama}}</td>
           <td>
