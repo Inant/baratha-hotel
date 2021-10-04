@@ -652,7 +652,7 @@ class TransaksiController extends Controller
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
         ->where('t.status_bayar', 'Sudah')
-        ->paginate(10);        
+        ->get();        
 
         return view('transaksi.transaksi.list-penjualan', $this->param);
     }
