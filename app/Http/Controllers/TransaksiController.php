@@ -679,4 +679,27 @@ class TransaksiController extends Controller
             return back()->withError($e->getMessage());
         }
     }
+
+    public function restoreData($kode)
+    {
+        try{
+            if(auth()->user()->level == 'Owner') {
+                $kode = str_replace('-', '/', $kode);
+                \DB::table('transaksi')->where('kode_transaksi', $kode)->update([
+                    'deleted_at' => NULL
+                ]);
+
+                return back()->withStatus('Data berhasil dikembalikan.');
+            }
+            else {
+                return back()->withError('Maaf hanya owner yang dapat mengakses fitur ini.');
+            }
+        }
+        catch(\Exception $e) {
+            return back()->withError($e->getMessage());
+        }
+        catch(\Illuminate\Database\QueryException $e) {
+            return back()->withError($e->getMessage());
+        }
+    }
 }

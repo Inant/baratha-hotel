@@ -209,11 +209,21 @@
                                                         @php
                                                             $kodeTrx = str_replace('/', '-', $value->kode_transaksi);
                                                         @endphp
+                                                        {{--  Restore Data  --}}
+                                                        @if ($value->deleted_at)
                                                         <a class="dropdown-item"
-                                                            href="{{ url('transaksi/all-penjualan/delete/' . $kodeTrx) }}">
-                                                            <button type="button" class="mr-1 dropdown-item"
-                                                                onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Hapus</button>
+                                                        href="{{ url('transaksi/all-penjualan/restore/' . $kodeTrx) }}">
+                                                        <button type="button" class="mr-1 dropdown-item"
+                                                            onclick="confirm('{{ __('Apakah anda yakin ingin mengembalikan data?') }}') ? this.parentElement.submit() : ''">Kembalikan</button>
                                                         </a>
+                                                        @else
+                                                        {{--  Delete Data  --}}
+                                                        <a class="dropdown-item"
+                                                        href="{{ url('transaksi/all-penjualan/delete/' . $kodeTrx) }}">
+                                                        <button type="button" class="mr-1 dropdown-item"
+                                                            onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Hapus</button>
+                                                        </a>
+                                                        @endif
                                                         {{-- <form action="{{ route('soft-delete-penjualan', $kodeTrx) }}" method="get">
                                                 input:hidden
                                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">Hapus</button>

@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('transaksi', 'TransaksiController');
         Route::get('all-penjualan', 'TransaksiController@allPenjualan')->name('all-penjualan');
         Route::get('all-penjualan/delete/{kode}', 'TransaksiController@softDelete')->name('soft-delete-penjualan');
+        Route::get('all-penjualan/restore/{kode}', 'TransaksiController@restoreData')->name('restore-data-penjualan');
     });
 
     // new route here
