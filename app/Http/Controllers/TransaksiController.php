@@ -321,7 +321,7 @@ class TransaksiController extends Controller
         $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu', 't.tipe_pemesanan')
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
-        ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
         ->where('t.status_bayar', 'Sudah');
         if ($tipe_pembayaran) {
             $laporan->where('p.jenis_pembayaran', 'LIKE', "%$tipe_pembayaran");
