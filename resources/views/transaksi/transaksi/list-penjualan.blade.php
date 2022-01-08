@@ -135,6 +135,7 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th>#</th>
+                                        <th>Status Transaksi</th>
                                         <th>Kode Transaksi</th>
                                         <th>Waktu</th>
                                         <th>Nama Tamu</th>
@@ -178,6 +179,18 @@
                                         ?>
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            <td>
+                                                @if ($value->status_bayar == 'Belum')
+                                                    <span
+                                                        class="badge badge-pill badge-danger">{{ $value->status_bayar }}</span>
+                                                @elseif ($value->status_bayar == 'Piutang')
+                                                    <span
+                                                        class="badge badge-pill badge-warning">{{ $value->status_bayar }}</span>
+                                                @else
+                                                    <span
+                                                        class="badge badge-pill badge-success">{{ $value->status_bayar }}</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $value->kode_transaksi }}</td>
                                             <td>{{ date('d-m-Y H:i', strtotime($value->waktu)) }}</td>
                                             <td>{{ $value->nama }}</td>
@@ -236,7 +249,7 @@
                                 </tbody>
                                 <tfoot class="bg-dark text-white">
                                     <tr>
-                                        <td colspan='7' class='text-center'><b>TOTAL</b></td>
+                                        <td colspan='8' class='text-center'><b>TOTAL</b></td>
                                         <td>{{ number_format($total, 0, ',', '.') }}</td>
                                         <td></td>
                                         <td></td>

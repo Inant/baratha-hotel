@@ -421,7 +421,7 @@ class TransaksiController extends Controller
             $transaksi->where('status', $status);
         }
 
-        $transaksi->where('status_bayar', '!=', 'Sudah');
+        $transaksi->where('status_bayar', '=', 'Belum');
         if ($keywordKamar) {
             $transaksi->where('dt.id_kamar', "$keywordKamar")
             ->join('detail_transaksi as dt','transaksi.kode_transaksi','dt.kode_transaksi')
@@ -446,6 +446,21 @@ class TransaksiController extends Controller
         }
 
         return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil disimpan.');
+    }
+    public function listPiutang()
+    {
+        $this->param['pageInfo'] = 'List Piutang';
+
+        $transaksi =Transaksi::with('tamu')->where('status_bayar', '=', 'Piutang');
+        return \view('transaksi.invoice.list-piutang', ['transaksi' => $transaksi->paginate(10)], $this->param);
+
+    }
+    public function addPiutang($kode)
+    {
+        $kode = str_replace('-', '/', $kode);
+
+        Transaksi::where('kode_transaksi',$kode)->update(['status_bayar' => 'Piutang']);
+        return redirect()->route('transaksi.list-invoice')->withStatus('Piutang Berhasil Ditambahkan.');
     }
 
     public function editInvoice($kode)
@@ -647,11 +662,11 @@ class TransaksiController extends Controller
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
         
-        $this->param['laporan'] = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan', 't.deleted_at')
+        $this->param['laporan'] = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','t.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan', 't.deleted_at','t.status_bayar')
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-        ->where('t.status_bayar', 'Sudah')
+        // ->where('t.status_bayar', 'Sudah')
         ->get();        
 
         return view('transaksi.transaksi.list-penjualan', $this->param);

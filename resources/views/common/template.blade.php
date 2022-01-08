@@ -127,6 +127,12 @@
                   </li> --}}
                 </ul>
             </li>
+            <li class="nav-item">
+              <a class="nav-link {{Request::segment(1) == 'piutang' ? 'active' : ''}}" href="{{route('transaksi.piutang')}}">
+                <i class="ni ni-paper-diploma text-blue"></i>
+                <span class="nav-link-text">Piutang</span>
+              </a>
+            </li>
             @if (\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link {{Request::segment(1) == 'user' ? 'active' : ''}}" href="{{route('user.index')}}">
