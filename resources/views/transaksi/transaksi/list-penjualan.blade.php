@@ -137,7 +137,7 @@
                                         <th>#</th>
                                         <th>Status Transaksi</th>
                                         <th>Kode Transaksi</th>
-                                        <th>Waktu</th>
+                                        <th>Waktu Pembayaran</th>
                                         <th>Nama Tamu</th>
                                         <th>No Kamar</th>
                                         <th>Lama Menginap</th>
@@ -145,7 +145,7 @@
                                         <th>Total</th>
                                         <th>Jenis Bayar</th>
                                         <th>Tipe Pemesanan</th>
-                                        <th>Deleted AT</th>
+                                        <th>Deleted At</th>
                                         {{-- <th>PPN</th> --}}
                                         <th></th>
                                     </tr>
