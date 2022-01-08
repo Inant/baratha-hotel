@@ -52,9 +52,13 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/baratha-hotel'),
+    // 'url' => env('APP_URL', 'http://192.168.1.37/baratha-hotel'),
 
-    'asset_url' => env('ASSET_URL', 'http://localhost:8080/baratha-hotel/public/assets'),
+    // 'asset_url' => env('ASSET_URL', 'http://192.168.1.37:8080/baratha-hotel/public/assets'),
+
+    'url' => env('APP_URL', 'http://192.168.18.36:777/baratha-hotel'),
+
+    'asset_url' => env('ASSET_URL', 'http://192.168.18.36:777/assets'),
 
     /*
     |--------------------------------------------------------------------------
