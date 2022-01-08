@@ -8,40 +8,6 @@
                     <div class="col-2">
                     <h3 class="mb-0">{{$pageInfo}}</h3>
                     </div>
-                    <div class="col-8 offset-4">
-                        <form action="{{ route('transaksi.list-invoice') }}">
-                            <div class="row">
-                                <div class="col-4">
-                                    <select name="keyTamu" id="keyTamu" class="form-control select2" width="100%">
-                                        <option value="">Semua Tamu</option>
-                                        @foreach ($tamu as $item)
-                                            <option value="{{$item->id}}" {{Request::get('keyTamu') == $item->id ? 'selected' : ''}} > {{$item->nama}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <select name="kamar" id="kamar" class="form-control select2" width="100%">
-                                        <option value="">Semua Kamar</option>
-                                        @foreach ($kamar as $item)
-                                            <option value="{{$item->id}}" {{Request::get('kamar') == $item->id ? 'selected' : ''}} > {{$item->no_kamar}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <select name="status" id="status" class="form-control select2" width="100%">
-                                        <option value="">Semua Status</option>
-                                        <option value="Booking" {{Request::get('status') == 'Booking' ? 'selected' : ''}} > Booking</option>
-                                        <option value="Check In" {{Request::get('status') == 'Check In' ? 'selected' : ''}} > Check In</option>
-                                    </select>
-                                </div>
-                                <div class="col-1">
-                                    <button type="submit" class="btn btn-info">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
             @if (session('status'))
@@ -101,7 +67,6 @@
                                         <a class="dropdown-item" href="{{ route('transaksi.invoice', $kodeTrx) }}" target="_blank">Cetak Invoice</a>
                                         <a class="dropdown-item" href="{{ route('transaksi.paid', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin? (Pastikan sudah mencetak invoice.)") }}')">Telah Terbayar</a>
                                         @endif
-                                        <a class="dropdown-item" href="{{ route('transaksi.add-piutang', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin?") }}')">Jadikan Piutang</a>
                                     </div>
                                 </div>
                             </td>
