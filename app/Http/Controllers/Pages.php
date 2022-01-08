@@ -26,6 +26,7 @@ class Pages extends Controller
                                 ->select(\DB::raw('SUM(p.grandtotal) AS pemasukan'))
                                 ->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')
                                 ->where('t.status_bayar', '=', 'Sudah')
+                                ->orWhere('t.status_bayar', '=', 'Piutang Terbayar')
                                 ->whereYear('p.waktu', $tahun)
                                 ->whereMonth('p.waktu', $val)
                                 ->whereNull('deleted_at')

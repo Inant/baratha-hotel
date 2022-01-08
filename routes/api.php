@@ -19,3 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('rekap-hotel/{date}', 'API\MainController@getTotalByDate');
+
+Route::get('piutang-hotel/{kodePenjualan}', 'API\MainController@getPiutang');
+
+Route::get('list-piutang-hotel', 'API\MainController@getListPiutang');
+
+Route::post('bayar-piutang', 'API\MainController@bayarPiutang');

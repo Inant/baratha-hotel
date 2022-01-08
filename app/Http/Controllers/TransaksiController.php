@@ -299,7 +299,7 @@ class TransaksiController extends Controller
         $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
         $newPembayaran->waktu = date('Y-m-d H:i:s');
         $newPembayaran->jenis_pembayaran = $request->get('jenis_pembayaran');
-        $newPembayaran->jenis_pembayaran = $request->get('no_kartu');
+        $newPembayaran->no_kartu = $request->get('no_kartu');
         $newPembayaran->total = $request->get('total');
         $newPembayaran->diskon = $request->get('diskon');
         $newPembayaran->tax = $request->get('tax');
@@ -322,7 +322,8 @@ class TransaksiController extends Controller
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('t.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-        ->where('t.status_bayar', 'Sudah');
+        ->where('t.status_bayar', 'Sudah')
+        ->orWhere('t.status_bayar', 'Piutang Terbayar');
         if ($tipe_pembayaran) {
             $laporan->where('p.jenis_pembayaran', 'LIKE', "%$tipe_pembayaran");
         }
@@ -341,7 +342,8 @@ class TransaksiController extends Controller
             ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
             ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
             ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-            ->where('t.status_bayar', 'Sudah');
+            ->where('t.status_bayar', 'Sudah')
+            ->orWhere('t.status_bayar', 'Piutang Terbayar');
             if ($_GET['tipe_pembayaran']) {
                 $laporan->where('p.jenis_pembayaran', 'LIKE', "%$_GET[tipe_pembayaran]");
             }
@@ -362,7 +364,8 @@ class TransaksiController extends Controller
         ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
         ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
         ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-        ->where('t.status_bayar', 'Sudah');
+        ->where('t.status_bayar', 'Sudah')
+        ->orWhere('t.status_bayar', 'Piutang Terbayar');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('p.jenis_pembayaran', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
