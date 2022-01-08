@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('checkin-booking/{kode}', 'TransaksiController@checkInBooking')->name('transaksi.checkin-booking');
         Route::get('pembayaran/{kode}', 'TransaksiController@pembayaran')->name('transaksi.pembayaran');
         Route::get('invoice', 'TransaksiController@listInvoice')->name('transaksi.list-invoice');
+        Route::get('piutang', 'TransaksiController@listPiutang')->name('transaksi.piutang');
+        Route::get('add-piutang/{kode}', 'TransaksiController@addPiutang')->name('transaksi.add-piutang');
         Route::get('edit-invoice/{kode}', 'TransaksiController@editInvoice')->name('transaksi.edit-invoice');
         Route::post('save-invoice', 'TransaksiController@saveInvoice')->name('transaksi.save-invoice');
         Route::get('paid/{kode}', 'TransaksiController@paid')->name('transaksi.paid');
