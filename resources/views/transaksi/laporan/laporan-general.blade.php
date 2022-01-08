@@ -4,7 +4,7 @@
             <tr>
                 <th>#</th>
                 <th>Kode Transaksi</th>
-                <th>Waktu</th>
+                <th>Waktu Pembayaran</th>
                 <th>Nama Tamu</th>
                 <th>No Kamar</th>
                 <th>Lama Menginap</th>
