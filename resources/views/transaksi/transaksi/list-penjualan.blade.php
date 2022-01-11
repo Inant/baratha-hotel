@@ -166,7 +166,8 @@
                                         //     $subtotal = $subtotal - $biaya_travel;
                                         // }
 
-                                        $total += $value->deleted_at ==null ? $subtotal : 0;
+                                        $total += $subtotal;
+                                        // $total += $value->deleted_at ==null ? $subtotal : 0;
                                         $diff = strtotime($value->tgl_checkout) - strtotime($value->tgl_checkin);
                                         $durasi = abs(round($diff / 86400));
                                         
