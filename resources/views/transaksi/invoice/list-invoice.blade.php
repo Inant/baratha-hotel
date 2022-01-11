@@ -100,9 +100,8 @@
                                         @if ($cek > 0)
                                         <a class="dropdown-item" href="{{ route('transaksi.invoice', $kodeTrx) }}" target="_blank">Cetak Invoice</a>
                                         <a class="dropdown-item" href="{{ route('transaksi.paid', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin? (Pastikan sudah mencetak invoice.)") }}')">Telah Terbayar</a>
-                                        @else
-                                        <a class="dropdown-item" href="{{ route('transaksi.add-piutang', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin?") }}')">Jadikan Piutang</a>
                                         @endif
+                                        <a class="dropdown-item" href="{{ route('transaksi.add-piutang', $kodeTrx) }}" onclick="return confirm('{{ __("Apakah anda yakin?") }}')">Jadikan Piutang</a>
                                     </div>
                                 </div>
                             </td>
