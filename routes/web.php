@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/','Pages@dashboard');
+    Route::get('/', 'Pages@dashboard');
     // user
     Route::get('user/ganti-password/', 'UserController@gantiPassword')->name('user.ganti-password');
 
     Route::put('user/update-password/{id}', 'UserController@updatePassword')->name('user.update-password');
 
     Route::resource('user', 'UserController');
-    
+
     Route::group(['prefix' => 'master-kamar'], function () {
         Route::get('kategori-kamar/foto/addFoto', 'KategoriKamarController@addFoto');
         Route::get('reservation-chart', 'KamarController@reservationChart');

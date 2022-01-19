@@ -154,6 +154,7 @@
                                     <?php
                                     $total = 0;
                                     $total_diskon = 0;
+                                    $subtotal = 0;
                                     ?>
                                     @foreach ($laporan as $value)
                                         <?php
@@ -165,8 +166,9 @@
                                         //     $biaya_travel = ($subtotal - $value->total_ppn - $value->room_charge) * 10/100;
                                         //     $subtotal = $subtotal - $biaya_travel;
                                         // }
-
-                                        $total += $subtotal;
+                                        if (!$value->deleted_at) {
+                                            $total += $subtotal;
+                                        }
                                         // $total += $value->deleted_at ==null ? $subtotal : 0;
                                         $diff = strtotime($value->tgl_checkout) - strtotime($value->tgl_checkin);
                                         $durasi = abs(round($diff / 86400));
@@ -207,7 +209,8 @@
                                             <td>{{ $value->tipe_pemesanan }}</td>
                                             <td class="text-center">
                                                 @if ($value->deleted_at)
-                                                    <span class="badge badge-danger"> {{ $value->deleted_at }} </span>
+                                                    <span class="badge badge-danger"> {{ $value->deleted_at }}
+                                                    </span>
                                                 @else
                                                     -
                                                 @endif
@@ -223,20 +226,20 @@
                                                         @php
                                                             $kodeTrx = str_replace('/', '-', $value->kode_transaksi);
                                                         @endphp
-                                                        {{--  Restore Data  --}}
+                                                        {{-- Restore Data --}}
                                                         @if ($value->deleted_at)
-                                                        <a class="dropdown-item"
-                                                        href="{{ url('transaksi/all-penjualan/restore/' . $kodeTrx) }}">
-                                                        <button type="button" class="mr-1 dropdown-item"
-                                                            onclick="confirm('{{ __('Apakah anda yakin ingin mengembalikan data?') }}') ? this.parentElement.submit() : ''">Kembalikan</button>
-                                                        </a>
+                                                            <a class="dropdown-item"
+                                                                href="{{ url('transaksi/all-penjualan/restore/' . $kodeTrx) }}">
+                                                                <button type="button" class="mr-1 dropdown-item"
+                                                                    onclick="confirm('{{ __('Apakah anda yakin ingin mengembalikan data?') }}') ? this.parentElement.submit() : ''">Kembalikan</button>
+                                                            </a>
                                                         @else
-                                                        {{--  Delete Data  --}}
-                                                        <a class="dropdown-item"
-                                                        href="{{ url('transaksi/all-penjualan/delete/' . $kodeTrx) }}">
-                                                        <button type="button" class="mr-1 dropdown-item"
-                                                            onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Hapus</button>
-                                                        </a>
+                                                            {{-- Delete Data --}}
+                                                            <a class="dropdown-item"
+                                                                href="{{ url('transaksi/all-penjualan/delete/' . $kodeTrx) }}">
+                                                                <button type="button" class="mr-1 dropdown-item"
+                                                                    onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Hapus</button>
+                                                            </a>
                                                         @endif
                                                         {{-- <form action="{{ route('soft-delete-penjualan', $kodeTrx) }}" method="get">
                                                 input:hidden
