@@ -107,6 +107,11 @@
                       <span class="nav-link-text">Invoice</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('transaksi/list-invoice')}}">
+                      <span class="nav-link-text">List Invoice</span>
+                    </a>
+                  </li>
                   @if (auth()->user()->level == 'Owner')
                   <li class="nav-item">
                     <a class="nav-link" href="{{route('all-penjualan')}}">
