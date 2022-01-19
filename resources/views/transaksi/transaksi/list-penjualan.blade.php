@@ -166,7 +166,7 @@
                                         //     $biaya_travel = ($subtotal - $value->total_ppn - $value->room_charge) * 10/100;
                                         //     $subtotal = $subtotal - $biaya_travel;
                                         // }
-                                        if (!$value->deleted_at) {
+                                        if (!$value->deleted_at && $value->status_bayar == 'Sudah') {
                                             $total += $subtotal;
                                         }
                                         // $total += $value->deleted_at ==null ? $subtotal : 0;
