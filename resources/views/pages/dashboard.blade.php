@@ -90,7 +90,18 @@
                                         <br>
                                         <span class="h2 font-weight-bold mb-1">
                                             {{ number_format(
-                                                \DB::table(\DB::raw('pembayaran p'))->select(\DB::raw('SUM(p.grandtotal) as pemasukan'))->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')->where('t.status_bayar', '=', 'Sudah')->orWhere('t.status_bayar', '=', 'Piutang Terbayar')->whereMonth('p.waktu', $month)->whereYear('p.waktu', $year)->whereNull('deleted_at')->get()[0]->pemasukan,
+                                                \DB::table(\DB::raw('pembayaran p'))
+                                                ->select(\DB::raw('SUM(p.grandtotal - p.charge) as pemasukan'))
+                                                ->join(\DB::raw('transaksi t'), 't.kode_transaksi', '=', 'p.kode_transaksi')
+                                                ->where('t.status_bayar', '=', 'Sudah')
+                                                ->whereMonth('p.waktu', $month)
+                                                ->whereYear('p.waktu', $year)
+                                                ->whereNull('deleted_at')
+                                                ->orWhere('t.status_bayar', '=', 'Piutang Terbayar')
+                                                ->whereMonth('p.waktu', $month)
+                                                ->whereYear('p.waktu', $year)
+                                                ->whereNull('deleted_at')
+                                                ->get()[0]->pemasukan,
                                                 0,
                                                 ',',
                                                 '.',
