@@ -449,8 +449,8 @@ class TransaksiController extends Controller
                         ->with('tamu')
                         ->join('pembayaran as p', 'p.kode_transaksi', 'transaksi.kode_transaksi')
                         ->where('transaksi.status_bayar', 'Belum')
-                        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"]);
-
+                        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+                        ->orderBy('p.waktu', 'DESC');
                         return \view('transaksi.invoice.list-all-invoice', ['transaksi' => $transaksi->paginate(10)], $this->param);
         }
         else {
