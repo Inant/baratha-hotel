@@ -170,7 +170,7 @@
                             <div class="col-12 mb-2">
                                 <label for="">Extra Bed</label>
                                 <input type="checkbox" name="is_extra_bed" id="is_extra_bed" class="is_extra_bed"
-                                    value="{{ old('is_extra_bed') }}">
+                                    value="{{ old('is_extra_bed', 1) }}">
                             </div>
                         </div>
                         <div class="row">
