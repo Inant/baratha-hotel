@@ -11,7 +11,7 @@ use \App\Tamu;
 use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
-{   
+{
     private $param;
     public function __construct()
     {
@@ -26,34 +26,34 @@ class TransaksiController extends Controller
         $keywordKamar = $request->get('kamar');
         $keyTamu = $request->get('keyTamu');
         $status = $request->get('status');
-        
-/*         $kamar = \DB::table(\DB::raw('kamar k'))
+
+        /*         $kamar = \DB::table(\DB::raw('kamar k'))
                     ->select('k.id', 'k.no_kamar')
                     ->join(\DB::raw('transaksi t'), 'k.id', '=', 't.id_kamar')
                     ->where('t.status', '!=', 'Check Out')
                     ->get();
- */        
+ */
         $tamu = \DB::table(\DB::raw('tamu t'))
-        ->select('t.id', 't.nama')
-        ->join(\DB::raw('transaksi tk'), 't.id', '=', 'tk.id_tamu')
-        ->where('tk.status', '!=', 'Check Out')
-        ->get();
+            ->select('t.id', 't.nama')
+            ->join(\DB::raw('transaksi tk'), 't.id', '=', 'tk.id_tamu')
+            ->where('tk.status', '!=', 'Check Out')
+            ->get();
 
-        $transaksi = Transaksi::select('kode_transaksi','tgl_checkin','tgl_checkout','status','keterangan','nama','tipe_pemesanan')->join('tamu','transaksi.id_tamu','tamu.id')->where('status','!=','Check Out');
+        $transaksi = Transaksi::select('kode_transaksi', 'tgl_checkin', 'tgl_checkout', 'status', 'keterangan', 'nama', 'tipe_pemesanan')->join('tamu', 'transaksi.id_tamu', 'tamu.id')->where('status', '!=', 'Check Out');
 
-        if($keyTamu){
+        if ($keyTamu) {
             $transaksi->where('id_tamu', $keyTamu);
         }
 
-/*         if ($keywordKamar) {
+        /*         if ($keywordKamar) {
             $transaksi->where('id_kamar', "$keywordKamar");
         }
- */        
+ */
         if ($status) {
             $transaksi->where('status', $status);
         }
 
-        return \view('transaksi.transaksi.list-transaksi', ['transaksi' => $transaksi->paginate(10), 'kamar' => /*$kamar */[], 'tamu' => $tamu], $this->param);
+        return \view('transaksi.transaksi.list-transaksi', ['transaksi' => $transaksi->paginate(10), 'kamar' => /*$kamar */ [], 'tamu' => $tamu], $this->param);
     }
 
     public function getKode()
@@ -64,22 +64,21 @@ class TransaksiController extends Controller
         $m = $tgl[1];
         $year = date('y');
         $lastKode = Transaksi::select('kode_transaksi')
-        ->whereMonth('waktu', $m)
-        ->whereYear('waktu', $y)
-        ->orderBy('kode_transaksi','desc')
-        ->skip(0)->take(1)
-        ->get();
+            ->whereMonth('waktu', $m)
+            ->whereYear('waktu', $y)
+            ->orderBy('kode_transaksi', 'desc')
+            ->skip(0)->take(1)
+            ->get();
 
-        if(count($lastKode)==0){
+        if (count($lastKode) == 0) {
             // $dateCreate = date_create($_GET['waktu']);
             $date = date('my');
-            $kode = 'INV/BH/'.'0001'.'/'.$m.'/'.$year;
-        }
-        else{
+            $kode = 'INV/BH/' . '0001' . '/' . $m . '/' . $year;
+        } else {
             $ex = explode('/', $lastKode[0]->kode_transaksi);
             $no = (int)$ex[2] + 1;
             $newNo = sprintf("%04s", $no);
-            $kode = 'INV/BH/'.$newNo.'/'.$m.'/'.$year;
+            $kode = 'INV/BH/' . $newNo . '/' . $m . '/' . $year;
         }
 
         return $kode;
@@ -92,9 +91,9 @@ class TransaksiController extends Controller
         $this->param['btnRight']['link'] = route('transaksi.index');
         $this->param['kode_transaksi'] = $this->getKode();
         $this->param['tamu'] = Tamu::select('id', 'nama')->get();
-        $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function($query){
-            $query->select('d.id_kamar')->from('detail_transaksi as d')->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')->whereIn('t.status', ['Check In', 'Booking']);
-        })->orderBy('id','asc')->get();
+        $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function ($query) {
+            $query->select('d.id_kamar')->from('detail_transaksi as d')->join('transaksi as t', 't.kode_transaksi', 'd.kode_transaksi')->whereIn('t.status', ['Check In', 'Booking']);
+        })->orderBy('id', 'asc')->get();
 
         return \view('transaksi.transaksi.check-in', $this->param);
     }
@@ -106,9 +105,9 @@ class TransaksiController extends Controller
         $this->param['btnRight']['link'] = route('transaksi.index');
         $this->param['kode_transaksi'] = $this->getKode();
         $this->param['tamu'] = Tamu::select('id', 'nama')->get();
-        $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function($query){
-            $query->select('d.id_kamar')->from('detail_transaksi as d')->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')->whereIn('t.status', ['Check In', 'Booking']);
-        })->orderBy('id','asc')->get();
+        $this->param['kamar'] = \DB::table('kamar')->where('status', 'Tersedia')->whereNotIn('id', function ($query) {
+            $query->select('d.id_kamar')->from('detail_transaksi as d')->join('transaksi as t', 't.kode_transaksi', 'd.kode_transaksi')->whereIn('t.status', ['Check In', 'Booking']);
+        })->orderBy('id', 'asc')->get();
 
         return \view('transaksi.transaksi.booking', $this->param);
     }
@@ -120,7 +119,7 @@ class TransaksiController extends Controller
         $this->param['btnRight']['link'] = route('transaksi.index');
         $this->param['kode_transaksi'] = $this->getKode();
         $this->param['tamu'] = Tamu::select('id', 'nama')->get();
-        $this->param['kamar'] = Kamar::where('id',$_GET['id_kamar'])->get();
+        $this->param['kamar'] = Kamar::where('id', $_GET['id_kamar'])->get();
         $this->param['tgl_checkin'] = $_GET['tgl_checkin'];
 
         return \view('transaksi.transaksi.reservasi-by-chart', $this->param);
@@ -131,21 +130,21 @@ class TransaksiController extends Controller
         $tgl_checkin = $_GET['tgl_checkin'];
         $tgl_checkout = $_GET['tgl_checkout'];
         $kamar = \DB::table('kamar AS k')
-                        ->select('k.id', 'k.no_kamar')
-                        ->where('status','Tersedia')
-                        ->whereNotIn('id', function($query) use ($tgl_checkin, $tgl_checkout){
-                            $query->select('d.id_kamar')->from('detail_transaksi as d')
-                            ->join('transaksi as t','t.kode_transaksi','d.kode_transaksi')
-                            ->where('t.tgl_checkin', '>=', $tgl_checkin)
-                            ->where('t.tgl_checkin', '<=', $tgl_checkout)
-                            // ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
-                            // ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
-                            ->where('t.tgl_checkout', '>=', $tgl_checkin)
-                            ->where('t.tgl_checkout', '<=', $tgl_checkout)
-                            ->where('t.status', '!=', 'Check Out');
-                        })
-                        ->orderBy('id', 'asc')
-                        ->get();
+            ->select('k.id', 'k.no_kamar')
+            ->where('status', 'Tersedia')
+            ->whereNotIn('id', function ($query) use ($tgl_checkin, $tgl_checkout) {
+                $query->select('d.id_kamar')->from('detail_transaksi as d')
+                    ->join('transaksi as t', 't.kode_transaksi', 'd.kode_transaksi')
+                    ->where('t.tgl_checkin', '>=', $tgl_checkin)
+                    ->where('t.tgl_checkin', '<=', $tgl_checkout)
+                    // ->whereBetween('t.tgl_checkin', [$tgl_checkin, $tgl_checkout])
+                    // ->orWhereBetween('t.tgl_checkout', [$tgl_checkin, $tgl_checkout])
+                    ->where('t.tgl_checkout', '>=', $tgl_checkin)
+                    ->where('t.tgl_checkout', '<=', $tgl_checkout)
+                    ->where('t.status', '!=', 'Check Out');
+            })
+            ->orderBy('id', 'asc')
+            ->get();
         return json_encode($kamar);
     }
 
@@ -190,7 +189,7 @@ class TransaksiController extends Controller
         $newCheckIn->keterangan = $request->get('keterangan');
         $newCheckIn->status_bayar = 'Belum';
         $newCheckIn->tipe_pemesanan = $request->get('tipe_pemesanan');
-//        $newCheckIn->id_kamar = $request->get('id_kamar');
+        //        $newCheckIn->id_kamar = $request->get('id_kamar');
 
         $newCheckIn->save();
 
@@ -255,11 +254,11 @@ class TransaksiController extends Controller
         $transaksi->tgl_checkout = $request->get('tgl_checkout');
         $transaksi->tipe_pemesanan = $request->get('tipe_pemesanan');
         $transaksi->keterangan = $request->get('keterangan');
-//        $newCheckIn->id_kamar = $request->get('id_kamar');
+        //        $newCheckIn->id_kamar = $request->get('id_kamar');
 
         $transaksi->save();
 
-        
+
 
         $transaksi->save();
 
@@ -294,7 +293,7 @@ class TransaksiController extends Controller
             'bayar' => 'required|numeric|gte:grandtotal',
             'jenis_pembayaran' => 'required'
         ]);
-        
+
         $newPembayaran = new Pembayaran;
         $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
         $newPembayaran->waktu = date('Y-m-d H:i:s');
@@ -316,15 +315,15 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi.index')->withStatus('Data berhasil disimpan.');
     }
 
-    public function getLaporanGeneral($dari, $sampai, $tipe, $tipe_pembayaran='')
+    public function getLaporanGeneral($dari, $sampai, $tipe, $tipe_pembayaran = '')
     {
-        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu', 't.tipe_pemesanan')
-        ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
-        ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
-        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-        ->whereNull('deleted_at')
-        ->where('t.status_bayar', 'Sudah')
-        ->orWhere('t.status_bayar', 'Piutang Terbayar');
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi', 'p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu', 't.tipe_pemesanan')
+            ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
+            ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
+            ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+            ->whereNull('deleted_at')
+            ->where('t.status_bayar', 'Sudah')
+            ->orWhere('t.status_bayar', 'Piutang Terbayar');
         if ($tipe_pembayaran) {
             $laporan->where('p.jenis_pembayaran', 'LIKE', "%$tipe_pembayaran");
         }
@@ -334,38 +333,37 @@ class TransaksiController extends Controller
 
         return $laporan->get();
     }
-    
-    public function getLaporanKhusus($dari, $sampai, $tipe='')
+
+    public function getLaporanKhusus($dari, $sampai, $tipe = '')
     {
-        if(auth()->user()->level == 'Owner') {
-            $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu','t.tipe_pemesanan')
-            ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
-            ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
-            ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-            ->where('t.status_bayar', 'Sudah')
-            ->orWhere('t.status_bayar', 'Piutang Terbayar');
+        if (auth()->user()->level == 'Owner') {
+            $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi', 'p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu', 't.tipe_pemesanan')
+                ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
+                ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
+                ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+                ->where('t.status_bayar', 'Sudah')
+                ->orWhere('t.status_bayar', 'Piutang Terbayar');
             if ($_GET['tipe_pembayaran']) {
                 $laporan->where('p.jenis_pembayaran', 'LIKE', "%$_GET[tipe_pembayaran]");
             }
             if ($_GET['tipe_pemesanan'] != '') {
                 $laporan->where('t.tipe_pemesanan', '=', $_GET['tipe_pemesanan']);
             }
-            
+
             return $laporan->get();
-        }
-        else {
+        } else {
             return back()->withError('Maaf hanya owner yang dapat mengakses fitur ini.');
         }
     }
 
-    public function getLaporanPembayaran($dari, $sampai, $tipe='')
+    public function getLaporanPembayaran($dari, $sampai, $tipe = '')
     {
-        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu','t.tipe_pemesanan')
-        ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
-        ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
-        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-        ->where('t.status_bayar', 'Sudah')
-        ->orWhere('t.status_bayar', 'Piutang Terbayar');
+        $laporan = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi', 'p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 'p.no_kartu', 't.tipe_pemesanan')
+            ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
+            ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
+            ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+            ->where('t.status_bayar', 'Sudah')
+            ->orWhere('t.status_bayar', 'Piutang Terbayar');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('p.jenis_pembayaran', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
@@ -373,21 +371,21 @@ class TransaksiController extends Controller
             $laporan->where('t.tipe_pemesanan', '=', $_GET['tipe_pemesanan']);
         }
         $laporan->whereNull('deleted_at');
-        
+
         return $laporan->get();
     }
 
     public function getKamarFavorit($dari, $sampai)
     {
-        if($dari && $sampai){
+        if ($dari && $sampai) {
             $laporan = \DB::table(\DB::raw('transaksi t'))
-                        ->select('k.no_kamar', \DB::raw('COUNT(d.id_kamar) as jml'))
-                        ->join(\DB::raw('detail_transaksi d'), 'd.kode_transaksi', '=', 't.kode_transaksi')
-                        ->join(\DB::raw('kamar k'), 'k.id', '=', 'd.id_kamar')
-                        ->whereBetween('waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-                        ->groupBy('d.id_kamar')
-                        ->orderBy(\DB::raw('jml'), 'desc');
-            if(auth()->user()->level == 'Resepsionis') 
+                ->select('k.no_kamar', \DB::raw('COUNT(d.id_kamar) as jml'))
+                ->join(\DB::raw('detail_transaksi d'), 'd.kode_transaksi', '=', 't.kode_transaksi')
+                ->join(\DB::raw('kamar k'), 'k.id', '=', 'd.id_kamar')
+                ->whereBetween('waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+                ->groupBy('d.id_kamar')
+                ->orderBy(\DB::raw('jml'), 'desc');
+            if (auth()->user()->level == 'Resepsionis')
                 $laporan->whereNull('t.deleted_at');
         }
         return $laporan->get();
@@ -400,25 +398,25 @@ class TransaksiController extends Controller
         $keyTamu = $request->get('keyTamu');
         $keywordKamar = $request->get('kamar');
         $status = $request->get('status');
-        
+
         $kamar = \DB::table(\DB::raw('kamar k'))
-                    ->select('k.id', 'k.no_kamar')
-                    ->join(\DB::raw('detail_transaksi dt'), 'k.id', '=', 'dt.id_kamar')
-                    ->join(\DB::raw('transaksi t'), 'dt.kode_transaksi', '=', 't.kode_transaksi')
-                    ->where('t.status_bayar', '=', 'Belum')
-                    ->distinct()
-                    ->get();
+            ->select('k.id', 'k.no_kamar')
+            ->join(\DB::raw('detail_transaksi dt'), 'k.id', '=', 'dt.id_kamar')
+            ->join(\DB::raw('transaksi t'), 'dt.kode_transaksi', '=', 't.kode_transaksi')
+            ->where('t.status_bayar', '=', 'Belum')
+            ->distinct()
+            ->get();
 
         $tamu = \DB::table(\DB::raw('tamu t'))
-                    ->select('t.id', 't.nama')
-                    ->join(\DB::raw('transaksi tk'), 't.id', '=', 'tk.id_tamu')
-                    ->where('tk.status_bayar', '=', 'Belum')
-                    ->distinct()
-                    ->get();
+            ->select('t.id', 't.nama')
+            ->join(\DB::raw('transaksi tk'), 't.id', '=', 'tk.id_tamu')
+            ->where('tk.status_bayar', '=', 'Belum')
+            ->distinct()
+            ->get();
 
-        $transaksi =Transaksi::with('tamu');
+        $transaksi = Transaksi::with('tamu');
 
-        if($keyTamu){
+        if ($keyTamu) {
             $transaksi->where('id_tamu', $keyTamu);
         }
         if ($status) {
@@ -428,10 +426,10 @@ class TransaksiController extends Controller
         $transaksi->where('status_bayar', '=', 'Belum');
         if ($keywordKamar) {
             $transaksi->where('dt.id_kamar', "$keywordKamar")
-            ->join('detail_transaksi as dt','transaksi.kode_transaksi','dt.kode_transaksi')
-            ->groupBy('transaksi.kode_transaksi');
+                ->join('detail_transaksi as dt', 'transaksi.kode_transaksi', 'dt.kode_transaksi')
+                ->groupBy('transaksi.kode_transaksi');
         }
-        
+
 
         return \view('transaksi.invoice.list-invoice', ['transaksi' => $transaksi->paginate(10), 'kamar' => $kamar, 'tamu' => $tamu], $this->param);
     }
@@ -444,16 +442,15 @@ class TransaksiController extends Controller
         $sampai = $request->get('sampai');
         $transaksi = '';
 
-        if(isset($dari) && isset($sampai)) {
-            $transaksi =Transaksi::select('transaksi.*', 'p.waktu')
-                        ->with('tamu')
-                        ->join('pembayaran as p', 'p.kode_transaksi', 'transaksi.kode_transaksi')
-                        ->where('transaksi.status_bayar', 'Belum')
-                        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-                        ->orderBy('p.waktu', 'DESC');
-                        return \view('transaksi.invoice.list-all-invoice', ['transaksi' => $transaksi->paginate(10)], $this->param);
-        }
-        else {
+        if (isset($dari) && isset($sampai)) {
+            $transaksi = Transaksi::select('transaksi.*', 'p.waktu')
+                ->with('tamu')
+                ->join('pembayaran as p', 'p.kode_transaksi', 'transaksi.kode_transaksi')
+                ->where('transaksi.status_bayar', 'Belum')
+                ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+                ->orderBy('p.waktu', 'DESC');
+            return \view('transaksi.invoice.list-all-invoice', ['transaksi' => $transaksi->paginate(10)], $this->param);
+        } else {
             return \view('transaksi.invoice.list-all-invoice',  $this->param);
         }
     }
@@ -464,11 +461,11 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::find($kode);
         $transaksi->status_bayar = 'Sudah';
         $transaksi->save();
-        
-        $status = Transaksi::select('status_bayar')->where('kode_transaksi',$kode)->get();
-        if($status[0]->status_bayar=='DP50%'){
-            $getGrandTotal = Pembayaran::select('grandtotal')->where('kode_transaksi',$kode)->get();
-            Pembayaran::where('kode_transaksi',$kode)->update(['bayar' => $getGrandTotal[0]->grandtotal]);
+
+        $status = Transaksi::select('status_bayar')->where('kode_transaksi', $kode)->get();
+        if ($status[0]->status_bayar == 'DP50%') {
+            $getGrandTotal = Pembayaran::select('grandtotal')->where('kode_transaksi', $kode)->get();
+            Pembayaran::where('kode_transaksi', $kode)->update(['bayar' => $getGrandTotal[0]->grandtotal]);
         }
 
         return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil disimpan.');
@@ -477,15 +474,14 @@ class TransaksiController extends Controller
     {
         $this->param['pageInfo'] = 'List Piutang';
 
-        $transaksi =Transaksi::with('tamu')->where('status_bayar', '=', 'Piutang');
+        $transaksi = Transaksi::with('tamu')->where('status_bayar', '=', 'Piutang');
         return \view('transaksi.invoice.list-piutang', ['transaksi' => $transaksi->paginate(10)], $this->param);
-
     }
     public function addPiutang($kode)
     {
         $kode = str_replace('-', '/', $kode);
 
-        Transaksi::where('kode_transaksi',$kode)->update(['status_bayar' => 'Piutang']);
+        Transaksi::where('kode_transaksi', $kode)->update(['status_bayar' => 'Piutang']);
         return redirect()->route('transaksi.list-invoice')->withStatus('Piutang Berhasil Ditambahkan.');
     }
 
@@ -497,7 +493,7 @@ class TransaksiController extends Controller
         $this->param['btnRight']['link'] = route('transaksi.list-invoice');
 
         $this->param['transaksi'] = Transaksi::findOrFail($kode);
-        $pembayaran = Pembayaran::where('kode_transaksi',$kode)->get();
+        $pembayaran = Pembayaran::where('kode_transaksi', $kode)->get();
         $this->param['pembayaran'] = count($pembayaran) > 0 ? $pembayaran[0] : '';
 
         return view('transaksi.invoice.edit-invoice', $this->param);
@@ -547,9 +543,11 @@ class TransaksiController extends Controller
                 'charge' => $request->get('charge'),
                 'grandtotal' => $request->get('grandtotal'),
             );
+            if ($request->input('is_extra_bed') != null) {
+                $arr['extra_bed'] = $request->input('total_extra_bed');
+            }
             Pembayaran::where('kode_transaksi', $request->get('kode_transaksi'))->update($arr);
-        }
-        else{
+        } else {
             $newPembayaran = new Pembayaran;
             $newPembayaran->kode_transaksi = $request->get('kode_transaksi');
             $newPembayaran->waktu = date('Y-m-d H:i:s');
@@ -559,11 +557,21 @@ class TransaksiController extends Controller
             $newPembayaran->diskon = $request->get('diskon');
             $newPembayaran->tax = $request->get('tax');
             $newPembayaran->charge = $request->get('charge');
+            if ($request->input('is_extra_bed') != null) {
+                $newPembayaran->extra_bed  = $request->input('total_extra_bed');
+            }
             $newPembayaran->grandtotal = $request->get('grandtotal');
             $newPembayaran->bayar = 0;
 
-    
+
             $newPembayaran->save();
+        }
+        if ($request->input('is_extra_bed') != null) {
+            $extraBed = [
+                'is_extra_bed' => $request->input('is_extra_bed'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            Transaksi::where('kode_transaksi', $request->get('kode_transaksi'))->update($extraBed);
         }
 
         return redirect()->route('transaksi.list-invoice')->withStatus('Data berhasil disimpan.');
@@ -579,43 +587,42 @@ class TransaksiController extends Controller
 
     public function online()
     {
-        $data = Transaksi::select('kode_transaksi','tgl_checkin','tgl_checkout','status','keterangan','nama')->join('tamu','transaksi.id_tamu','tamu.id')->where('status_bayar','Belum')->where('tipe_pemesanan','Online')->paginate(10);
-        return view('transaksi.transaksi.list-pemesanan-online')->with('data', $data)->with('pageInfo', 'Pemesanan Online')->with('icon','ni-world-2 text-pink');
+        $data = Transaksi::select('kode_transaksi', 'tgl_checkin', 'tgl_checkout', 'status', 'keterangan', 'nama')->join('tamu', 'transaksi.id_tamu', 'tamu.id')->where('status_bayar', 'Belum')->where('tipe_pemesanan', 'Online')->paginate(10);
+        return view('transaksi.transaksi.list-pemesanan-online')->with('data', $data)->with('pageInfo', 'Pemesanan Online')->with('icon', 'ni-world-2 text-pink');
     }
     public function listPembayaranOnline()
     {
-        $data = \DB::table('pembayaran as p')->select('p.kode_transaksi','p.jenis_pembayaran','p.bukti')->join('transaksi as t','p.kode_transaksi','t.kode_transaksi')->where('t.status_bayar','Menunggu Verifikasi')->paginate(10);
-        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon','ni-credit-card text-yellow');
+        $data = \DB::table('pembayaran as p')->select('p.kode_transaksi', 'p.jenis_pembayaran', 'p.bukti')->join('transaksi as t', 'p.kode_transaksi', 't.kode_transaksi')->where('t.status_bayar', 'Menunggu Verifikasi')->paginate(10);
+        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon', 'ni-credit-card text-yellow');
     }
 
     public function searchPembayaranOnline(Request $req)
     {
-        $data = Pembayaran::where('kode_transaksi','like','%'.$req->get('keyword').'%')
-                        ->whereNotNull('bukti')->get();
-        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon','ni-credit-card text-orange');
+        $data = Pembayaran::where('kode_transaksi', 'like', '%' . $req->get('keyword') . '%')
+            ->whereNotNull('bukti')->get();
+        return view('transaksi.pembayaran-online.index')->with('data', $data)->with('pageInfo', 'Pembayaran Online')->with('icon', 'ni-credit-card text-orange');
     }
 
     public function detailPembayaran($kode)
     {
-        $kode = str_replace('-','/',$kode);
+        $kode = str_replace('-', '/', $kode);
         $data = Pembayaran::where('kode_transaksi', $kode)->get();
-        return view('transaksi.pembayaran.detail-pembayaran')->with('data', $data)->with('pageInfo', 'Detail Pembayaran Online')->with('icon','ni-credit-card text-orange');
+        return view('transaksi.pembayaran.detail-pembayaran')->with('data', $data)->with('pageInfo', 'Detail Pembayaran Online')->with('icon', 'ni-credit-card text-orange');
     }
 
     public function updatePembayaranOnline()
     {
         $kode = $_GET['kode'];
         $kode = str_replace('-', '/', $kode);
-        $email = \DB::table('transaksi as t')->select('ta.email')->join('tamu as ta','t.id_tamu','ta.id')->where('t.kode_transaksi',$kode)->get()[0];
-        if($_GET['act']=='acc'){
+        $email = \DB::table('transaksi as t')->select('ta.email')->join('tamu as ta', 't.id_tamu', 'ta.id')->where('t.kode_transaksi', $kode)->get()[0];
+        if ($_GET['act'] == 'acc') {
             DB::table('transaksi')->where('kode_transaksi', $kode)->update([
                 'status' => 'Check In',
                 'status_bayar' => 'DP50%',
                 'updated_at' => date('y-m-d H:i:s')
             ]);
-            $tipe = 'Diterima';  
-        }
-        else{
+            $tipe = 'Diterima';
+        } else {
             $tipe = 'Ditolak';
             DB::table('transaksi')->where('kode_transaksi', $kode)->update([
                 'status_bayar' => 'Belum',
@@ -623,7 +630,7 @@ class TransaksiController extends Controller
             ]);
             DB::table('pembayaran')->where('kode_transaksi', $kode)->delete();
         }
-        \Mail::to($email->email)->send(new \App\Mail\VerifikasiMail($kode,$tipe));
+        \Mail::to($email->email)->send(new \App\Mail\VerifikasiMail($kode, $tipe));
         return redirect()->route('transaksi.list-pembayaran-online')->withStatus('Verifikasi Berhasil');
     }
 
@@ -633,28 +640,23 @@ class TransaksiController extends Controller
         // $this->param['btnRight']['text'] = 'Tambah Penjualan';
         // $this->param['btnRight']['link'] = route('penjualan.create');
         $tipe = $_GET['tipe'];
-        if(isset($_GET['dari']) && isset($_GET['sampai'])){
-            if($tipe=='general'){
+        if (isset($_GET['dari']) && isset($_GET['sampai'])) {
+            if ($tipe == 'general') {
                 $this->param['laporan'] = $this->getLaporanGeneral($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
-            }
-            else if($tipe=='khusus'){
-                if(auth()->user()->level == 'Owner') {   
-                    $this->param['laporan'] = $this->getLaporanKhusus($_GET['dari'], $_GET['sampai'],$_GET['tipe_pembayaran']);
-                }
-                else {
+            } else if ($tipe == 'khusus') {
+                if (auth()->user()->level == 'Owner') {
+                    $this->param['laporan'] = $this->getLaporanKhusus($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
+                } else {
                     return back()->withError('Maaf hanya owner yang dapat mengakses fitur ini.');
                 }
-            }
-            else if($tipe=='pembayaran'){
+            } else if ($tipe == 'pembayaran') {
                 $this->param['laporan'] = $this->getLaporanPembayaran($_GET['dari'], $_GET['sampai']);
-            }
-            else if($tipe=='kamar-favorit'){
+            } else if ($tipe == 'kamar-favorit') {
                 $this->param['laporan'] = $this->getKamarFavorit($_GET['dari'], $_GET['sampai']);
             }
-        }
-        else {
-            if($tipe=='khusus'){
-                if(auth()->user()->level != 'Owner') {   
+        } else {
+            if ($tipe == 'khusus') {
+                if (auth()->user()->level != 'Owner') {
                     return back()->withError('Maaf hanya owner yang dapat mengakses fitur ini.');
                 }
             }
@@ -662,23 +664,21 @@ class TransaksiController extends Controller
         return view('transaksi.laporan.laporan', $this->param);
     }
 
-    public function printLaporan(){
-        if(isset($_GET['dari']) && isset($_GET['sampai'])){
+    public function printLaporan()
+    {
+        if (isset($_GET['dari']) && isset($_GET['sampai'])) {
             $type = $_GET['tipe'];
-            if($type=='general'){
+            if ($type == 'general') {
                 $this->param['laporan'] = $this->getLaporanGeneral($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
-            }
-            else if($type=='khusus'){
+            } else if ($type == 'khusus') {
                 $this->param['laporan'] = $this->getLaporanKhusus($_GET['dari'], $_GET['sampai'], $_GET['tipe_pembayaran']);
-            }
-            else if($_GET['tipe']=='pembayaran'){
+            } else if ($_GET['tipe'] == 'pembayaran') {
                 $this->param['laporan'] = $this->getLaporanPembayaran($_GET['dari'], $_GET['sampai']);
-            }
-            else if($_GET['tipe']=='kamar-favorit'){
+            } else if ($_GET['tipe'] == 'kamar-favorit') {
                 $this->param['laporan'] = $this->getKamarFavorit($_GET['dari'], $_GET['sampai']);
             }
         }
-        return view('transaksi.laporan.print-laporan-'.$_GET['tipe'], $this->param);
+        return view('transaksi.laporan.print-laporan-' . $_GET['tipe'], $this->param);
     }
 
     public function allPenjualan(Request $request)
@@ -687,59 +687,53 @@ class TransaksiController extends Controller
 
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
-        
-        $this->param['laporan'] = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi','p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan', 't.deleted_at','t.status_bayar')
-        ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
-        ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
-        ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
-        // ->where('t.status_bayar', 'Sudah')
-        ->get();        
+
+        $this->param['laporan'] = \DB::table(\DB::raw('transaksi t'))->select('t.kode_transaksi', 'p.waktu', 'tm.nama', 't.tgl_checkin', 't.tgl_checkout', 'p.total', 'p.charge', 'p.diskon', 'p.tax', 'p.grandtotal', 'p.jenis_pembayaran', 't.tipe_pemesanan', 't.deleted_at', 't.status_bayar')
+            ->join(\DB::raw('pembayaran p'), 'p.kode_transaksi', '=', 't.kode_transaksi')
+            ->join(\DB::raw('tamu tm'), 'tm.id', '=', 't.id_tamu')
+            ->whereBetween('p.waktu', ["$dari 00:00:00", "$sampai 23:59:59"])
+            // ->where('t.status_bayar', 'Sudah')
+            ->get();
 
         return view('transaksi.transaksi.list-penjualan', $this->param);
     }
 
     public function softDelete($kode)
     {
-        try{
-            if(auth()->user()->level == 'Owner') {
+        try {
+            if (auth()->user()->level == 'Owner') {
                 $kode = str_replace('-', '/', $kode);
                 \DB::table('transaksi')->where('kode_transaksi', $kode)->update([
                     'deleted_at' => date('Y-m-d H:i:s')
                 ]);
 
                 return back()->withStatus('Data berhasil dihapus.');
-            }
-            else {
+            } else {
                 return back()->withError('Maaf hanya owner yang dapat mengakses fitur ini.');
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return back()->withError($e->getMessage());
-        }
-        catch(\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError($e->getMessage());
         }
     }
 
     public function restoreData($kode)
     {
-        try{
-            if(auth()->user()->level == 'Owner') {
+        try {
+            if (auth()->user()->level == 'Owner') {
                 $kode = str_replace('-', '/', $kode);
                 \DB::table('transaksi')->where('kode_transaksi', $kode)->update([
                     'deleted_at' => NULL
                 ]);
 
                 return back()->withStatus('Data berhasil dikembalikan.');
-            }
-            else {
+            } else {
                 return back()->withError('Maaf hanya owner yang dapat mengakses fitur ini.');
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return back()->withError($e->getMessage());
-        }
-        catch(\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError($e->getMessage());
         }
     }

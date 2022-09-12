@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $(".datepicker").datepicker({
-        format: "yyyy-mm-dd",
+        format: "yyyy-mm-dd"
     });
     $(".select2").select2();
     $(".fullpage-version").click(function(e) {
@@ -45,38 +45,41 @@ $(document).ready(function() {
 
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
-        var tipe = $(this).data('tipe')
-        var tipe_pemesanan = $(this).data('tipe_pemesanan')
+        var tipe = $(this).data("tipe");
+        var tipe_pemesanan = $(this).data("tipe_pemesanan");
         var total = parseInt($("#total").val());
         var diskon = 0;
         var tax = 0;
-        if (tipe_pemesanan =='langsung') {
-            tax = (total - diskon_tambahan) * 10 / 100;
+        if (tipe_pemesanan == "langsung") {
+            tax = ((total - diskon_tambahan) * 10) / 100;
         }
-        if(tipe=='persen'){
-            var otherDisc = parseInt($(".diskon_tambahan[data-tipe='rp']").val())
-            diskon = (diskon_tambahan * total / 100) + otherDisc;
-        }
-        else{
-            var getOtherDisc = parseInt($(".diskon_tambahan[data-tipe='persen']").val())
+        if (tipe == "persen") {
+            var otherDisc = parseInt(
+                $(".diskon_tambahan[data-tipe='rp']").val()
+            );
+            diskon = (diskon_tambahan * total) / 100 + otherDisc;
+        } else {
+            var getOtherDisc = parseInt(
+                $(".diskon_tambahan[data-tipe='persen']").val()
+            );
             var otherDisc = 0;
-            if(getOtherDisc>0){
-                otherDisc = getOtherDisc * total / 100;
+            if (getOtherDisc > 0) {
+                otherDisc = (getOtherDisc * total) / 100;
             }
-            diskon = diskon_tambahan + otherDisc
+            diskon = diskon_tambahan + otherDisc;
         }
         var grand_total = total - diskon_tambahan + tax;
         $("#tax").val(tax);
-            $("#grand_total").val(grand_total);
-            $("#subtotal").val(grand_total);
-            $("#idrGrandTotal").html(formatRupiah(grand_total));
-        if($(this).hasClass('dp')){
-        }
-        else{
-/*             $("#grand_total").val(grand_total + (grand_total * 10 / 100));
+        $("#grand_total").val(grand_total);
+        $("#subtotal").val(grand_total);
+        $("#idrGrandTotal").html(formatRupiah(grand_total));
+        if ($(this).hasClass("dp")) {
+        } else {
+            /*             $("#grand_total").val(grand_total + (grand_total * 10 / 100));
             $("#total").val(grand_total + (grand_total * 10 / 100));
             $("#idrGrandTotal").html(formatRupiah(grand_total + (grand_total * 10 / 100)));
- */        }
+ */
+        }
     });
 
     $("#bayar").keyup(function() {
@@ -86,7 +89,7 @@ $(document).ready(function() {
         $("#kembalian").val(kembalian);
     });
 
-    // $('#total').keyup(function () { 
+    // $('#total').keyup(function () {
     //     let total = parseInt($(this).val());
     //     let diskon = parseInt($('.diskon_tambahan').val());
     //     let ppn = (total - diskon) * 10 /100;
@@ -98,13 +101,14 @@ $(document).ready(function() {
     //     $("#idrGrandTotal").html(formatRupiah(grand_total));
     // });
 
-    $('.getGrandTotal').keyup(function (e) { 
+    $(".getGrandTotal").keyup(function(e) {
         var ppn = parseInt($("#tax").val());
-        var total = parseInt($("#total").val())
-        var diskon = parseInt($('#diskon_tambahan').val());
-        var charge = parseInt($('#charge').val());
+        var total = parseInt($("#total").val());
+        var diskon = parseInt($("#diskon_tambahan").val());
+        var charge = parseInt($("#charge").val());
+        var extraBed = parseInt($("#total_extra_bed").val());
 
-        var grandTotal = ppn + total - diskon + charge
+        var grandTotal = ppn + total - diskon + charge + extraBed;
 
         $("#grand_total").val(grandTotal);
         $("#subtotal").val(grandTotal);
@@ -113,14 +117,14 @@ $(document).ready(function() {
     });
 
     // $("#no_kartu").prop("disabled", true);
-//    $("#charge").prop("disabled", true);
+    //    $("#charge").prop("disabled", true);
 
     temp_grand_total = parseInt($("#grand_total").val());
-    
+
     function getCharge(thisVal) {
         var ppn = parseInt($("#tax").val());
-        var total = parseInt($("#total").val())
-        var diskon = parseInt($('#diskon_tambahan').val());
+        var total = parseInt($("#total").val());
+        var diskon = parseInt($("#diskon_tambahan").val());
 
         var grand_total = ppn + total - diskon;
         var charge = 0;
@@ -128,13 +132,15 @@ $(document).ready(function() {
             $("#no_kartu").prop("disabled", false);
             $("#no_kartu").attr("required", true);
 
-/*             $("#charge").prop("disabled", false);
+            /*             $("#charge").prop("disabled", false);
             $("#charge").attr("required", true);
- */        } else {
+ */
+        } else {
             $("#no_kartu").prop("disabled", true);
-/*             $("#charge").prop("disabled", true);
+            /*             $("#charge").prop("disabled", true);
             $("#charge").val(0);
- */        }
+ */
+        }
 
         if (thisVal == "Debit BCA") {
             charge = 0;
@@ -156,25 +162,24 @@ $(document).ready(function() {
         );
     }
 
-        // $("#charge").keyup(function(){
-        //     var change = parseInt($(this).val())
-        //     var subtotal = parseInt($("#subtotal").val())
-        //     var newGrandTotal = subtotal + change;
-        //     $("#grand_total").val(newGrandTotal);
-        //     $("#idrGrandTotal").html(
-        //         formatRupiah(newGrandTotal)
-        //     );
+    // $("#charge").keyup(function(){
+    //     var change = parseInt($(this).val())
+    //     var subtotal = parseInt($("#subtotal").val())
+    //     var newGrandTotal = subtotal + change;
+    //     $("#grand_total").val(newGrandTotal);
+    //     $("#idrGrandTotal").html(
+    //         formatRupiah(newGrandTotal)
+    //     );
 
-        // })
+    // })
 
     $("#jenis_bayar").change(function() {
         var thisVal = $(this).val();
         getCharge(thisVal);
         if ($(this).val() != "Tunai") {
-            $('#no_kartu').attr({'disabled': false, 'required' : true});
-        }
-        else{
-            $('#no_kartu').attr({'disabled': true, 'required' : false});
+            $("#no_kartu").attr({ disabled: false, required: true });
+        } else {
+            $("#no_kartu").attr({ disabled: true, required: false });
         }
     });
 
@@ -237,32 +242,64 @@ $(document).ready(function() {
         deleteFoto($(this));
     });
 
-    $('#tgl_checkout').change(function (e) {  
-        $('#id_kamar')
-        .find('option')
-        .remove()
-        .end()
-        .append('<option value="">Pilih Kamar</option>');
+    $("#tgl_checkout").change(function(e) {
+        $("#id_kamar")
+            .find("option")
+            .remove()
+            .end()
+            .append('<option value="">Pilih Kamar</option>');
 
-        var url = $('#id_kamar').data("url");
-        var tgl_checkin = $('#tgl_checkin').val();
+        var url = $("#id_kamar").data("url");
+        var tgl_checkin = $("#tgl_checkin").val();
         var tgl_checkout = $(this).val();
         $.ajax({
             type: "get",
             url: url,
             data: { tgl_checkin: tgl_checkin, tgl_checkout: tgl_checkout },
-            dataType: 'json',
-            success: function (data) {
+            dataType: "json",
+            success: function(data) {
                 console.log(data);
                 $.each(data, function(i, item) {
                     // alert(item.id);
-                    $('#id_kamar').append(
+                    $("#id_kamar").append(
                         "<option value='" +
-                        item.id +
-                            "'> " + item.no_kamar +" </option>"
+                            item.id +
+                            "'> " +
+                            item.no_kamar +
+                            " </option>"
                     );
                 });
             }
         });
     });
+
+    $(".total_extra_bed").hide();
+    $(".is_extra_bed").click(function(e) {
+        var check = $(this).is(":checked");
+        if (check == true) {
+            $(".total_extra_bed").show();
+            $(".total_extra_bed").keyup(function(e) {
+                extraBed();
+            });
+        } else {
+            $(".total_extra_bed").hide();
+            $(".total_extra_bed").val(0);
+            extraBed();
+        }
+    });
+
+    function extraBed() {
+        var ppn = parseInt($("#tax").val());
+        var total = parseInt($("#total").val());
+        var diskon = parseInt($("#diskon_tambahan").val());
+        var charge = parseInt($("#charge").val());
+        var extraBed = parseInt($("#total_extra_bed").val());
+
+        var grandTotal = ppn + total - diskon + charge + extraBed;
+
+        $("#grand_total").val(grandTotal);
+        $("#subtotal").val(grandTotal);
+        // $("#total").val(grandTotal);
+        $("#idrGrandTotal").html(formatRupiah(grandTotal));
+    }
 });
