@@ -1,5 +1,15 @@
 @extends('common/template')
 @section('content')
+<style>
+    .card .table td, .card .table th{
+    }
+    .table thead th{
+        letter-spacing: 0px !important;
+    }
+    .table th, .table td{
+        padding: 1rem 0.5rem !important;
+    }
+</style>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -237,8 +247,7 @@
                                                             {{-- Delete Data --}}
                                                             <a class="dropdown-item"
                                                                 href="{{ url('transaksi/all-penjualan/delete/' . $kodeTrx) }}">
-                                                                <button type="button" class="mr-1 dropdown-item"
-                                                                    onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Hapus</button>
+                                                                <button type="button" class="mr-1 dropdown-item">Hapus</button>
                                                             </a>
                                                         @endif
                                                         {{-- <form action="{{ route('soft-delete-penjualan', $kodeTrx) }}" method="get">
@@ -255,6 +264,7 @@
                                     <tr>
                                         <td colspan='8' class='text-center'><b>TOTAL</b></td>
                                         <td>{{ number_format($total, 0, ',', '.') }}</td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
