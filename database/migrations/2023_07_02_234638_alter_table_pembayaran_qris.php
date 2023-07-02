@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTablePenjualaQris extends Migration
+class AlterTablePembayaranQris extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AlterTablePenjualaQris extends Migration
      */
     public function up()
     {
-        Schema::table('penjualan', function (Blueprint $table) {
-            \DB::statement("ALTER TABLE `penjualan` CHANGE `jenis_bayar` `jenis_bayar` ENUM('Tunai','Debit BCA','Debit BRI','Kredit BCA','Kredit BRI','Debit Bank Lain','Kredit Bank Lain','QRIS') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;");
+        Schema::table('pembayaran', function (Blueprint $table) {
+            \DB::statement("ALTER TABLE `pembayaran` CHANGE `jenis_pembayaran` `jenis_pembayaran` ENUM('Tunai','Debit BCA','Debit BRI','Kredit BCA','Kredit BRI','Kredit Bank Lain','Debit Bank Lain','QRIS') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;");
         });
     }
 
