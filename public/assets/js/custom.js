@@ -154,6 +154,8 @@ $(document).ready(function() {
             charge = (grand_total * 0.15) / 100;
         } else if (thisVal == "Kredit Bank Lain") {
             charge = (grand_total * 1.5) / 100;
+        } else if (thisVal == "QRIS") {
+            charge = (grand_total * 0.3) / 100;
         }
         $("#charge").val(Math.round(charge));
         $("#grand_total").val(grand_total + Math.round(charge));

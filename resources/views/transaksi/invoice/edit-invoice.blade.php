@@ -237,6 +237,9 @@
                                     <option value="Kredit Bank Lain"
                                         {{ old('jenis_pembayaran', $jenis_pembayaran) == 'Kredit Bank Lain' ? 'selected' : '' }}>
                                         Kredit Bank Lain</option>
+                                        <option value="QRIS"
+                                            {{ old('jenis_pembayaran', $jenis_pembayaran) == 'QRIS' ? 'selected' : '' }}>
+                                            QRIS</option>
                                 </select>
                                 @error('jenis_pembayaran')
                                     <span class="invalid-feedback" role="alert">
