@@ -26,6 +26,7 @@ class TransaksiController extends Controller
         $keywordKamar = $request->get('kamar');
         $keyTamu = $request->get('keyTamu');
         $status = $request->get('status');
+        $keyDate = $request->get('keyDate');
 
         /*         $kamar = \DB::table(\DB::raw('kamar k'))
                     ->select('k.id', 'k.no_kamar')
@@ -51,6 +52,10 @@ class TransaksiController extends Controller
  */
         if ($status) {
             $transaksi->where('status', $status);
+        }
+
+        if ($keyDate) {
+            $transaksi->where('tgl_checkin', $keyDate);
         }
 
         return \view('transaksi.transaksi.list-transaksi', ['transaksi' => $transaksi->paginate(10), 'kamar' => /*$kamar */ [], 'tamu' => $tamu], $this->param);
@@ -270,6 +275,7 @@ class TransaksiController extends Controller
         $kode = str_replace('-', '/', $kode);
         Pembayaran::where('kode_transaksi', $kode)->delete();
         $transaksi = Transaksi::findOrFail($kode);
+        $transaksi->detail_transaksi()->delete();
         $transaksi->delete();
 
         return redirect()->route('transaksi.index')->withStatus('Data berhasil dihapus.');

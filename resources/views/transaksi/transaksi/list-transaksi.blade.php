@@ -16,7 +16,7 @@
                                 <select name="keyTamu" id="keyTamu" class="form-control select2" width="100%">
                                     <option value="">Semua Tamu</option>
                                     @foreach ($tamu as $item)
-                                        <option value="{{$item->id}}" {{Request::get('keyTamu') == $item->id ? 'selected' : ''}} > {{$item->nama}} </option>
+                                        <option value="{{$item->id}}" {{Request::get('keyTamu') == $item->id ? 'selected' : ''}} > {{$item->nama }} </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -35,6 +35,9 @@
                                     <option value="Check In" {{Request::get('status') == 'Check In' ? 'selected' : ''}} > Check In</option>
                                     <option value="Pending" {{Request::get('status') == 'Pending' ? 'selected' : ''}} > Pemesanan Online : Pending</option>
                                 </select>
+                            </div>
+                            <div class="col-3">
+                                <input type="date" name="keyDate" id="keyDate" class="form-control" value="{{Request::get('keyDate')}}">
                             </div>
                             <div class="col-1">
                                 <button type="submit" class="btn btn-info">

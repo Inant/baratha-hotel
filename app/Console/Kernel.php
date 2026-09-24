@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('db:sync-replica')->timezone('Asia/Jakarta')->dailyAt('01:00')->withoutOverlapping();
         // $schedule->command('inspire')->hourly();
     }
 
